@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thiết lập Năm học - UTE</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #34495e;
+            margin-bottom: 20px;
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.3em;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 0.85em;
+            opacity: 0.7;
+        }
+
+        .menu-item {
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-item:hover {
+            background: #34495e;
+            border-left-color: #667eea;
+        }
+
+        .menu-item.active {
+            background: #34495e;
+            border-left-color: #667eea;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+        }
+
+        .header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1em;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-open {
+            background: #28a745;
+            color: white;
+        }
+
+        .badge-closed {
+            background: #dc3545;
+            color: white;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+
+        .action-btn.edit {
+            background: #007bff;
+            color: white;
+        }
+
+        .action-btn.toggle {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .action-btn.delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border-left: 4px solid #ffc107;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 2em;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            color: #7f8c8d;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .info-box strong {
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>🎓 UTE Admin</h2>
+            <p>Hệ thống quản trị</p>
+        </div>
+        <div class="menu-item" style="cursor: pointer;" onclick="window.location.href='./nguoidung.html'">
+            <span>👥</span>
+            <span>Người dùng</span>
+        </div>
+        <div class="menu-item active" style="cursor: pointer;" onclick="window.location.href='./namhoc.html'">
+            <span>📚</span>
+            <span>Năm học</span>
+        </div>
+        <div class="menu-item" style="cursor: pointer;" onclick="window.location.href='./hocbong.html'">
+            <span>💰</span>
+            <span>Học bổng</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h1>📚 Thiết lập Năm học & Học kỳ</h1>
+            <p>Tạo học kỳ mới, đóng/mở trạng thái học kỳ</p>
+        </div>
+
+        <!-- Thống kê -->
+        <div class="stats">
+            <div class="stat-card">
+                <h3 id="totalSemesters">0</h3>
+                <p>Tổng số học kỳ</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="openSemesters">0</h3>
+                <p>Học kỳ đang mở</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="closedSemesters">0</h3>
+                <p>Học kỳ đã đóng</p>
+            </div>
+        </div>
+
+        <!-- Alert -->
+        <div class="alert alert-success" id="alertSuccess"></div>
+        <div class="alert alert-error" id="alertError"></div>
+        <div class="alert alert-warning" id="alertWarning"></div>
+
+        <!-- Thông tin quan trọng -->
+        <div class="info-box">
+            <strong>⚠️ Lưu ý quan trọng:</strong> Khi đóng học kỳ, Trigger sẽ tự động kích hoạt để chặn việc sửa điểm GPA và điểm rèn luyện. Điều này đảm bảo tính toàn vẹn dữ liệu sau khi học kỳ kết thúc.
+        </div>
+
+        <!-- Form tạo học kỳ -->
+        <div class="card">
+            <h2>➕ Tạo học kỳ mới</h2>
+            <form id="formAddSemester">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Mã học kỳ: *</label>
+                        <input type="text" id="maHK" required placeholder="VD: HK1" maxlength="5">
+                    </div>
+                    <div class="form-group">
+                        <label>Tên học kỳ: *</label>
+                        <input type="text" id="tenHK" required placeholder="VD: Học kỳ 1">
+                    </div>
+                    <div class="form-group">
+                        <label>Năm học: *</label>
+                        <input type="text" id="namHoc" required placeholder="VD: 2024-2025">
+                    </div>
+                    <div class="form-group">
+                        <label>Ngày bắt đầu: *</label>
+                        <input type="date" id="ngayBatDau" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Ngày kết thúc: *</label>
+                        <input type="date" id="ngayKetThuc" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Trạng thái: *</label>
+                        <select id="trangThai" required>
+                            <option value="Mở">🟢 Mở</option>
+                            <option value="Đóng">🔴 Đóng</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    ✅ Tạo học kỳ
+                </button>
+            </form>
+        </div>
+
+        <!-- Danh sách học kỳ -->
+        <div class="card">
+            <h2>📋 Danh sách học kỳ</h2>
+            <table id="semesterTable">
+                <thead>
+                    <tr>
+                        <th>Mã HK</th>
+                        <th>Tên học kỳ</th>
+                        <th>Năm học</th>
+                        <th>Ngày bắt đầu</th>
+                        <th>Ngày kết thúc</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="semesterTableBody">
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: #999;">
+                            Đang tải dữ liệu...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Dữ liệu mẫu từ SQL
+        let semesters = [
+            {
+                maHK: 'HK1',
+                tenHK: 'Học kỳ 1',
+                namHoc: '2024-2025',
+                ngayBatDau: '2024-09-01',
+                ngayKetThuc: '2025-01-15',
+                trangThai: 'Đóng'
+            },
+            {
+                maHK: 'HK2',
+                tenHK: 'Học kỳ 2',
+                namHoc: '2024-2025',
+                ngayBatDau: '2025-01-20',
+                ngayKetThuc: '2025-05-30',
+                trangThai: 'Mở'
+            },
+            {
+                maHK: 'HK3',
+                tenHK: 'Học kỳ 3',
+                namHoc: '2024-2025',
+                ngayBatDau: '2025-06-01',
+                ngayKetThuc: '2025-08-15',
+                trangThai: 'Mở'
+            }
+        ];
+
+        // Load dữ liệu khi trang load
+        window.onload = function() {
+            loadSemesters();
+            updateStats();
+        };
+
+        // Hàm load danh sách học kỳ
+        function loadSemesters() {
+            const tbody = document.getElementById('semesterTableBody');
+            tbody.innerHTML = '';
+
+            semesters.forEach((sem, index) => {
+                const statusClass = sem.trangThai === 'Mở' ? 'open' : 'closed';
+                const statusIcon = sem.trangThai === 'Mở' ? '🟢' : '🔴';
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${sem.maHK}</strong></td>
+                        <td>${sem.tenHK}</td>
+                        <td>${sem.namHoc}</td>
+                        <td>${formatDate(sem.ngayBatDau)}</td>
+                        <td>${formatDate(sem.ngayKetThuc)}</td>
+                        <td><span class="badge badge-${statusClass}">${statusIcon} ${sem.trangThai}</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn toggle" onclick="toggleStatus(${index})">
+                                    ${sem.trangThai === 'Mở' ? '🔒 Đóng' : '🔓 Mở'}
+                                </button>
+                                <button class="action-btn edit" onclick="editSemester(${index})">
+                                    ✏️ Sửa
+                                </button>
+                                <button class="action-btn delete" onclick="deleteSemester(${index})">
+                                    🗑️ Xóa
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Format ngày
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+        // Cập nhật thống kê
+        function updateStats() {
+            document.getElementById('totalSemesters').textContent = semesters.length;
+            document.getElementById('openSemesters').textContent = semesters.filter(s => s.trangThai === 'Mở').length;
+            document.getElementById('closedSemesters').textContent = semesters.filter(s => s.trangThai === 'Đóng').length;
+        }
+
+        // Xử lý form thêm học kỳ
+        document.getElementById('formAddSemester').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const maHK = document.getElementById('maHK').value.toUpperCase();
+            const tenHK = document.getElementById('tenHK').value;
+            const namHoc = document.getElementById('namHoc').value;
+            const ngayBatDau = document.getElementById('ngayBatDau').value;
+            const ngayKetThuc = document.getElementById('ngayKetThuc').value;
+            const trangThai = document.getElementById('trangThai').value;
+
+            // Kiểm tra mã học kỳ đã tồn tại
+            if (semesters.some(s => s.maHK === maHK)) {
+                showAlert('error', 'Mã học kỳ đã tồn tại!');
+                return;
+            }
+
+            // Kiểm tra ngày hợp lệ
+            if (new Date(ngayBatDau) >= new Date(ngayKetThuc)) {
+                showAlert('error', 'Ngày bắt đầu phải trước ngày kết thúc!');
+                return;
+            }
+
+            // Thêm học kỳ mới
+            semesters.push({
+                maHK,
+                tenHK,
+                namHoc,
+                ngayBatDau,
+                ngayKetThuc,
+                trangThai
+            });
+
+            showAlert('success', `Tạo học kỳ "${tenHK}" thành công!`);
+            loadSemesters();
+            updateStats();
+            this.reset();
+        });
+
+        // Đóng/Mở học kỳ
+        function toggleStatus(index) {
+            const sem = semesters[index];
+            const newStatus = sem.trangThai === 'Mở' ? 'Đóng' : 'Mở';
+            
+            if (newStatus === 'Đóng') {
+                if (confirm(`⚠️ CẢNH BÁO: Đóng học kỳ "${sem.tenHK}" sẽ kích hoạt Trigger chặn sửa điểm!\n\nSau khi đóng, không thể chỉnh sửa GPA và Điểm rèn luyện của học kỳ này.\n\nBạn có chắc chắn muốn đóng?`)) {
+                    semesters[index].trangThai = newStatus;
+                    showAlert('warning', `🔒 Đã đóng học kỳ "${sem.tenHK}". Trigger chặn sửa điểm đã được kích hoạt!`);
+                    loadSemesters();
+                    updateStats();
+                }
+            } else {
+                if (confirm(`Bạn có muốn mở lại học kỳ "${sem.tenHK}"?`)) {
+                    semesters[index].trangThai = newStatus;
+                    showAlert('success', `🔓 Đã mở lại học kỳ "${sem.tenHK}"!`);
+                    loadSemesters();
+                    updateStats();
+                }
+            }
+        }
+
+        // Sửa học kỳ
+        function editSemester(index) {
+            const sem = semesters[index];
+            document.getElementById('maHK').value = sem.maHK;
+            document.getElementById('tenHK').value = sem.tenHK;
+            document.getElementById('namHoc').value = sem.namHoc;
+            document.getElementById('ngayBatDau').value = sem.ngayBatDau;
+            document.getElementById('ngayKetThuc').value = sem.ngayKetThuc;
+            document.getElementById('trangThai').value = sem.trangThai;
+            
+            // Xóa học kỳ cũ
+            semesters.splice(index, 1);
+            showAlert('success', 'Đã tải thông tin. Vui lòng chỉnh sửa và nhấn "Tạo học kỳ"');
+        }
+
+        // Xóa học kỳ
+        function deleteSemester(index) {
+            const sem = semesters[index];
+            if (confirm(`Bạn có chắc muốn xóa học kỳ "${sem.tenHK}"?\n\nCảnh báo: Dữ liệu liên quan có thể bị ảnh hưởng!`)) {
+                semesters.splice(index, 1);
+                showAlert('success', `Đã xóa học kỳ "${sem.tenHK}"!`);
+                loadSemesters();
+                updateStats();
+            }
+        }
+
+        // Hiển thị thông báo
+        function showAlert(type, message) {
+            const alertId = type === 'success' ? 'alertSuccess' : 
+                           type === 'warning' ? 'alertWarning' : 'alertError';
+            const alert = document.getElementById(alertId);
+            alert.textContent = message;
+            alert.style.display = 'block';
+            
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
