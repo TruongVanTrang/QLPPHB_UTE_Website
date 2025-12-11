@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Xét Duyệt HB Thử Thách</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .minh-chung-link { text-decoration: none; font-weight: bold; }
+        .minh-chung-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body class="bg-light">
+<div class="container-fluid pt-3">
+    <a href="../TrangChu/index.html" class="btn btn-outline-secondary btn-sm mb-2">
+        <i class="fas fa-arrow-left me-2"></i>Quay lại Trang chủ
+    </a>
+</div>
+<div class="container-fluid py-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fas fa-hand-holding-heart me-2"></i>XÉT DUYỆT HỌC BỔNG THỬ THÁCH (VƯỢT KHÓ)</h5>
+            <span class="badge bg-light text-dark" id="status-badge">Đang tải...</span>
+        </div>
+        
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Năm học:</label>
+                    <select id="cboNamHoc" class="form-select" onchange="fetchData()">
+                        <option value="2024-2025">2024-2025</option>
+                        <option value="2023-2024">2023-2024</option>
+                    </select>
+                </div>
+                <div class="col-md-9 text-end align-self-end">
+                    <button class="btn btn-primary" onclick="fetchData()"><i class="fas fa-sync me-2"></i>Tải lại danh sách</button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-light text-center">
+                        <tr>
+                            <th>Thông tin Sinh viên</th>
+                            <th>Điểm TB Năm<br>(GPA / ĐRL)</th>
+                            <th>Minh chứng</th>
+                            <th>Điểm Tự Đánh Giá</th>
+                            <th width="150px">Điểm Thẩm Định</th>
+                            <th>Trạng thái</th>
+                            <th width="120px">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        fetchData();
+    });
+
+    async function fetchData() {
+        let namHoc = document.getElementById('cboNamHoc').value;
+        try {
+            let res = await fetch(`http://localhost:3000/api/xetduyet-hbtt?namHoc=${namHoc}`);
+            let data = await res.json();
+            
+            let tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+            
+            let pendingCount = 0;
+
+            if(data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4">Không có hồ sơ nào nộp cho năm học này.</td></tr>`;
+                document.getElementById('status-badge').innerText = "0 hồ sơ";
+                return;
+            }
+
+            data.forEach(item => {
+                if (item.TrangThai === 'Chờ duyệt') pendingCount++;
+
+                // Logic hiển thị màu sắc trạng thái
+                let statusColor = "bg-secondary";
+                if(item.TrangThai === 'Đạt') statusColor = "bg-success";
+                if(item.TrangThai === 'Không đạt') statusColor = "bg-danger";
+                
+                // Nếu đã duyệt rồi thì khóa nút, khóa ô nhập
+                let isDisabled = item.TrangThai !== 'Chờ duyệt' ? 'disabled' : '';
+                let isReadonly = item.TrangThai !== 'Chờ duyệt' ? 'readonly' : '';
+
+                let row = `
+                    <tr>
+                        <td>
+                            <strong>${item.MaSV} - ${item.HoTen}</strong><br>
+                            <small class="text-muted">${item.TenLop}</small>
+                        </td>
+                        <td class="text-center fw-bold">
+                            <span class="text-primary">${item.DiemGPA_Nam}</span> / 
+                            <span class="text-info">${item.DiemRL_Nam}</span>
+                        </td>
+                        <td class="text-center">
+                            <a href="${item.LinkMinhChung || '#'}" target="_blank" class="minh-chung-link text-primary">
+                                <i class="fas fa-external-link-alt me-1"></i>Xem file
+                            </a>
+                        </td>
+                        <td class="text-center fs-5 text-secondary fw-bold">${item.DiemTuDanhGia}</td>
+                        <td class="text-center">
+                            <input type="number" id="input-${item.MaSV}" class="form-control text-center fw-bold text-success" 
+                                   value="${item.DiemThamDinh}" ${isReadonly} min="0" max="100">
+                        </td>
+                        <td class="text-center">
+                            <span class="badge ${statusColor}">${item.TrangThai}</span>
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group" role="group">
+                                <button class="btn btn-outline-success btn-sm" title="Duyệt" ${isDisabled}
+                                    onclick="updateStatus('${item.MaSV}', '${item.NamHoc}', '${item.MaTieuChi}', 'Đạt')">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm" title="Từ chối" ${isDisabled}
+                                    onclick="updateStatus('${item.MaSV}', '${item.NamHoc}', '${item.MaTieuChi}', 'Không đạt')">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+
+            document.getElementById('status-badge').innerText = `Chờ xử lý: ${pendingCount} hồ sơ`;
+
+        } catch (error) {
+            console.error(error);
+            alert("Lỗi tải dữ liệu!");
+        }
+    }
+
+    // HÀM GỬI LỆNH DUYỆT / TỪ CHỐI
+    async function updateStatus(maSV, namHoc, maTieuChi, trangThaiMoi) {
+        // Lấy điểm thẩm định từ ô nhập
+        let inputDiem = document.getElementById(`input-${maSV}`);
+        let diemThamDinh = inputDiem.value;
+
+        if(!diemThamDinh || diemThamDinh < 0) {
+            alert("Vui lòng nhập điểm thẩm định hợp lệ!");
+            return;
+        }
+
+        // Hỏi lại cho chắc
+        let confirmMsg = trangThaiMoi === 'Đạt' 
+            ? `Duyệt sinh viên ${maSV} với điểm thẩm định là ${diemThamDinh}?`
+            : `Từ chối hồ sơ của sinh viên ${maSV}?`;
+            
+        if (!confirm(confirmMsg)) return;
+
+        try {
+            // Gửi API
+            let res = await fetch('http://localhost:3000/api/duyet-hbtt', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    maSV: maSV,
+                    namHoc: namHoc,
+                    maTieuChi: maTieuChi,
+                    diemThamDinh: diemThamDinh,
+                    trangThai: trangThaiMoi,
+                    ghiChu: trangThaiMoi === 'Không đạt' ? 'Điểm thẩm định không đạt' : '' 
+                })
+            });
+
+            let result = await res.json();
+            if (result.success) {
+                // alert("Cập nhật thành công!");
+                fetchData(); // Tải lại bảng để thấy trạng thái mới
+            } else {
+                alert("Lỗi: " + result.message);
+            }
+
+        } catch (error) {
+            console.error(error);
+            alert("Lỗi kết nối khi lưu!");
+        }
+    }
+</script>
+
+</body>
+</html>
