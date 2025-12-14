@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tra Cứu Sinh Viên & Lịch Sử Học Bổng Theo Khoa</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #e0e0e0;
+            margin: 0;
+            padding: 30px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.4em;
+            font-weight: bold;
+        }
+        .content {
+            padding: 35px;
+        }
+        h2 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .filter {
+            margin-bottom: 25px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        select {
+            padding: 12px 16px;
+            font-size: 16px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            background: white;
+        }
+        select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #f8f9fa;
+        }
+        th {
+            background: #34495e;
+            color: white;
+            padding: 14px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #eee;
+        }
+        tr:hover {
+            background: #f1f8ff;
+        }
+        .btn-view {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .btn-view:hover {
+            background: #2980b9;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 32px;
+            cursor: pointer;
+            color: #aaa;
+        }
+        .close:hover { color: #e74c3c; }
+        .hb-type {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+        .KhuyenKhich { background: #27ae60; }
+        .ThuThach { background: #e67e22; }
+        .DoanhNghiep { background: #9b59b6; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>PHÒNG ĐÀO TẠO</h1>
+        </header>
+        
+        <div class="content">
+            <h2>Tra Cứu Sinh Viên & Lịch Sử Học Bổng Theo Khoa</h2>
+            
+            <div class="filter">
+                <label><strong>Chọn Khoa:</strong></label>
+                <select id="khoaFilter" onchange="filterStudents()">
+                    <option value="">-- Tất cả các khoa --</option>
+                    <option value="CNTT">Công Nghệ Thông Tin (CNTT)</option>
+                    <option value="XD">Xây Dựng (XD)</option>
+                    <option value="KTCK">Kỹ Thuật Cơ Khí (KTCK)</option>
+                </select>
+            </div>
+
+            <table id="studentTable">
+                <thead>
+                    <tr>
+                        <th>Mã SV</th>
+                        <th>Họ Tên</th>
+                        <th>Lớp</th>
+                        <th>Khoa</th>
+                        <th>Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal chi tiết -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">×</span>
+            <h2>Chi Tiết Sinh Viên & Lịch Sử Học Bổng</h2>
+            <div id="studentDetail"></div>
+            <h3 style="margin-top: 30px;">Lịch Sử Học Bổng</h3>
+            <table id="hbTable">
+                <thead>
+                    <tr>
+                        <th>Năm</th>
+                        <th>Tên Học Bổng</th>
+                        <th>Loại</th>
+                        <th>Giá Trị</th>
+                        <th>Ngày Cấp</th>
+                        <th>Trạng Thái</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Dữ liệu mẫu (CNTT + Xây Dựng + Cơ Khí)
+        const students = [
+            // Khoa CNTT (20 SV)
+            ...Array.from({length: 20}, (_, i) => ({
+                maSV: `SV21${String(1001+i).padStart(4,'0')}`,
+                hoTen: `Nguyễn Văn ${String.fromCharCode(65+i)}`,
+                lop: ["CNTT21A", "CNTT21B", "CNTT21C"][i%3],
+                khoa: "CNTT"
+            })),
+            // Khoa Xây Dựng (20 SV) - ĐÃ ĐỔI TỪ KINH TẾ SANG XÂY DỰNG
+            ...Array.from({length: 20}, (_, i) => ({
+                maSV: `SV22${String(2001+i).padStart(4,'0')}`,
+                hoTen: `Trần Văn ${String.fromCharCode(65+i)}`,
+                lop: ["XD22A", "XD22B", "XD22C"][i%3],
+                khoa: "XD"
+            })),
+            // Khoa Kỹ Thuật Cơ Khí (20 SV)
+            ...Array.from({length: 20}, (_, i) => ({
+                maSV: `SV23${String(3001+i).padStart(4,'0')}`,
+                hoTen: `Lê Thị ${String.fromCharCode(65+i)}`,
+                lop: ["CK23A", "CK23B", "CK23C"][i%3],
+                khoa: "KTCK"
+            }))
+        ];
+
+        const hocbongList = [
+            { ten: "Học bổng Khuyến khích Học tập", loai: "KhuyenKhich", giaTri: "5.000.000đ" },
+            { ten: "Học bổng Thử thách Lập trình", loai: "ThuThach", giaTri: "10.000.000đ" },
+            { ten: "Học bổng Doanh nghiệp Google", loai: "DoanhNghiep", giaTri: "15.000.000đ" },
+            { ten: "Học bổng Khuyến khích Nghiên cứu", loai: "KhuyenKhich", giaTri: "6.000.000đ" },
+            { ten: "Học bổng Thử thách Thiết kế Công trình", loai: "ThuThach", giaTri: "12.000.000đ" },
+            { ten: "Học bổng Doanh nghiệp VinGroup", loai: "DoanhNghiep", giaTri: "12.000.000đ" },
+            { ten: "Học bổng Doanh nghiệp Coteccons", loai: "DoanhNghiep", giaTri: "20.000.000đ" },
+            { ten: "Học bổng Khuyến khích Ngoại khóa", loai: "KhuyenKhich", giaTri: "3.000.000đ" }
+        ];
+
+        const lichSuHocBong = {};
+        students.forEach(sv => {
+            const soLuongHB = Math.floor(Math.random() * 5) + 2;
+            lichSuHocBong[sv.maSV] = Array.from({length: soLuongHB}, () => {
+                const hb = hocbongList[Math.floor(Math.random() * hocbongList.length)];
+                const nam = 2022 + Math.floor(Math.random() * 4);
+                return {
+                    nam,
+                    ten: hb.ten,
+                    loai: hb.loai,
+                    giaTri: hb.giaTri,
+                    ngayCap: `${Math.floor(Math.random()*28)+1}/${Math.floor(Math.random()*12)+1}/${nam}`,
+                    trangThai: Math.random() > 0.2 ? "Đã cấp" : "Đang xét"
+                };
+            });
+        });
+
+        function renderTable(filterKhoa = "") {
+            const tbody = document.querySelector('#studentTable tbody');
+            tbody.innerHTML = '';
+            const filtered = filterKhoa ? students.filter(s => s.khoa === filterKhoa) : students;
+            
+            filtered.forEach(sv => {
+                const tenKhoa = sv.khoa === "CNTT" ? "Công Nghệ Thông Tin" 
+                             : sv.khoa === "XD"   ? "Xây Dựng" 
+                             : "Kỹ Thuật Cơ Khí";
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${sv.maSV}</strong></td>
+                    <td>${sv.hoTen}</td>
+                    <td>${sv.lop}</td>
+                    <td>${tenKhoa}</td>
+                    <td><button class="btn-view" onclick="viewDetail('${sv.maSV}')">Xem chi tiết</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterStudents() {
+            const khoa = document.getElementById('khoaFilter').value;
+            renderTable(khoa);
+        }
+
+        window.viewDetail = function(maSV) {
+            const sv = students.find(s => s.maSV === maSV);
+            const hbList = lichSuHocBong[maSV] || [];
+            const tenKhoa = sv.khoa === "CNTT" ? "Công Nghệ Thông Tin" 
+                          : sv.khoa === "XD"   ? "Xây Dựng" 
+                          : "Kỹ Thuật Cơ Khí";
+
+            document.getElementById('studentDetail').innerHTML = `
+                <p><strong>Mã SV:</strong> ${sv.maSV}</p>
+                <p><strong>Họ tên:</strong> ${sv.hoTen}</p>
+                <p><strong>Lớp:</strong> ${sv.lop}</p>
+                <p><strong>Khoa:</strong> ${tenKhoa}</p>
+                <p><strong>Tổng học bổng đã nhận:</strong> ${hbList.filter(h=>h.trangThai==="Đã cấp").length} suất</p>
+            `;
+
+            const hbBody = document.querySelector('#hbTable tbody');
+            hbBody.innerHTML = '';
+            hbList.forEach(hb => {
+                const loaiHienThi = hb.loai === "KhuyenKhich" ? "Khuyến khích" 
+                                  : hb.loai === "ThuThach" ? "Thử thách" 
+                                  : "Doanh nghiệp";
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${hb.nam}</td>
+                    <td>${hb.ten}</td>
+                    <td><span class="hb-type ${hb.loai}">${loaiHienThi}</span></td>
+                    <td>${hb.giaTri}</td>
+                    <td>${hb.ngayCap}</td>
+                    <td><strong>${hb.trangThai}</strong></td>
+                `;
+                hbBody.appendChild(tr);
+            });
+
+            document.getElementById('detailModal').style.display = 'flex';
+        }
+
+        window.closeModal = function() {
+            document.getElementById('detailModal').style.display = 'none';
+        }
+
+        window.onclick = function(e) {
+            if (e.target === document.getElementById('detailModal')) closeModal();
+        }
+        // Khởi động
+        renderTable();
+    </script>
+</body>
+</html>
