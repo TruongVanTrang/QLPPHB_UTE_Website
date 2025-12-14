@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Xét Duyệt HB Doanh Nghiệp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-light">
+<div class="container-fluid pt-3">
+    <a href="../TrangChu/index.html" class="btn btn-outline-secondary btn-sm mb-2">
+        <i class="fas fa-arrow-left me-2"></i>Quay lại Trang chủ
+    </a>
+</div>
+<div class="container-fluid py-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fas fa-building me-2"></i>XÉT DUYỆT HỌC BỔNG DOANH NGHIỆP</h5>
+        </div>
+        
+        <div class="card-body">
+            <div class="row mb-4 align-items-end">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Chọn Đợt Tài Trợ / Doanh Nghiệp:</label>
+                    <select id="cboDotHB" class="form-select form-select-lg" onchange="fetchData()">
+                        <option value="">-- Đang tải danh sách... --</option>
+                    </select>
+                </div>
+                <div class="col-md-6 text-end">
+                    <button class="btn btn-outline-success"><i class="fas fa-file-excel me-2"></i>Xuất Excel gửi DN</button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle border">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th>STT</th>
+                            <th>Thông tin Ứng viên</th>
+                            <th class="text-center">Thành tích<br><small>(GPA / ĐRL / HĐ)</small></th>
+                            <th class="text-center">Hồ sơ năng lực (CV)</th>
+                            <th class="text-center">Trạng thái</th>
+                            <th class="text-center" width="150px">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        loadDotHB(); // Tải danh sách đợt trước
+    });
+
+    // 1. Tải danh sách các đợt tài trợ vào ComboBox
+    async function loadDotHB() {
+        try {
+            let res = await fetch('http://localhost:3000/api/dot-hb-dn');
+            let data = await res.json();
+            
+            let cbo = document.getElementById('cboDotHB');
+            cbo.innerHTML = ''; // Xóa placeholder
+
+            if(data.length === 0) {
+                cbo.innerHTML = '<option>Chưa có đợt tài trợ nào</option>';
+                return;
+            }
+
+            data.forEach(dot => {
+                let option = document.createElement("option");
+                option.value = dot.MaDotDN;
+                option.text = `${dot.TenDot} (${dot.DonViTaiTro})`;
+                cbo.appendChild(option);
+            });
+
+            // Tự động tải dữ liệu của đợt đầu tiên luôn
+            fetchData();
+
+        } catch (error) {
+            console.error("Lỗi tải đợt:", error);
+        }
+    }
+
+    // 2. Tải danh sách ứng viên theo đợt đã chọn
+    async function fetchData() {
+        let maDot = document.getElementById('cboDotHB').value;
+        if(!maDot) return;
+
+        try {
+            let res = await fetch(`http://localhost:3000/api/xetduyet-hbdn?maDot=${maDot}`);
+            let data = await res.json();
+            
+            let tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+
+            if(data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-3 text-muted">Chưa có sinh viên nào nộp đơn vào đợt này.</td></tr>';
+                return;
+            }
+
+            data.forEach((sv, index) => {
+                // Màu sắc trạng thái
+                let badgeClass = "bg-secondary";
+                if(sv.TrangThai === 'Đạt') badgeClass = "bg-success";
+                if(sv.TrangThai === 'Không đạt') badgeClass = "bg-danger";
+                
+                // Khóa nút nếu đã duyệt
+                let disabled = sv.TrangThai !== 'Chờ duyệt' ? 'disabled' : '';
+
+                let row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>
+                            <strong>${sv.MaSV} - ${sv.HoTen}</strong><br>
+                            <small class="text-muted">${sv.TenLop}</small>
+                        </td>
+                        <td class="text-center">
+                            <span class="badge bg-primary">${sv.DiemGPA}</span>
+                            <span class="badge bg-info text-dark">${sv.DiemRL}</span>
+                            <span class="badge bg-warning text-dark">${sv.DiemHD || 0}</span>
+                        </td>
+                        <td class="text-center">
+                            <a href="${sv.LinkCV || '#'}" target="_blank" class="btn btn-sm btn-outline-dark">
+                                <i class="fab fa-google-drive me-1"></i>Xem CV
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <span class="badge ${badgeClass}">${sv.TrangThai}</span>
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-success btn-sm" title="Duyệt" ${disabled} 
+                                onclick="updateStatus('${sv.MaSV}', '${sv.MaDotDN}', 'Đạt')">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" title="Loại" ${disabled}
+                                onclick="updateStatus('${sv.MaSV}', '${sv.MaDotDN}', 'Không đạt')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+
+        } catch (error) {
+            console.error("Lỗi tải SV:", error);
+            alert("Lỗi tải danh sách ứng viên!");
+        }
+    }
+
+    // 3. Hàm Duyệt / Loại
+    async function updateStatus(maSV, maDot, trangThai) {
+        if(!confirm(`Bạn chắc chắn muốn đánh dấu ${trangThai} cho SV ${maSV}?`)) return;
+
+        try {
+            let res = await fetch('http://localhost:3000/api/duyet-hbdn', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ maSV, maDot, trangThai })
+            });
+
+            let result = await res.json();
+            if(result.success) {
+                fetchData(); // Tải lại bảng
+            } else {
+                alert("Lỗi: " + result.message);
+            }
+        } catch (error) {
+            alert("Lỗi kết nối Server!");
+        }
+    }
+</script>
+
+</body>
+</html>

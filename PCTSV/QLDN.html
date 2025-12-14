@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Doanh Nghiệp - P.CTSV</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .header {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group label .required {
+            color: red;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            flex: 1;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+            flex: 1;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-top: 30px;
+            border-radius: 5px;
+        }
+        
+        .note strong {
+            color: #856404;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .data-table th {
+            background: #f5f5f5;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .data-table tr:hover {
+            background: #f9f9f9;
+        }
+        
+        .btn-action {
+            padding: 5px 15px;
+            font-size: 14px;
+            margin-right: 5px;
+        }
+        
+        .section-title {
+            color: #667eea;
+            font-size: 1.3em;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 QUẢN LÝ DOANH NGHIỆP</h1>
+            <p>Phòng Công Tác Sinh Viên - Hệ Thống Quản Lý Học Bổng UTE</p>
+        </div>
+        
+        <form id="formDoanhNghiep">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Mã Doanh Nghiệp <span class="required">*</span></label>
+                    <input type="text" id="maDN" placeholder="VD: DN004" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Tên Doanh Nghiệp <span class="required">*</span></label>
+                    <input type="text" id="tenDN" placeholder="VD: Công ty TNHH ABC" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Mã Số Thuế</label>
+                    <input type="text" id="maSoThue" placeholder="13 chữ số" maxlength="13">
+                </div>
+                
+                <div class="form-group">
+                    <label>Email <span class="required">*</span></label>
+                    <input type="email" id="emailDN" placeholder="hr@company.com" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Số Điện Thoại <span class="required">*</span></label>
+                    <input type="tel" id="sdtDN" placeholder="0909123456" maxlength="10" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Địa Chỉ</label>
+                    <input type="text" id="diaChiDN" placeholder="Địa chỉ công ty">
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button type="submit" class="btn btn-primary">💾 Lưu Thông Tin</button>
+                <button type="reset" class="btn btn-secondary">🔄 Làm Mới</button>
+            </div>
+        </form>
+        
+        <div class="note">
+            <strong>📌 Lưu ý:</strong> Sau khi thêm doanh nghiệp, bạn có thể tạo đợt học bổng cho doanh nghiệp này tại bảng <strong>DotHB_DoanhNghiep</strong>
+        </div>
+        
+        <h3 class="section-title">📋 Danh Sách Doanh Nghiệp</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Mã DN</th>
+                    <th>Tên Doanh Nghiệp</th>
+                    <th>Mã Số Thuế</th>
+                    <th>Email</th>
+                    <th>SĐT</th>
+                    <th>Địa Chỉ</th>
+                    <th>Thao Tác</th>
+                </tr>
+            </thead>
+            <tbody id="tableDoanhNghiep">
+                <tr>
+                    <td>DN001</td>
+                    <td>Công ty FPT Software</td>
+                    <td>0123456789012</td>
+                    <td>hr@fpt.com.vn</td>
+                    <td>0909123456</td>
+                    <td>Khu công nghệ cao, Đà Nẵng</td>
+                    <td>
+                        <button class="btn btn-secondary btn-action">✏️ Sửa</button>
+                        <button class="btn btn-secondary btn-action">🗑️ Xóa</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>DN002</td>
+                    <td>Tập đoàn Viettel</td>
+                    <td>0987654321098</td>
+                    <td>tuyendung@viettel.vn</td>
+                    <td>0911222333</td>
+                    <td>Hà Nội</td>
+                    <td>
+                        <button class="btn btn-secondary btn-action">✏️ Sửa</button>
+                        <button class="btn btn-secondary btn-action">🗑️ Xóa</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>DN003</td>
+                    <td>Công ty VNPT</td>
+                    <td>0555666777888</td>
+                    <td>hr@vnpt.vn</td>
+                    <td>0909333555</td>
+                    <td>TP. Hồ Chí Minh</td>
+                    <td>
+                        <button class="btn btn-secondary btn-action">✏️ Sửa</button>
+                        <button class="btn btn-secondary btn-action">🗑️ Xóa</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+        document.getElementById('formDoanhNghiep').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const data = {
+                maDN: document.getElementById('maDN').value,
+                tenDN: document.getElementById('tenDN').value,
+                maSoThue: document.getElementById('maSoThue').value,
+                emailDN: document.getElementById('emailDN').value,
+                sdtDN: document.getElementById('sdtDN').value,
+                diaChiDN: document.getElementById('diaChiDN').value
+            };
+            
+            console.log('Dữ liệu doanh nghiệp:', data);
+            alert('✅ Đã lưu thông tin doanh nghiệp: ' + data.tenDN);
+            
+            // Thêm dòng mới vào bảng
+            const tbody = document.getElementById('tableDoanhNghiep');
+            const newRow = tbody.insertRow();
+            newRow.innerHTML = `
+                <td>${data.maDN}</td>
+                <td>${data.tenDN}</td>
+                <td>${data.maSoThue}</td>
+                <td>${data.emailDN}</td>
+                <td>${data.sdtDN}</td>
+                <td>${data.diaChiDN}</td>
+                <td>
+                    <button class="btn btn-secondary btn-action">✏️ Sửa</button>
+                    <button class="btn btn-secondary btn-action">🗑️ Xóa</button>
+                </td>
+            `;
+            
+            this.reset();
+        });
+    </script>
+</body>
+</html>

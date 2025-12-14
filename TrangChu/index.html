@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Quản Lý Học Bổng UTE</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .card-function {
+            transition: transform 0.2s;
+            cursor: pointer;
+            height: 100%;
+        }
+        .card-function:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .icon-box {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        .section-title {
+            border-left: 5px solid;
+            padding-left: 10px;
+            margin-bottom: 20px;
+            margin-top: 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        /* Màu sắc cho từng nhóm */
+        .group-admin { border-color: #dc3545; color: #dc3545; }
+        .group-pdt { border-color: #0d6efd; color: #0d6efd; }
+        .group-khoa { border-color: #0dcaf0; color: #0dcaf0; }
+        .group-ctsv { border-color: #198754; color: #198754; }
+        
+        .disabled-link {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background-color: #f8f9fa;
+        }
+        .badge-ready {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#"><i class="fas fa-graduation-cap me-2"></i>SCHOLARSHIP UTE</a>
+            <div class="d-flex text-white align-items-center">
+                <span class="me-3"><i class="fas fa-user-circle me-1"></i>Xin chào, ...</span>
+                <button class="btn btn-sm btn-light text-primary fw-bold">Đăng xuất</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        
+        <h5 class="section-title group-admin">1. Quản Trị Hệ Thống (Admin)</h5>
+        <div class="row g-4">
+            
+            <div class="col-md-4">
+                <a href="../admin/nguoidung.html" class="text-decoration-none text-dark">
+                    <div class="card card-function p-3 text-center border-danger bg-white shadow">
+                        <span class="badge bg-danger badge-ready">Đã hoàn thiện</span>
+                        
+                        <div class="icon-box text-danger"><i class="fas fa-users-cog"></i></div>
+                        <h6 class="fw-bold">1. QL Người dùng & Phân quyền</h6>
+                        <small class="text-muted">Tài khoản, Vai trò, Cán bộ</small>
+                    </div>
+                </a>               
+            </div>
+
+            <div class="col-md-4">
+                <a href="../admin/namhoc.html" class="text-decoration-none text-dark">
+                    <div class="card card-function p-3 text-center border-danger bg-white shadow">
+                        <span class="badge bg-danger badge-ready">Đã hoàn thiện</span>
+                        
+                        <div class="icon-box text-danger"><i class="fas fa-calendar-alt"></i></div>
+                        <h6 class="fw-bold">2. Thiết lập Năm học & Học kỳ</h6>
+                        <small class="text-muted">Mở/Đóng học kỳ, Kích hoạt Trigger</small>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a href="../admin/hocbong.html" class="text-decoration-none text-dark">
+                    <div class="card card-function p-3 text-center border-danger bg-white shadow">
+                        <span class="badge bg-danger badge-ready">Đã hoàn thiện</span>
+                        
+                        <div class="icon-box text-danger"><i class="fas fa-list-check"></i></div>
+                        <h6 class="fw-bold">3. Thiết lập Đợt & Tiêu chí</h6>
+                        <small class="text-muted">Tiêu chí HBKK, Đợt Doanh nghiệp</small>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <h5 class="section-title group-pdt">2. Phòng Đào Tạo (PDT)</h5>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card card-function p-3 text-center border-primary" onclick="showMsg('QL Hồ sơ SV')">
+                    <div class="icon-box text-primary"><i class="fas fa-id-card"></i></div>
+                    <h6 class="fw-bold">4. Quản lý Hồ sơ Sinh viên</h6>
+                    <small class="text-muted">Thông tin cá nhân, Lớp, Ngân hàng</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card card-function p-3 text-center border-primary" onclick="showMsg('QL Điểm GPA')">
+                    <div class="icon-box text-primary"><i class="fas fa-file-excel"></i></div>
+                    <h6 class="fw-bold">5. Quản lý Điểm GPA</h6>
+                    <small class="text-muted">Import Excel, Nhập điểm kỳ</small>
+                </div>
+            </div>
+        </div>
+
+        <h5 class="section-title group-khoa">3. Giáo Vụ Khoa</h5>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card card-function p-3 text-center border-info" onclick="showMsg('QL Điểm Rèn luyện')">
+                    <div class="icon-box text-info"><i class="fas fa-running"></i></div>
+                    <h6 class="fw-bold">6. Quản lý Điểm Rèn Luyện</h6>
+                    <small class="text-muted">Nhập ĐRL sinh viên Khoa</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card card-function p-3 text-center border-info" onclick="showMsg('Tra cứu SV')">
+                    <div class="icon-box text-info"><i class="fas fa-search"></i></div>
+                    <h6 class="fw-bold">7. Tra cứu Sinh viên Khoa</h6>
+                    <small class="text-muted">Xem lịch sử học bổng (Read-only)</small>
+                </div>
+            </div>
+        </div>
+
+        <h5 class="section-title group-ctsv">4. Phòng Công Tác Sinh Viên (P.CTSV)</h5>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <a href="../PCTSV/QLDN.html" class="text-decoration-none text-dark">
+                <div class="card card-function p-3 text-center border-success" onclick="showMsg('QL Doanh nghiệp')">
+                    <div class="icon-box text-success"><i class="fas fa-building"></i></div>
+                    <h6 class="fw-bold">8. QL Doanh nghiệp Tài trợ</h6>
+                    <small class="text-muted">Hồ sơ FPT, Viettel...</small>
+                </div>
+                </a>    
+            </div>
+            <div class="col-md-4">
+                <a href="../PCTSV/PBNS.html" class="text-decoration-none text-dark">
+                <div class="card card-function p-3 text-center border-success" onclick="showMsg('Phân bổ ngân sách')">
+                    <div class="icon-box text-success"><i class="fas fa-chart-pie"></i></div>
+                    <h6 class="fw-bold">9. Phân bổ Ngân sách</h6>
+                    <small class="text-muted">Chia suất/tiền cho các Khoa</small>
+                </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="../PCTSV/DuyetDHD.html" class="text-decoration-none text-dark">
+                <div class="card card-function p-3 text-center border-success" onclick="showMsg('Duyệt điểm HĐ')">
+                    <div class="icon-box text-success"><i class="fas fa-tasks"></i></div>
+                    <h6 class="fw-bold">10. Duyệt Điểm Hoạt động</h6>
+                    <small class="text-muted">Xem minh chứng & Duyệt điểm</small>
+                </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a href="../PCTSV/HBKK.html" class="text-decoration-none text-dark">
+                    <div class="card card-function p-3 text-center border-success bg-white shadow">
+                        <span class="badge bg-danger badge-ready">Đã hoàn thiện</span>
+                        <div class="icon-box text-success"><i class="fas fa-star"></i></div>
+                        <h6 class="fw-bold text-uppercase">11. Xét duyệt HB Khuyến Khích</h6>
+                        <small class="text-success fw-bold">Quét hệ thống & Chốt danh sách</small>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a href="../PCTSV/HBTT.html" class="text-decoration-none text-dark">
+                    <div class="card card-function p-3 text-center border-success bg-white shadow">
+                        <span class="badge bg-danger badge-ready">Đã hoàn thiện</span>
+                        <div class="icon-box text-success"><i class="fas fa-hand-holding-heart"></i></div>
+                        <h6 class="fw-bold text-uppercase">12. Xét duyệt HB Thử Thách</h6>
+                        <small class="text-success fw-bold">Xem sổ hộ nghèo & Thẩm định</small>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a href="../PCTSV/HBDN.html" class="text-decoration-none text-dark">
+                    <div class="card card-function p-3 text-center border-success bg-white shadow">
+                        <span class="badge bg-danger badge-ready">Đã hoàn thiện</span>
+                        <div class="icon-box text-success"><i class="fas fa-briefcase"></i></div>
+                        <h6 class="fw-bold text-uppercase">13. Xét duyệt HB Doanh Nghiệp</h6>
+                        <small class="text-success fw-bold">Xem CV & Duyệt ứng viên</small>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p class="mb-0">Đồ án Thực tập chuyên môn - Hệ thống Quản lý Học bổng UTE &copy; 2025</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function showMsg(featureName) {
+            alert("Chức năng [" + featureName + "] đang được phát triển trong giai đoạn tiếp theo!");
+        }
+    </script>
+</body>
+</html>
