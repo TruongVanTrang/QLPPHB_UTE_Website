@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Điểm Rèn Luyện</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #e0e0e0;
+            margin: 0;
+            padding: 30px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        header {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.2em;
+            font-weight: bold;
+        }
+        .content {
+            padding: 30px;
+        }
+        h2 {
+            color: #2c3e50;
+            border-bottom: 3px solid #e67e22;
+            padding-bottom: 8px;
+            margin-top: 0;
+        }
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .full {
+            grid-column: span 2;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #e67e22;
+            box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.2);
+        }
+        button {
+            background: #e67e22;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #d35400;
+        }
+        #updateBtn { background: #27ae60; }
+        #updateBtn:hover { background: #219a52; }
+        #cancelBtn { background: #e74c3c; margin-left: 10px; }
+        #cancelBtn:hover { background: #c0392b; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            background: #f8f9fa;
+        }
+        th {
+            background: #fdf2e9;
+            padding: 14px;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+        }
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #eee;
+        }
+        tr:hover {
+            background: #fff8f0;
+        }
+        .actions button {
+            padding: 6px 12px;
+            font-size: 13px;
+            margin-right: 6px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .edit-btn {
+            background: #f39c12;
+            color: white;
+        }
+        .edit-btn:hover { background: #e67e22; }
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+        }
+        .delete-btn:hover { background: #c0392b; }
+        .diemRL {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .tot { color: #27ae60; }
+        .kha { color: #f39c12; }
+        .trungbinh { color: #e67e22; }
+        .yeu { color: #e74c3c; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>PHÒNG ĐÀO TẠO</h1>
+        </header>
+        
+        <div class="content">
+            <h2>Quản Lý Điểm Rèn Luyện</h2>
+            
+            <h3 style="margin-top: 30px; color:#34495e;">Form Nhập/Cập Nhật Điểm Rèn Luyện</h3>
+            
+            <form id="drlForm">
+                <div>
+                    <label>Mã SV:</label>
+                    <input type="text" id="maSV" required placeholder="Nhập mã sinh viên">
+                </div>
+                <div>
+                    <label>Học Kỳ:</label>
+                    <select id="maHK" required>
+                        <option value="">Chọn Học Kỳ</option>
+                        <option value="HK1_2024">HK1 - Năm học 2024-2025</option>
+                        <option value="HK2_2024">HK2 - Năm học 2024-2025</option>
+                        <option value="HK3_2024">HK3 - Năm học 2024-2025</option>
+                        <option value="HK1_2025">HK1 - Năm học 2025-2026</option>
+                        <option value="HK2_2025">HK2 - Năm học 2025-2026</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Điểm Rèn Luyện:</label>
+                    <input type="number" id="diemRL" min="0" max="100" step="1" required placeholder="0 đến 100">
+                </div>
+                <div>
+                    <label>Ngày Nhập:</label>
+                    <input type="date" id="ngayNhap" required>
+                </div>
+                
+                <div class="full" style="margin-top: 10px;">
+                    <button type="submit" id="submitBtn">Thêm Điểm Rèn Luyện</button>
+                    <button type="button" id="updateBtn" style="display:none;">Cập Nhật Điểm</button>
+                    <button type="button" id="cancelBtn" style="display:none;">Hủy</button>
+                </div>
+            </form>
+
+            <h3 style="margin-top: 50px; color:#34495e;">Danh Sách Điểm Rèn Luyện</h3>
+            <table id="drlTable">
+                <thead>
+                    <tr>
+                        <th>Mã SV</th>
+                        <th>Học Kỳ</th>
+                        <th>Điểm RL</th>
+                        <th>Xếp Loại</th>
+                        <th>Ngày Nhập</th>
+                        <th>Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Danh sách học kỳ mẫu
+        const hocKyList = [
+            "HK1_2024", "HK2_2024", "HK3_2024",
+            "HK1_2025", "HK2_2025"
+        ];
+
+        let drlList = JSON.parse(localStorage.getItem('diemRenLuyen')) || [];
+        let editingIndex = null;
+
+        const tbody = document.querySelector('#drlTable tbody');
+        const form = document.getElementById('drlForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const updateBtn = document.getElementById('updateBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+
+        // Xếp loại điểm rèn luyện theo quy định phổ biến
+        function xepLoaiRL(diem) {
+            diem = parseInt(diem);
+            if (diem >= 90) return { text: "Xuất sắc", class: "tot" };
+            if (diem >= 80) return { text: "Tốt", class: "tot" };
+            if (diem >= 65) return { text: "Khá", class: "kha" };
+            if (diem >= 50) return { text: "Trung bình", class: "trungbinh" };
+            return { text: "Yếu", class: "yeu" };
+        }
+
+        function renderTable() {
+            tbody.innerHTML = '';
+            drlList.forEach((item, i) => {
+                const xl = xepLoaiRL(item.diemRL);
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${item.maSV}</strong></td>
+                    <td>${item.maHK.replace('_', ' ')}</td>
+                    <td class="diemRL">${item.diemRL}</td>
+                    <td class="${xl.class}"><strong>${xl.text}</strong></td>
+                    <td>${item.ngayNhap}</td>
+                    <td class="actions">
+                        <button class="edit-btn" onclick="editDRL(${i})">Sửa</button>
+                        <button class="delete-btn" onclick="deleteDRL(${i})">Xóa</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function saveToStorage() {
+            localStorage.setItem('diemRenLuyen', JSON.stringify(drlList));
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const diem = document.getElementById('diemRL').value;
+            if (diem < 0 || diem > 100) {
+                alert('Điểm rèn luyện phải từ 0 đến 100!');
+                return;
+            }
+
+            const data = {
+                maSV: document.getElementById('maSV').value.trim().toUpperCase(),
+                maHK: document.getElementById('maHK').value,
+                diemRL: diem,
+                ngayNhap: document.getElementById('ngayNhap').value
+            };
+
+            if (editingIndex !== null) {
+                drlList[editingIndex] = data;
+                editingIndex = null;
+                submitBtn.style.display = 'block';
+                updateBtn.style.display = 'none';
+                cancelBtn.style.display = 'none';
+                alert('Cập nhật điểm rèn luyện thành công!');
+            } else {
+                // Kiểm tra trùng (MaSV + HocKy)
+                const exists = drlList.some(item => item.maSV === data.maSV && item.maHK === data.maHK);
+                if (exists) {
+                    if (!confirm('Điểm rèn luyện của sinh viên này trong học kỳ này đã tồn tại. Bạn có muốn ghi đè?')) {
+                        return;
+                    }
+                    const index = drlList.findIndex(item => item.maSV === data.maSV && item.maHK === data.maHK);
+                    drlList[index] = data;
+                } else {
+                    drlList.push(data);
+                }
+                alert('Thêm điểm rèn luyện thành công!');
+            }
+
+            saveToStorage();
+            renderTable();
+            form.reset();
+        });
+
+        window.editDRL = function(i) {
+            const item = drlList[i];
+            document.getElementById('maSV').value = item.maSV;
+            document.getElementById('maHK').value = item.maHK;
+            document.getElementById('diemRL').value = item.diemRL;
+            document.getElementById('ngayNhap').value = item.ngayNhap;
+
+            editingIndex = i;
+            submitBtn.style.display = 'none';
+            updateBtn.style.display = 'inline-block';
+            cancelBtn.style.display = 'inline-block';
+        };
+
+        cancelBtn.onclick = () => {
+            editingIndex = null;
+            form.reset();
+            submitBtn.style.display = 'block';
+            updateBtn.style.display = 'none';
+            cancelBtn.style.display = 'none';
+        };
+
+        window.deleteDRL = function(i) {
+            if (confirm('Xóa điểm rèn luyện của sinh viên này trong học kỳ này?')) {
+                drlList.splice(i, 1);
+                saveToStorage();
+                renderTable();
+            }
+        };
+
+        // Khởi tạo
+        renderTable();
+    </script>
+</body>
+</html>
