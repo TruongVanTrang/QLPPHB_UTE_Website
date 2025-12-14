@@ -3,93 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý Người dùng - UTE</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    <title>Quản lý Người dùng - UTE Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    <style>
+        /* --- 1. CSS GIAO DIỆN CHÍNH (SIDEBAR & LAYOUT) --- */
+        body { 
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
         }
-
+        
+        /* Sidebar Menu */
         .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 250px;
-            height: 100vh;
-            background: #2c3e50;
+            min-height: 100vh;
+            background: #2c3e50; /* Màu nền tối */
             color: white;
-            padding: 20px 0;
+            width: 250px;
+            position: fixed;
+            top: 0; left: 0;
             z-index: 1000;
-        }
-
-        .sidebar-header {
-            padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid #34495e;
-            margin-bottom: 20px;
-        }
-
-        .sidebar-header h2 {
-            font-size: 1.3em;
-            margin-bottom: 5px;
-        }
-
-        .sidebar-header p {
-            font-size: 0.85em;
-            opacity: 0.7;
-        }
-
-        .menu-item {
-            padding: 15px 25px;
-            cursor: pointer;
             transition: all 0.3s;
-            border-left: 4px solid transparent;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .brand-logo {
+            padding: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            background: #1a252f;
+            border-bottom: 1px solid #34495e;
         }
 
-        .menu-item:hover {
+        .sidebar .nav-link {
+            color: #b0b8c1;
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            text-decoration: none;
+            display: block;
+            font-size: 0.95rem;
+        }
+
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            color: #fff;
             background: #34495e;
-            border-left-color: #667eea;
+            border-left: 4px solid #3498db; /* Thanh màu xanh điểm nhấn */
         }
 
-        .menu-item.active {
-            background: #34495e;
-            border-left-color: #667eea;
-        }
-
-        .main-content {
-            margin-left: 250px;
+        /* Vùng nội dung chính (Bên phải Sidebar) */
+        .main-wrapper {
+            margin-left: 250px; /* Chừa chỗ cho sidebar */
             padding: 30px;
+            transition: all 0.3s;
         }
 
-        .header {
+        /* Header trên cùng */
+        .admin-header {
             background: white;
-            padding: 25px 30px;
-            border-radius: 15px;
+            padding: 15px 25px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             margin-bottom: 30px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .header h1 {
-            color: #2c3e50;
-            font-size: 2em;
-            margin-bottom: 5px;
-        }
-
-        .header p {
-            color: #7f8c8d;
-            font-size: 1em;
-        }
-
+        /* --- 2. CSS CÁC THÀNH PHẦN CON (FORM, TABLE, CARD...) --- */
         .card {
             background: white;
             border-radius: 15px;
@@ -113,232 +95,64 @@
             margin-bottom: 20px;
         }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group label {
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #2c3e50;
-        }
-
-        .form-group input,
-        .form-group select {
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-weight: 600; margin-bottom: 8px; color: #2c3e50; }
+        .form-group input, .form-group select {
             padding: 12px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
-            font-size: 1em;
-            transition: all 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-success {
-            background: #28a745;
-            color: white;
-        }
-
-        .btn-danger {
-            background: #dc3545;
-            color: white;
-        }
-
-        .btn-warning {
-            background: #ffc107;
-            color: #333;
-        }
-
-        table {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none; border-color: #667eea;
         }
 
-        th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
+        .btn-custom {
+            padding: 12px 30px; border: none; border-radius: 8px;
+            font-size: 1em; font-weight: 600; cursor: pointer; color: white;
+            display: inline-flex; align-items: center; gap: 8px;
         }
+        .btn-add { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .btn-add:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
 
-        td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #f0f0f0;
-        }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; border-radius: 10px; overflow: hidden; }
+        th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; text-align: left; }
+        td { padding: 12px 15px; border-bottom: 1px solid #f0f0f0; }
 
-        tr:hover {
-            background: #f8f9fa;
-        }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 20px; border-radius: 10px; text-align: center; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
+        .stat-card h3 { font-size: 2em; color: #667eea; margin: 0; }
+        .stat-card p { color: #7f8c8d; margin: 0; }
 
-        .badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
-            display: inline-block;
-        }
+        .action-btn { padding: 6px 12px; border: none; border-radius: 5px; cursor: pointer; color: white; margin-right: 5px; }
+        .action-btn.edit { background: #007bff; }
+        .action-btn.delete { background: #dc3545; }
 
-        .badge-admin {
-            background: #667eea;
-            color: white;
-        }
-
-        .badge-ctsv {
-            background: #28a745;
-            color: white;
-        }
-
-        .badge-pdt {
-            background: #17a2b8;
-            color: white;
-        }
-
-        .badge-khoa {
-            background: #ffc107;
-            color: #333;
-        }
-
-        .badge-sv {
-            background: #6c757d;
-            color: white;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-        }
-
-        .action-btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9em;
-            transition: all 0.3s;
-        }
-
-        .action-btn.edit {
-            background: #007bff;
-            color: white;
-        }
-
-        .action-btn.delete {
-            background: #dc3545;
-            color: white;
-        }
-
-        .action-btn:hover {
-            transform: scale(1.05);
-        }
-
-        .alert {
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border-left: 4px solid #28a745;
-        }
-
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border-left: 4px solid #dc3545;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        .stat-card h3 {
-            font-size: 2em;
-            color: #667eea;
-            margin-bottom: 5px;
-        }
-
-        .stat-card p {
-            color: #7f8c8d;
-        }
+        .alert { padding: 15px; margin-bottom: 20px; border-radius: 8px; display: none; }
+        .alert-success { background: #d4edda; color: #155724; border-left: 5px solid #28a745; }
+        .alert-error { background: #f8d7da; color: #721c24; border-left: 5px solid #dc3545; }
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <h2>🎓 UTE Admin</h2>
-            <p>Hệ thống quản trị</p>
-        </div>
-        <div class="menu-item active" style="cursor: pointer;" onclick="window.location.href='./nguoidung.html'">
-            <span>👥</span>
-            <span>Người dùng</span>
-        </div>
-        <div class="menu-item" style="cursor: pointer;" onclick="window.location.href='./namhoc.html'">
-            <span>📚</span>
-            <span>Năm học</span>
-        </div>
-        <div class="menu-item" style="cursor: pointer;" onclick="window.location.href='./hocbong.html'">
-            <span>💰</span>
-            <span>Học bổng</span>
-        </div>
-    </div>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <div class="header">
-            <h1>👥 Quản lý Người dùng & Phân quyền</h1>
-            <p>Thêm, xóa, sửa tài khoản và phân quyền cho người dùng</p>
+    <div id="sidebar-container">
         </div>
 
-        <!-- Thống kê -->
+    <div class="main-wrapper">
+        
+        <header class="admin-header">
+            <h4 class="m-0 fw-bold text-secondary">👥 Quản lý Người dùng & Phân quyền</h4>
+            <div class="dropdown">
+                <a href="#" class="text-decoration-none text-dark dropdown-toggle" data-bs-toggle="dropdown">
+                    <img src="https://via.placeholder.com/30" class="rounded-circle me-1">
+                    <span>Xin chào, <b>Admin</b></span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item text-danger" href="#">Đăng xuất</a></li>
+                </ul>
+            </div>
+        </header>
+
         <div class="stats">
             <div class="stat-card">
                 <h3 id="totalUsers">0</h3>
@@ -358,11 +172,9 @@
             </div>
         </div>
 
-        <!-- Alert -->
         <div class="alert alert-success" id="alertSuccess"></div>
         <div class="alert alert-error" id="alertError"></div>
 
-        <!-- Form thêm tài khoản -->
         <div class="card">
             <h2>➕ Thêm tài khoản mới</h2>
             <form id="formAddUser">
@@ -395,13 +207,12 @@
                         <input type="text" id="maCB" placeholder="VD: CB001">
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn-custom btn-add">
                     ✅ Thêm tài khoản
                 </button>
             </form>
         </div>
 
-        <!-- Danh sách tài khoản -->
         <div class="card">
             <h2>📋 Danh sách tài khoản</h2>
             <table id="userTable">
@@ -416,78 +227,115 @@
                     </tr>
                 </thead>
                 <tbody id="userTableBody">
-                    <tr>
-                        <td colspan="6" style="text-align: center; color: #999;">
-                            Đang tải dữ liệu...
-                        </td>
-                    </tr>
-                </tbody>
+                    </tbody>
             </table>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
-        // Giả lập dữ liệu (Thay bằng API thật từ SQL Server)
+        // --- PHẦN 1: CẤU HÌNH MENU ---
+        const MENUS = {
+            ADMIN: [
+                { title: 'Người dùng', url: 'nguoidung.html', icon: 'fa-users-cog' },
+                { title: 'Năm học', url: 'namhoc.html', icon: 'fa-calendar-alt' },
+                { title: 'Học bổng', url: 'hocbong.html', icon: 'fa-hand-holding-usd' }
+            ],
+            PCTSV: [
+                { title: 'QL Doanh nghiệp', url: 'QLDN.html', icon: 'fa-building' },
+                { title: 'Phân bổ ngân sách', url: 'PBNS.html', icon: 'fa-chart-pie' },
+                { title: 'Duyệt Điểm HĐ', url: 'DuyetDHD.html', icon: 'fa-tasks' },
+                { title: 'Duyệt HB Khuyến khích', url: 'HBKK.html', icon: 'fa-star' },
+                { title: 'Duyệt HB Thử thách', url: 'HBTT.html', icon: 'fa-hand-holding-heart' },
+                { title: 'Duyệt HB Doanh nghiệp', url: 'HBDN.html', icon: 'fa-briefcase' }
+            ]
+        };
+
+        // --- PHẦN 2: HÀM VẼ SIDEBAR ---
+        function createSidebar(role, activePage) {
+            const container = document.getElementById('sidebar-container');
+            if (!container) return; // Không tìm thấy chỗ để vẽ
+
+            const menuItems = MENUS[role] || [];
+            
+            // Icon và tiêu đề Logo
+            const brandTitle = role === 'ADMIN' ? 'QUẢN TRỊ VIÊN' : 'P. CÔNG TÁC SV';
+            const brandIcon = role === 'ADMIN' ? 'fa-user-shield' : 'fa-university';
+
+            let html = `
+                <nav class="sidebar">
+                    <div class="brand-logo">
+                        <i class="fas ${brandIcon} me-2"></i> ${brandTitle}
+                    </div>
+                    <div class="nav flex-column">
+            `;
+
+            // Vòng lặp tạo menu items
+            menuItems.forEach(item => {
+                // Kiểm tra active
+                const isActive = activePage.includes(item.url) ? 'active' : '';
+                
+                html += `
+                    <a href="${item.url}" class="nav-link ${isActive}">
+                        <i class="fas ${item.icon} me-2"></i> ${item.title}
+                    </a>
+                `;
+            });
+
+            html += `
+                    </div>
+                    <div class="mt-auto p-3 border-top border-secondary" style="position: absolute; bottom: 0; width: 100%;">
+                        <a href="../TrangChu/index.html" class="nav-link text-white">
+                            <i class="fas fa-sign-out-alt me-2"></i> Thoát
+                        </a>
+                    </div>
+                </nav>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // --- GỌI HÀM NGAY LẬP TỨC ---
+        // Vẽ menu cho ADMIN, trang hiện tại là nguoidung.html
+        createSidebar('ADMIN', 'nguoidung.html');
+    </script>
+
+    <script>
+        // Giả lập dữ liệu
         let users = [
-            {
-                username: 'admin',
-                password: '123',
-                role: 'ADMIN',
-                maSV: null,
-                maCB: 'CB004',
-                hoTen: 'Nguyễn Văn Hùng',
-                email: 'hung.nv@ute.edu.vn'
-            },
-            {
-                username: 'ctsv',
-                password: '123',
-                role: 'CTSV',
-                maSV: null,
-                maCB: 'CB001',
-                hoTen: 'Trần Văn Minh',
-                email: 'minh.tv@ute.edu.vn'
-            },
-            {
-                username: 'SV001',
-                password: '123',
-                role: 'SV',
-                maSV: 'SV001',
-                maCB: null,
-                hoTen: 'Nguyễn Văn An',
-                email: 'an.nv@ute.edu.vn'
-            }
+            { username: 'admin', password: '123', role: 'ADMIN', maSV: null, maCB: 'CB004', hoTen: 'Nguyễn Văn Hùng', email: 'hung.nv@ute.edu.vn' },
+            { username: 'ctsv', password: '123', role: 'CTSV', maSV: null, maCB: 'CB001', hoTen: 'Trần Văn Minh', email: 'minh.tv@ute.edu.vn' },
+            { username: 'SV001', password: '123', role: 'SV', maSV: 'SV001', maCB: null, hoTen: 'Nguyễn Văn An', email: 'an.nv@ute.edu.vn' }
         ];
 
-        // Load dữ liệu khi trang load
         window.onload = function() {
+            // Lưu ý: createSidebar đã được gọi bên trên rồi nên không cần gọi lại ở đây
             loadUsers();
             updateStats();
         };
 
-        // Hàm load danh sách user
         function loadUsers() {
             const tbody = document.getElementById('userTableBody');
             tbody.innerHTML = '';
-
             users.forEach((user, index) => {
-                const roleClass = user.role.toLowerCase();
                 const roleName = getRoleName(user.role);
-                
+                let badgeClass = 'bg-secondary';
+                if(user.role === 'ADMIN') badgeClass = 'bg-primary';
+                if(user.role === 'CTSV' || user.role === 'PDT') badgeClass = 'bg-success';
+                if(user.role === 'SV') badgeClass = 'bg-info';
+
                 tbody.innerHTML += `
                     <tr>
                         <td><strong>${user.username}</strong></td>
-                        <td><span class="badge badge-${roleClass}">${roleName}</span></td>
+                        <td><span class="badge ${badgeClass}">${roleName}</span></td>
                         <td>${user.maSV || user.maCB || '-'}</td>
                         <td>${user.hoTen}</td>
                         <td>${user.email}</td>
                         <td>
                             <div class="action-buttons">
-                                <button class="action-btn edit" onclick="editUser(${index})">
-                                    ✏️ Sửa
-                                </button>
-                                <button class="action-btn delete" onclick="deleteUser(${index})">
-                                    🗑️ Xóa
-                                </button>
+                                <button class="action-btn edit" onclick="editUser(${index})"><i class="fas fa-edit"></i> Sửa</button>
+                                <button class="action-btn delete" onclick="deleteUser(${index})"><i class="fas fa-trash"></i> Xóa</button>
                             </div>
                         </td>
                     </tr>
@@ -495,19 +343,11 @@
             });
         }
 
-        // Hàm lấy tên vai trò
         function getRoleName(role) {
-            const roles = {
-                'ADMIN': 'Quản trị viên',
-                'CTSV': 'P.CTSV',
-                'PDT': 'P.Đào tạo',
-                'KHOA': 'Giáo vụ Khoa',
-                'SV': 'Sinh viên'
-            };
+            const roles = { 'ADMIN': 'Quản trị viên', 'CTSV': 'P.CTSV', 'PDT': 'P.Đào tạo', 'KHOA': 'Giáo vụ Khoa', 'SV': 'Sinh viên' };
             return roles[role] || role;
         }
 
-        // Cập nhật thống kê
         function updateStats() {
             document.getElementById('totalUsers').textContent = users.length;
             document.getElementById('adminCount').textContent = users.filter(u => u.role === 'ADMIN').length;
@@ -515,50 +355,37 @@
             document.getElementById('studentCount').textContent = users.filter(u => u.role === 'SV').length;
         }
 
-        // Xử lý form thêm user
         document.getElementById('formAddUser').addEventListener('submit', function(e) {
             e.preventDefault();
-            
             const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const role = document.getElementById('role').value;
-            const maSV = document.getElementById('maSV').value || null;
-            const maCB = document.getElementById('maCB').value || null;
-
-            // Kiểm tra username đã tồn tại
             if (users.some(u => u.username === username)) {
                 showAlert('error', 'Tên đăng nhập đã tồn tại!');
                 return;
             }
-
-            // Thêm user mới
             users.push({
-                username,
-                password,
-                role,
-                maSV,
-                maCB,
+                username: username,
+                password: document.getElementById('password').value,
+                role: document.getElementById('role').value,
+                maSV: document.getElementById('maSV').value || null,
+                maCB: document.getElementById('maCB').value || null,
                 hoTen: 'Chưa cập nhật',
                 email: 'Chưa cập nhật'
             });
-
             showAlert('success', `Thêm tài khoản "${username}" thành công!`);
             loadUsers();
             updateStats();
             this.reset();
         });
 
-        // Hàm xóa user
         function deleteUser(index) {
             if (confirm(`Bạn có chắc muốn xóa tài khoản "${users[index].username}"?`)) {
-                const deletedUser = users.splice(index, 1)[0];
-                showAlert('success', `Đã xóa tài khoản "${deletedUser.username}"!`);
+                users.splice(index, 1);
+                showAlert('success', 'Đã xóa tài khoản!');
                 loadUsers();
                 updateStats();
             }
         }
 
-        // Hàm sửa user
         function editUser(index) {
             const user = users[index];
             document.getElementById('username').value = user.username;
@@ -566,22 +393,16 @@
             document.getElementById('role').value = user.role;
             document.getElementById('maSV').value = user.maSV || '';
             document.getElementById('maCB').value = user.maCB || '';
-            
-            // Xóa user cũ để thêm lại với thông tin mới
             users.splice(index, 1);
-            showAlert('success', 'Đã tải thông tin. Vui lòng chỉnh sửa và nhấn "Thêm tài khoản"');
+            showAlert('success', 'Đã tải thông tin. Vui lòng sửa và thêm lại.');
         }
 
-        // Hiển thị thông báo
         function showAlert(type, message) {
             const alertId = type === 'success' ? 'alertSuccess' : 'alertError';
             const alert = document.getElementById(alertId);
             alert.textContent = message;
             alert.style.display = 'block';
-            
-            setTimeout(() => {
-                alert.style.display = 'none';
-            }, 3000);
+            setTimeout(() => { alert.style.display = 'none'; }, 3000);
         }
     </script>
 </body>

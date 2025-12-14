@@ -3,284 +3,332 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Doanh Nghiệp - P.CTSV</title>
+    <title>Quản Lý Doanh Nghiệp - PCTSV</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
+        /* --- 1. GIAO DIỆN CHUẨN PCTSV (GREEN THEME) --- */
+        body { 
+            background: linear-gradient(135deg, #134E5E 0%, #71B280 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
         }
         
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+        /* Sidebar */
+        .sidebar {
+            min-height: 100vh;
+            background: #1a3c34;
+            color: white;
+            width: 250px;
+            position: fixed;
+            top: 0; left: 0;
+            z-index: 1000;
+            transition: all 0.3s;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .brand-logo {
+            padding: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            background: #14302a;
+            border-bottom: 1px solid #2a5c52;
+        }
+
+        .sidebar .nav-link {
+            color: #a8d5cc;
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            text-decoration: none;
+            display: block;
+        }
+
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            color: #fff;
+            background: #2a5c52;
+            border-left: 4px solid #71B280;
+        }
+
+        /* Main Content */
+        .main-wrapper {
+            margin-left: 250px;
+            padding: 30px;
+            transition: all 0.3s;
+        }
+
+        /* Header */
+        .admin-header {
+            background: white;
+            padding: 15px 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* --- 2. CSS CÁC THÀNH PHẦN CON --- */
+        .card {
             background: white;
             border-radius: 15px;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        
-        .header {
-            text-align: center;
-            color: #667eea;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid #667eea;
         }
-        
-        .header h1 {
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-        
-        .header p {
-            color: #666;
-            font-size: 1.1em;
-        }
-        
-        .form-group {
+
+        .card h2 {
+            color: #134E5E;
             margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 3px solid #71B280;
+            padding-bottom: 10px;
         }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-        }
-        
-        .form-group label .required {
-            color: red;
-        }
-        
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.3s;
-        }
-        
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        
+
+        /* Form Styles */
         .form-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-            flex-wrap: wrap;
-        }
-        
-        .btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            flex: 1;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
-        }
-        
-        .btn-secondary {
-            background: #f5f5f5;
-            color: #333;
-            flex: 1;
-        }
-        
-        .btn-secondary:hover {
-            background: #e0e0e0;
-        }
-        
-        .note {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 15px;
-            margin-top: 30px;
-            border-radius: 5px;
-        }
-        
-        .note strong {
-            color: #856404;
-        }
-        
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 30px;
-        }
-        
-        .data-table th,
-        .data-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        .data-table th {
-            background: #f5f5f5;
-            font-weight: bold;
-            color: #667eea;
-        }
-        
-        .data-table tr:hover {
-            background: #f9f9f9;
-        }
-        
-        .btn-action {
-            padding: 5px 15px;
-            font-size: 14px;
-            margin-right: 5px;
-        }
-        
-        .section-title {
-            color: #667eea;
-            font-size: 1.3em;
-            margin-top: 40px;
             margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .form-group label { font-weight: 600; margin-bottom: 8px; color: #134E5E; }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        .form-group input:focus {
+            outline: none; border-color: #71B280;
+        }
+
+        /* Buttons */
+        .button-group { display: flex; gap: 15px; margin-top: 20px; }
+        .btn-custom {
+            padding: 10px 25px; border: none; border-radius: 8px;
+            font-weight: bold; cursor: pointer; color: white; flex: 1; transition: all 0.3s;
+        }
+        .btn-save { background: linear-gradient(135deg, #134E5E 0%, #71B280 100%); }
+        .btn-save:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(19, 78, 94, 0.3); }
+        .btn-reset { background: #f5f5f5; color: #333; }
+        .btn-reset:hover { background: #e0e0e0; }
+
+        /* Table */
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .data-table th { 
+            background: #f8f9fa; 
+            font-weight: bold; 
+            color: #134E5E; 
+            padding: 12px; text-align: left; 
+            border-bottom: 2px solid #71B280; 
+        }
+        .data-table td { padding: 12px; border-bottom: 1px solid #e0e0e0; }
+        .data-table tr:hover { background: #f1f8f6; }
+
+        .btn-action { padding: 5px 10px; font-size: 13px; border-radius: 5px; border: none; cursor: pointer; margin-right: 5px; }
+        .btn-edit { background: #ffc107; color: #333; }
+        .btn-delete { background: #dc3545; color: white; }
+
+        .note {
+            background: #e8f5e9;
+            border-left: 4px solid #2e7d32;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            color: #1b5e20;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📊 QUẢN LÝ DOANH NGHIỆP</h1>
-            <p>Phòng Công Tác Sinh Viên - Hệ Thống Quản Lý Học Bổng UTE</p>
+
+    <div id="sidebar-container"></div>
+
+    <div class="main-wrapper">
+        
+        <header class="admin-header">
+            <h4 class="m-0 fw-bold text-secondary">📊 Quản Lý Doanh Nghiệp</h4>
+            <div class="dropdown">
+                <a href="#" class="text-decoration-none text-dark dropdown-toggle" data-bs-toggle="dropdown">
+                    <img src="https://via.placeholder.com/30" class="rounded-circle me-1">
+                    <span>Xin chào, <b>Cán bộ CTSV</b></span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item text-danger" href="#">Đăng xuất</a></li>
+                </ul>
+            </div>
+        </header>
+
+        <div class="card">
+            <h2>➕ Thêm Doanh Nghiệp Mới</h2>
+            <form id="formDoanhNghiep">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Mã Doanh Nghiệp <span class="text-danger">*</span></label>
+                        <input type="text" id="maDN" placeholder="VD: DN004" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tên Doanh Nghiệp <span class="text-danger">*</span></label>
+                        <input type="text" id="tenDN" placeholder="VD: Công ty TNHH ABC" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Mã Số Thuế</label>
+                        <input type="text" id="maSoThue" placeholder="13 chữ số" maxlength="13">
+                    </div>
+                    <div class="form-group">
+                        <label>Email <span class="text-danger">*</span></label>
+                        <input type="email" id="emailDN" placeholder="hr@company.com" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Số Điện Thoại <span class="text-danger">*</span></label>
+                        <input type="tel" id="sdtDN" placeholder="0909123456" maxlength="10" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Địa Chỉ</label>
+                        <input type="text" id="diaChiDN" placeholder="Địa chỉ công ty">
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn-custom btn-save">💾 Lưu Thông Tin</button>
+                    <button type="reset" class="btn-custom btn-reset">🔄 Làm Mới</button>
+                </div>
+            </form>
+
+            <div class="note">
+                <strong>📌 Lưu ý:</strong> Sau khi thêm doanh nghiệp, bạn có thể tạo đợt học bổng cho doanh nghiệp này tại mục <strong>Xét duyệt HB Doanh nghiệp</strong>.
+            </div>
         </div>
-        
-        <form id="formDoanhNghiep">
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Mã Doanh Nghiệp <span class="required">*</span></label>
-                    <input type="text" id="maDN" placeholder="VD: DN004" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Tên Doanh Nghiệp <span class="required">*</span></label>
-                    <input type="text" id="tenDN" placeholder="VD: Công ty TNHH ABC" required>
-                </div>
+
+        <div class="card">
+            <h2>📋 Danh Sách Doanh Nghiệp</h2>
+            <div style="overflow-x: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Mã DN</th>
+                            <th>Tên Doanh Nghiệp</th>
+                            <th>Mã Số Thuế</th>
+                            <th>Email</th>
+                            <th>SĐT</th>
+                            <th>Địa Chỉ</th>
+                            <th>Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableDoanhNghiep">
+                        <tr>
+                            <td>DN001</td>
+                            <td>Công ty FPT Software</td>
+                            <td>0123456789012</td>
+                            <td>hr@fpt.com.vn</td>
+                            <td>0909123456</td>
+                            <td>Khu công nghệ cao, Đà Nẵng</td>
+                            <td>
+                                <button class="btn-action btn-edit">✏️</button>
+                                <button class="btn-action btn-delete">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>DN002</td>
+                            <td>Tập đoàn Viettel</td>
+                            <td>0987654321098</td>
+                            <td>tuyendung@viettel.vn</td>
+                            <td>0911222333</td>
+                            <td>Hà Nội</td>
+                            <td>
+                                <button class="btn-action btn-edit">✏️</button>
+                                <button class="btn-action btn-delete">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>DN003</td>
+                            <td>Công ty VNPT</td>
+                            <td>0555666777888</td>
+                            <td>hr@vnpt.vn</td>
+                            <td>0909333555</td>
+                            <td>TP. Hồ Chí Minh</td>
+                            <td>
+                                <button class="btn-action btn-edit">✏️</button>
+                                <button class="btn-action btn-delete">🗑️</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Mã Số Thuế</label>
-                    <input type="text" id="maSoThue" placeholder="13 chữ số" maxlength="13">
-                </div>
-                
-                <div class="form-group">
-                    <label>Email <span class="required">*</span></label>
-                    <input type="email" id="emailDN" placeholder="hr@company.com" required>
-                </div>
-            </div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Số Điện Thoại <span class="required">*</span></label>
-                    <input type="tel" id="sdtDN" placeholder="0909123456" maxlength="10" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Địa Chỉ</label>
-                    <input type="text" id="diaChiDN" placeholder="Địa chỉ công ty">
-                </div>
-            </div>
-            
-            <div class="button-group">
-                <button type="submit" class="btn btn-primary">💾 Lưu Thông Tin</button>
-                <button type="reset" class="btn btn-secondary">🔄 Làm Mới</button>
-            </div>
-        </form>
-        
-        <div class="note">
-            <strong>📌 Lưu ý:</strong> Sau khi thêm doanh nghiệp, bạn có thể tạo đợt học bổng cho doanh nghiệp này tại bảng <strong>DotHB_DoanhNghiep</strong>
         </div>
-        
-        <h3 class="section-title">📋 Danh Sách Doanh Nghiệp</h3>
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Mã DN</th>
-                    <th>Tên Doanh Nghiệp</th>
-                    <th>Mã Số Thuế</th>
-                    <th>Email</th>
-                    <th>SĐT</th>
-                    <th>Địa Chỉ</th>
-                    <th>Thao Tác</th>
-                </tr>
-            </thead>
-            <tbody id="tableDoanhNghiep">
-                <tr>
-                    <td>DN001</td>
-                    <td>Công ty FPT Software</td>
-                    <td>0123456789012</td>
-                    <td>hr@fpt.com.vn</td>
-                    <td>0909123456</td>
-                    <td>Khu công nghệ cao, Đà Nẵng</td>
-                    <td>
-                        <button class="btn btn-secondary btn-action">✏️ Sửa</button>
-                        <button class="btn btn-secondary btn-action">🗑️ Xóa</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>DN002</td>
-                    <td>Tập đoàn Viettel</td>
-                    <td>0987654321098</td>
-                    <td>tuyendung@viettel.vn</td>
-                    <td>0911222333</td>
-                    <td>Hà Nội</td>
-                    <td>
-                        <button class="btn btn-secondary btn-action">✏️ Sửa</button>
-                        <button class="btn btn-secondary btn-action">🗑️ Xóa</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>DN003</td>
-                    <td>Công ty VNPT</td>
-                    <td>0555666777888</td>
-                    <td>hr@vnpt.vn</td>
-                    <td>0909333555</td>
-                    <td>TP. Hồ Chí Minh</td>
-                    <td>
-                        <button class="btn btn-secondary btn-action">✏️ Sửa</button>
-                        <button class="btn btn-secondary btn-action">🗑️ Xóa</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
     </div>
-    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const MENUS = {
+            ADMIN: [
+                { title: 'Tổng quan', url: 'Dashboard.html', icon: 'fa-tachometer-alt' },
+                { title: 'Người dùng', url: 'nguoidung.html', icon: 'fa-users-cog' },
+                { title: 'Năm học', url: 'namhoc.html', icon: 'fa-calendar-alt' },
+                { title: 'Học bổng', url: 'hocbong.html', icon: 'fa-hand-holding-usd' }
+            ],
+            PCTSV: [
+                { title: 'QL Doanh nghiệp', url: 'QLDN.html', icon: 'fa-building' },
+                { title: 'Phân bổ ngân sách', url: 'PBNS.html', icon: 'fa-chart-pie' },
+                { title: 'Duyệt Điểm HĐ', url: 'DuyetDHD.html', icon: 'fa-tasks' },
+                { title: 'Duyệt HB Khuyến khích', url: 'HBKK.html', icon: 'fa-star' },
+                { title: 'Duyệt HB Thử thách', url: 'HBTT.html', icon: 'fa-hand-holding-heart' },
+                { title: 'Duyệt HB Doanh nghiệp', url: 'HBDN.html', icon: 'fa-briefcase' }
+            ]
+        };
+
+        function createSidebar(role, activePage) {
+            const container = document.getElementById('sidebar-container');
+            if (!container) return;
+
+            const menuItems = MENUS[role] || [];
+            const brandIcon = 'fa-university'; 
+            const brandTitle = 'P. CÔNG TÁC SV';
+
+            let html = `
+                <nav class="sidebar">
+                    <div class="brand-logo">
+                        <i class="fas ${brandIcon} me-2"></i> ${brandTitle}
+                    </div>
+                    <div class="nav flex-column">
+            `;
+
+            menuItems.forEach(item => {
+                const isActive = activePage.includes(item.url) ? 'active' : '';
+                html += `
+                    <a href="${item.url}" class="nav-link ${isActive}">
+                        <i class="fas ${item.icon} me-2"></i> ${item.title}
+                    </a>
+                `;
+            });
+
+            html += `
+                    </div>
+                    <div class="mt-auto p-3 border-top border-secondary" style="position: absolute; bottom: 0; width: 100%;">
+                        <a href="../TrangChu/index.html" class="nav-link text-white">
+                            <i class="fas fa-sign-out-alt me-2"></i> Thoát
+                        </a>
+                    </div>
+                </nav>
+            `;
+            container.innerHTML = html;
+        }
+
+        // Kích hoạt sidebar cho trang này
+        createSidebar('PCTSV', 'QLDN.html');
+    </script>
+
     <script>
         document.getElementById('formDoanhNghiep').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -308,8 +356,8 @@
                 <td>${data.sdtDN}</td>
                 <td>${data.diaChiDN}</td>
                 <td>
-                    <button class="btn btn-secondary btn-action">✏️ Sửa</button>
-                    <button class="btn btn-secondary btn-action">🗑️ Xóa</button>
+                    <button class="btn-action btn-edit">✏️</button>
+                    <button class="btn-action btn-delete">🗑️</button>
                 </td>
             `;
             

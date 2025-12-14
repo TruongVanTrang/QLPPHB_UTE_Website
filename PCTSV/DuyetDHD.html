@@ -3,59 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Duyệt Điểm Hoạt Động - P.CTSV</title>
+    <title>Duyệt Điểm Hoạt Động - PCTSV</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
+        /* --- 1. GIAO DIỆN CHUẨN PCTSV (GREEN THEME) --- */
+        body { 
+            background: linear-gradient(135deg, #134E5E 0%, #71B280 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             min-height: 100vh;
-            padding: 20px;
         }
         
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+        /* Sidebar */
+        .sidebar {
+            min-height: 100vh;
+            background: #1a3c34;
+            color: white;
+            width: 250px;
+            position: fixed;
+            top: 0; left: 0;
+            z-index: 1000;
+            transition: all 0.3s;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .brand-logo {
+            padding: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            background: #14302a;
+            border-bottom: 1px solid #2a5c52;
+        }
+
+        .sidebar .nav-link {
+            color: #a8d5cc;
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            text-decoration: none;
+            display: block;
+        }
+
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            color: #fff;
+            background: #2a5c52;
+            border-left: 4px solid #71B280;
+        }
+
+        /* Main Content */
+        .main-wrapper {
+            margin-left: 250px;
+            padding: 30px;
+            transition: all 0.3s;
+        }
+
+        /* Header */
+        .admin-header {
+            background: white;
+            padding: 15px 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* --- 2. CSS CÁC THÀNH PHẦN CON --- */
+        .card {
             background: white;
             border-radius: 15px;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        
-        .header {
-            text-align: center;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             margin-bottom: 30px;
         }
-        
-        .header h1 {
-            color: #f5576c;
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-        
-        .header p {
-            color: #666;
-            font-size: 1.1em;
-        }
-        
-        .form-title {
-            color: #f5576c;
+
+        .card h2 {
+            color: #134E5E;
+            margin-bottom: 20px;
             font-size: 1.5em;
-            margin-bottom: 25px;
+            border-bottom: 3px solid #71B280;
             padding-bottom: 10px;
-            border-bottom: 3px solid #f5576c;
         }
-        
+
+        /* Filter Section (Đã chỉnh màu sang xanh) */
         .filter-section {
-            background: #f8f9fa;
+            background: #f1f8f6;
             padding: 20px;
             border-radius: 10px;
             margin-bottom: 30px;
+            border: 1px solid #d1e7dd;
         }
         
         .filter-row {
@@ -64,205 +102,81 @@
             gap: 15px;
             margin-bottom: 15px;
         }
+
+        .form-group label { font-weight: 600; margin-bottom: 8px; color: #134E5E; }
         
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-        }
-        
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: 10px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.3s;
         }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none; border-color: #71B280;
+        }
+
+        /* Table */
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .data-table th { 
+            background: #f8f9fa; 
+            font-weight: bold; 
+            color: #134E5E; 
+            padding: 12px; text-align: left; 
+            border-bottom: 2px solid #71B280; 
+        }
+        .data-table td { padding: 12px; border-bottom: 1px solid #e0e0e0; }
+        .data-table tr:hover { background: #f1f8f6; }
+
+        /* Buttons */
+        .btn { padding: 8px 20px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .btn-primary { background: linear-gradient(135deg, #134E5E 0%, #71B280 100%); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(19, 78, 94, 0.3); }
+        .btn-warning { background: #ffc107; color: #333; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+
+        /* Status Badges */
+        .status-badge { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-block; }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-approved { background: #d4edda; color: #155724; }
+        .status-rejected { background: #f8d7da; color: #721c24; }
+
+        /* Modal Styles (Green Theme) */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1050; justify-content: center; align-items: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: white; padding: 30px; border-radius: 15px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; }
+        .modal-header { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #71B280; }
+        .modal-header h3 { color: #134E5E; margin: 0; }
         
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #f5576c;
-        }
+        .info-row { display: grid; grid-template-columns: 150px 1fr; margin-bottom: 15px; padding: 10px; background: #f8f9fa; border-radius: 5px; }
+        .info-label { font-weight: bold; color: #666; }
+        .link-button { color: #134E5E; text-decoration: none; font-weight: bold; }
+        .link-button:hover { text-decoration: underline; color: #71B280; }
         
-        .btn {
-            padding: 10px 25px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(245, 87, 108, 0.4);
-        }
-        
-        .btn-success {
-            background: #28a745;
-            color: white;
-        }
-        
-        .btn-danger {
-            background: #dc3545;
-            color: white;
-        }
-        
-        .btn-warning {
-            background: #ffc107;
-            color: #333;
-        }
-        
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        
-        .data-table th,
-        .data-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        .data-table th {
-            background: #f5f5f5;
-            font-weight: bold;
-            color: #f5576c;
-            position: sticky;
-            top: 0;
-        }
-        
-        .data-table tr:hover {
-            background: #f9f9f9;
-        }
-        
-        .status-badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            display: inline-block;
-        }
-        
-        .status-pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-        
-        .status-approved {
-            background: #d4edda;
-            color: #155724;
-        }
-        
-        .status-rejected {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 5px;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .modal.active {
-            display: flex;
-        }
-        
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .modal-header {
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #f5576c;
-        }
-        
-        .modal-header h3 {
-            color: #f5576c;
-            margin: 0;
-        }
-        
-        .modal-footer {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        .info-row {
-            display: grid;
-            grid-template-columns: 150px 1fr;
-            margin-bottom: 15px;
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 5px;
-        }
-        
-        .info-label {
-            font-weight: bold;
-            color: #666;
-        }
-        
-        .link-button {
-            color: #007bff;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        
-        .link-button:hover {
-            text-decoration: underline;
-        }
+        .action-buttons { display: flex; gap: 5px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>✅ DUYỆT ĐIỂM HOẠT ĐỘNG</h1>
-            <p>Phòng Công Tác Sinh Viên - UTE</p>
-        </div>
+
+    <div id="sidebar-container"></div>
+
+    <div class="main-wrapper">
         
-        <h2 class="form-title">Xem Các Hoạt Động SV Tự Khai Báo, Xem Minh Chứng → Duyệt Điểm</h2>
-        
-        <!-- Bộ lọc -->
-        <div class="filter-section">
-            <h3 style="color: #f5576c; margin-bottom: 15px;">🔍 Bộ Lọc</h3>
+        <header class="admin-header">
+            <h4 class="m-0 fw-bold text-secondary">✅ Duyệt Điểm Hoạt Động</h4>
+            <div class="dropdown">
+                <a href="#" class="text-decoration-none text-dark dropdown-toggle" data-bs-toggle="dropdown">
+                    <img src="https://via.placeholder.com/30" class="rounded-circle me-1">
+                    <span>Xin chào, <b>Cán bộ CTSV</b></span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item text-danger" href="#">Đăng xuất</a></li>
+                </ul>
+            </div>
+        </header>
+
+        <div class="card">
+            <h2 class="mb-3">🔍 Bộ Lọc & Tìm Kiếm</h2>
             <div class="filter-row">
                 <div class="form-group">
                     <label>Học Kỳ</label>
@@ -273,7 +187,6 @@
                         <option value="HK3">Học kỳ 3 - 2024-2025</option>
                     </select>
                 </div>
-                
                 <div class="form-group">
                     <label>Trạng Thái</label>
                     <select id="filterStatus">
@@ -283,182 +196,205 @@
                         <option value="rejected">Không đạt</option>
                     </select>
                 </div>
-                
                 <div class="form-group">
                     <label>Mã SV</label>
                     <input type="text" id="filterMaSV" placeholder="VD: SV001">
                 </div>
             </div>
-            
             <button class="btn btn-primary" onclick="applyFilter()">🔍 Lọc Dữ Liệu</button>
         </div>
-        
-        <!-- Bảng dữ liệu -->
-        <div style="overflow-x: auto;">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Mã ĐHD</th>
-                        <th>Mã SV</th>
-                        <th>Họ Tên</th>
-                        <th>Học Kỳ</th>
-                        <th>Tên Hoạt Động</th>
-                        <th>Điểm Tự ĐG</th>
-                        <th>Điểm Chốt</th>
-                        <th>Trạng Thái</th>
-                        <th>Thao Tác</th>
-                    </tr>
-                </thead>
-                <tbody id="tableHoatDong">
-                    <tr data-status="approved">
-                        <td>DHD001</td>
-                        <td>SV001</td>
-                        <td>Nguyễn Văn An</td>
-                        <td>HK2</td>
-                        <td>Mùa hè xanh</td>
-                        <td>10</td>
-                        <td>10</td>
-                        <td><span class="status-badge status-approved">Đạt</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-warning" onclick="viewDetail('DHD001')" style="padding: 5px 12px;">👁️ Xem</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr data-status="pending">
-                        <td>DHD006</td>
-                        <td>SV009</td>
-                        <td>Hoàng Văn Hùng</td>
-                        <td>HK2</td>
-                        <td>Hackathon 2024</td>
-                        <td>20</td>
-                        <td>-</td>
-                        <td><span class="status-badge status-pending">Chờ duyệt</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-warning" onclick="viewDetail('DHD006')" style="padding: 5px 12px;">👁️ Xem</button>
-                                <button class="btn btn-success" onclick="approveActivity('DHD006')" style="padding: 5px 12px;">✔️ Duyệt</button>
-                                <button class="btn btn-danger" onclick="rejectActivity('DHD006')" style="padding: 5px 12px;">✖️ Từ chối</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr data-status="approved">
-                        <td>DHD005</td>
-                        <td>SV008</td>
-                        <td>Phan Văn Minh</td>
-                        <td>HK2</td>
-                        <td>Nghiên cứu KH</td>
-                        <td>15</td>
-                        <td>15</td>
-                        <td><span class="status-badge status-approved">Đạt</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-warning" onclick="viewDetail('DHD005')" style="padding: 5px 12px;">👁️ Xem</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr data-status="pending">
-                        <td>DHD011</td>
-                        <td>SV016</td>
-                        <td>Lý Thị Quýt</td>
-                        <td>HK2</td>
-                        <td>Thi Olympic Toán</td>
-                        <td>10</td>
-                        <td>-</td>
-                        <td><span class="status-badge status-pending">Chờ duyệt</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-warning" onclick="viewDetail('DHD011')" style="padding: 5px 12px;">👁️ Xem</button>
-                                <button class="btn btn-success" onclick="approveActivity('DHD011')" style="padding: 5px 12px;">✔️ Duyệt</button>
-                                <button class="btn btn-danger" onclick="rejectActivity('DHD011')" style="padding: 5px 12px;">✖️ Từ chối</button>
-                            </div>
-                        </td>
 
-                    </tr>
-                </tbody>
-            </table>
+        <div class="card">
+            <h2>📋 Danh Sách Hoạt Động Cần Duyệt</h2>
+            <div style="overflow-x: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Mã ĐHD</th>
+                            <th>Mã SV</th>
+                            <th>Họ Tên</th>
+                            <th>Học Kỳ</th>
+                            <th>Tên Hoạt Động</th>
+                            <th>Điểm Tự ĐG</th>
+                            <th>Điểm Chốt</th>
+                            <th>Trạng Thái</th>
+                            <th>Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableHoatDong">
+                        <tr data-status="approved">
+                            <td>DHD001</td>
+                            <td>SV001</td>
+                            <td>Nguyễn Văn An</td>
+                            <td>HK2</td>
+                            <td>Mùa hè xanh</td>
+                            <td>10</td>
+                            <td>10</td>
+                            <td><span class="status-badge status-approved">Đạt</span></td>
+                            <td><div class="action-buttons"><button class="btn btn-warning" onclick="viewDetail('DHD001')" style="padding: 5px 10px;">👁️</button></div></td>
+                        </tr>
+                        <tr data-status="pending">
+                            <td>DHD006</td>
+                            <td>SV009</td>
+                            <td>Hoàng Văn Hùng</td>
+                            <td>HK2</td>
+                            <td>Hackathon 2024</td>
+                            <td>20</td>
+                            <td>-</td>
+                            <td><span class="status-badge status-pending">Chờ duyệt</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-warning" onclick="viewDetail('DHD006')" style="padding: 5px 10px;">👁️</button>
+                                    <button class="btn btn-success" onclick="approveActivity('DHD006')" style="padding: 5px 10px;">✔️</button>
+                                    <button class="btn btn-danger" onclick="rejectActivity('DHD006')" style="padding: 5px 10px;">✖️</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-status="approved">
+                            <td>DHD005</td>
+                            <td>SV008</td>
+                            <td>Phan Văn Minh</td>
+                            <td>HK2</td>
+                            <td>Nghiên cứu KH</td>
+                            <td>15</td>
+                            <td>15</td>
+                            <td><span class="status-badge status-approved">Đạt</span></td>
+                            <td><div class="action-buttons"><button class="btn btn-warning" onclick="viewDetail('DHD005')" style="padding: 5px 10px;">👁️</button></div></td>
+                        </tr>
+                        <tr data-status="pending">
+                            <td>DHD011</td>
+                            <td>SV016</td>
+                            <td>Lý Thị Quýt</td>
+                            <td>HK2</td>
+                            <td>Thi Olympic Toán</td>
+                            <td>10</td>
+                            <td>-</td>
+                            <td><span class="status-badge status-pending">Chờ duyệt</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-warning" onclick="viewDetail('DHD011')" style="padding: 5px 10px;">👁️</button>
+                                    <button class="btn btn-success" onclick="approveActivity('DHD011')" style="padding: 5px 10px;">✔️</button>
+                                    <button class="btn btn-danger" onclick="rejectActivity('DHD011')" style="padding: 5px 10px;">✖️</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-    
-    <!-- Modal Chi Tiết -->
+
     <div id="modalDetail" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3>📋 Chi Tiết Hoạt Động</h3>
             </div>
-            
             <div id="modalBody">
-                <div class="info-row">
-                    <span class="info-label">Mã ĐHD:</span>
-                    <span id="detailMaDHD">DHD001</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Mã SV:</span>
-                    <span id="detailMaSV">SV001</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Họ Tên:</span>
-                    <span id="detailHoTen">Nguyễn Văn An</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Tên Hoạt Động:</span>
-                    <span id="detailTenHD">Mùa hè xanh</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Điểm Tự Đánh Giá:</span>
-                    <span id="detailDiemTuDG">10</span>
-                </div>
+                <div class="info-row"><span class="info-label">Mã ĐHD:</span><span id="detailMaDHD">DHD001</span></div>
+                <div class="info-row"><span class="info-label">Mã SV:</span><span id="detailMaSV">SV001</span></div>
+                <div class="info-row"><span class="info-label">Họ Tên:</span><span id="detailHoTen">Nguyễn Văn An</span></div>
+                <div class="info-row"><span class="info-label">Tên Hoạt Động:</span><span id="detailTenHD">Mùa hè xanh</span></div>
+                <div class="info-row"><span class="info-label">Điểm Tự Đánh Giá:</span><span id="detailDiemTuDG">10</span></div>
                 <div class="info-row">
                     <span class="info-label">Minh Chứng:</span>
                     <a href="#" class="link-button" id="detailLink" target="_blank">Xem minh chứng</a>
                 </div>
-                <div class="info-row">
-                    <span class="info-label">Điểm Chốt:</span>
-                    <span id="detailDiemChot">10</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Ghi Chú:</span>
-                    <span id="detailGhiChu">-</span>
-                </div>
+                <div class="info-row"><span class="info-label">Điểm Chốt:</span><span id="detailDiemChot">10</span></div>
+                <div class="info-row"><span class="info-label">Ghi Chú:</span><span id="detailGhiChu">-</span></div>
             </div>
-            
-            <div class="modal-footer">
+            <div class="modal-footer" style="display: flex; gap: 10px; margin-top: 20px;">
                 <button class="btn btn-primary" onclick="closeModal()" style="flex: 1;">Đóng</button>
             </div>
         </div>
     </div>
-    
-    <!-- Modal Duyệt Điểm -->
+
     <div id="modalApprove" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3>✅ Duyệt Điểm Hoạt Động</h3>
             </div>
-            
             <form id="formApprove" onsubmit="handleApprove(event)">
                 <div class="info-row">
                     <span class="info-label">Mã Hoạt Động:</span>
                     <span id="approveMaDHD"></span>
                 </div>
-                
                 <div class="form-group">
                     <label>Điểm Chốt <span style="color: red;">*</span></label>
                     <input type="number" id="approveDiemChot" min="0" max="100" required>
                 </div>
-                
                 <div class="form-group">
                     <label>Ghi Chú</label>
                     <textarea id="approveGhiChu" rows="3" placeholder="Nhập ghi chú (nếu có)"></textarea>
                 </div>
-                
-                <div class="modal-footer">
+                <div class="modal-footer" style="display: flex; gap: 10px; margin-top: 20px;">
                     <button type="submit" class="btn btn-success" style="flex: 1;">✔️ Xác Nhận Duyệt</button>
                     <button type="button" class="btn btn-danger" onclick="closeModalApprove()">Hủy</button>
                 </div>
             </form>
         </div>
     </div>
-    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const MENUS = {
+            ADMIN: [
+                { title: 'Tổng quan', url: 'Dashboard.html', icon: 'fa-tachometer-alt' },
+                { title: 'Người dùng', url: 'nguoidung.html', icon: 'fa-users-cog' },
+                { title: 'Năm học', url: 'namhoc.html', icon: 'fa-calendar-alt' },
+                { title: 'Học bổng', url: 'hocbong.html', icon: 'fa-hand-holding-usd' }
+            ],
+            PCTSV: [
+                { title: 'QL Doanh nghiệp', url: 'QLDN.html', icon: 'fa-building' },
+                { title: 'Phân bổ ngân sách', url: 'PBNS.html', icon: 'fa-chart-pie' },
+                { title: 'Duyệt Điểm HĐ', url: 'DuyetDHD.html', icon: 'fa-tasks' },
+                { title: 'Duyệt HB Khuyến khích', url: 'HBKK.html', icon: 'fa-star' },
+                { title: 'Duyệt HB Thử thách', url: 'HBTT.html', icon: 'fa-hand-holding-heart' },
+                { title: 'Duyệt HB Doanh nghiệp', url: 'HBDN.html', icon: 'fa-briefcase' }
+            ]
+        };
+
+        function createSidebar(role, activePage) {
+            const container = document.getElementById('sidebar-container');
+            if (!container) return;
+
+            const menuItems = MENUS[role] || [];
+            const brandIcon = 'fa-university'; 
+            const brandTitle = 'P. CÔNG TÁC SV';
+
+            let html = `
+                <nav class="sidebar">
+                    <div class="brand-logo">
+                        <i class="fas ${brandIcon} me-2"></i> ${brandTitle}
+                    </div>
+                    <div class="nav flex-column">
+            `;
+
+            menuItems.forEach(item => {
+                const isActive = activePage.includes(item.url) ? 'active' : '';
+                html += `
+                    <a href="${item.url}" class="nav-link ${isActive}">
+                        <i class="fas ${item.icon} me-2"></i> ${item.title}
+                    </a>
+                `;
+            });
+
+            html += `
+                    </div>
+                    <div class="mt-auto p-3 border-top border-secondary" style="position: absolute; bottom: 0; width: 100%;">
+                        <a href="../TrangChu/index.html" class="nav-link text-white">
+                            <i class="fas fa-sign-out-alt me-2"></i> Thoát
+                        </a>
+                    </div>
+                </nav>
+            `;
+            container.innerHTML = html;
+        }
+
+        // Kích hoạt sidebar cho trang này
+        createSidebar('PCTSV', 'DuyetDHD.html');
+    </script>
+
     <script>
         let currentMaDHD = null;
         
@@ -495,7 +431,7 @@
                     row.cells[7].innerHTML = '<span class="status-badge status-approved">Đạt</span>';
                     row.cells[8].innerHTML = `
                         <div class="action-buttons">
-                            <button class="btn btn-warning" onclick="viewDetail('${currentMaDHD}')" style="padding: 5px 12px;">👁️ Xem</button>
+                            <button class="btn btn-warning" onclick="viewDetail('${currentMaDHD}')" style="padding: 5px 10px;">👁️</button>
                         </div>
                     `;
                     row.setAttribute('data-status', 'approved');
@@ -517,7 +453,7 @@
                         row.cells[7].innerHTML = '<span class="status-badge status-rejected">Không đạt</span>';
                         row.cells[8].innerHTML = `
                             <div class="action-buttons">
-                                <button class="btn btn-warning" onclick="viewDetail('${maDHD}')" style="padding: 5px 12px;">👁️ Xem</button>
+                                <button class="btn btn-warning" onclick="viewDetail('${maDHD}')" style="padding: 5px 10px;">👁️</button>
                             </div>
                         `;
                         row.setAttribute('data-status', 'rejected');

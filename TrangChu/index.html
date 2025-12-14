@@ -6,210 +6,356 @@
     <title>Hệ Thống Quản Lý Học Bổng UTE</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        .card-function {
-            transition: transform 0.2s;
-            cursor: pointer;
-            height: 100%;
+        :root {
+            --color-admin: #dc3545;
+            --color-pdt: #0d6efd;
+            --color-khoa: #0dcaf0;
+            --color-ctsv: #198754;
+            --bg-light: #f3f6f9;
         }
+
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: var(--bg-light);
+            color: #333;
+        }
+
+        /* --- Navbar & Hero --- */
+        .navbar {
+            background: linear-gradient(135deg, #0d6efd 0%, #0043a8 100%);
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+        
+        .hero-section {
+            background: white;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        /* --- Card Styles --- */
+        .card-function {
+            border: none;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            padding: 20px;
+            cursor: pointer;
+            text-decoration: none !important; /* Xóa gạch chân cho thẻ a */
+        }
+
         .card-function:hover {
             transform: translateY(-5px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
-        .icon-box {
-            font-size: 2rem;
+
+        /* Icon Wrapper Design */
+        .icon-wrapper {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
             margin-bottom: 15px;
+            transition: all 0.3s;
         }
-        .section-title {
-            border-left: 5px solid;
-            padding-left: 10px;
+
+        /* Typography inside cards */
+        .card-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        .card-desc {
+            font-size: 0.85rem;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+
+        /* --- Group Specific Styles --- */
+        /* Admin (Red) */
+        .group-admin .icon-wrapper { background-color: rgba(220, 53, 69, 0.1); color: var(--color-admin); }
+        .group-admin:hover .icon-wrapper { background-color: var(--color-admin); color: white; }
+        .group-admin::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--color-admin); }
+
+        /* PDT (Blue) */
+        .group-pdt .icon-wrapper { background-color: rgba(13, 110, 253, 0.1); color: var(--color-pdt); }
+        .group-pdt:hover .icon-wrapper { background-color: var(--color-pdt); color: white; }
+        .group-pdt::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--color-pdt); }
+
+        /* Khoa (Cyan) */
+        .group-khoa .icon-wrapper { background-color: rgba(13, 202, 240, 0.1); color: var(--color-khoa); }
+        .group-khoa:hover .icon-wrapper { background-color: var(--color-khoa); color: white; }
+        .group-khoa::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--color-khoa); }
+
+        /* CTSV (Green) */
+        .group-ctsv .icon-wrapper { background-color: rgba(25, 135, 84, 0.1); color: var(--color-ctsv); }
+        .group-ctsv:hover .icon-wrapper { background-color: var(--color-ctsv); color: white; }
+        .group-ctsv::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--color-ctsv); }
+
+        /* --- Section Header --- */
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-top: 40px;
             margin-bottom: 20px;
-            margin-top: 30px;
-            font-weight: bold;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .section-header h5 {
+            margin: 0;
+            font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        /* Màu sắc cho từng nhóm */
-        .group-admin { border-color: #dc3545; color: #dc3545; }
-        .group-pdt { border-color: #0d6efd; color: #0d6efd; }
-        .group-khoa { border-color: #0dcaf0; color: #0dcaf0; }
-        .group-ctsv { border-color: #198754; color: #198754; }
-        
-        .disabled-link {
-            opacity: 0.6;
-            cursor: not-allowed;
-            background-color: #f8f9fa;
+        .section-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: white;
+            margin-right: 10px;
         }
+
+        /* --- Badge Ready --- */
         .badge-ready {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 0.8rem;
+            top: 15px;
+            right: 15px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Search Box */
+        .search-container {
+            position: relative;
+            max-width: 500px;
+        }
+        .search-input {
+            border-radius: 50px;
+            padding-left: 45px;
+            border: 1px solid #ced4da;
+            height: 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #adb5bd;
         }
     </style>
 </head>
-<body class="bg-light">
+<body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
-        <div class="container-fluid">
-            <a class="navbar-brand fw-bold" href="#"><i class="fas fa-graduation-cap me-2"></i>SCHOLARSHIP UTE</a>
-            <div class="d-flex text-white align-items-center">
-                <span class="me-3"><i class="fas fa-user-circle me-1"></i>Xin chào, ...</span>
-                <button class="btn btn-sm btn-light text-primary fw-bold">Đăng xuất</button>
-            </div>
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
+        <div class="container justify-content-center">
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
+                <i class="fas fa-graduation-cap fa-lg me-2"></i>
+                <div>
+                    <div style="line-height: 1; font-size: 1.2rem;">UTE SCHOLARSHIP</div>
+                    <div style="line-height: 1; font-size: 0.75rem; opacity: 0.8; font-weight: 400;">Hệ thống quản lý học bổng</div>
+                </div>
+            </a>
         </div>
     </nav>
 
-    <div class="container py-4">
-        
-        <h5 class="section-title group-admin">1. Quản Trị Hệ Thống (Admin)</h5>
-        <div class="row g-4">
-            
-            <div class="col-md-4">
-                <a href="../admin/nguoidung.html" class="text-decoration-none text-dark">
-                    <div class="card card-function p-3 text-center border-danger bg-white shadow">
-                        <span class="badge bg-danger badge-ready">Đã hoàn thiện</span>
-                        
-                        <div class="icon-box text-danger"><i class="fas fa-users-cog"></i></div>
-                        <h6 class="fw-bold">1. QL Người dùng & Phân quyền</h6>
-                        <small class="text-muted">Tài khoản, Vai trò, Cán bộ</small>
+    <div class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-7">
+                    <h3 class="fw-bold text-dark mb-1">Bảng điều khiển</h3>
+                    <p class="text-muted mb-0">Chọn chức năng để bắt đầu làm việc</p>
+                </div>
+                <div class="col-md-5 mt-3 mt-md-0">
+                    <div class="search-container ms-auto">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="form-control search-input" id="functionSearch" placeholder="Tìm kiếm chức năng nhanh..." onkeyup="filterFunctions()">
                     </div>
-                </a>               
-            </div>
-
-            <div class="col-md-4">
-                <a href="../admin/namhoc.html" class="text-decoration-none text-dark">
-                    <div class="card card-function p-3 text-center border-danger bg-white shadow">
-                        <span class="badge bg-danger badge-ready">Đã hoàn thiện</span>
-                        
-                        <div class="icon-box text-danger"><i class="fas fa-calendar-alt"></i></div>
-                        <h6 class="fw-bold">2. Thiết lập Năm học & Học kỳ</h6>
-                        <small class="text-muted">Mở/Đóng học kỳ, Kích hoạt Trigger</small>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-md-4">
-                <a href="../admin/hocbong.html" class="text-decoration-none text-dark">
-                    <div class="card card-function p-3 text-center border-danger bg-white shadow">
-                        <span class="badge bg-danger badge-ready">Đã hoàn thiện</span>
-                        
-                        <div class="icon-box text-danger"><i class="fas fa-list-check"></i></div>
-                        <h6 class="fw-bold">3. Thiết lập Đợt & Tiêu chí</h6>
-                        <small class="text-muted">Tiêu chí HBKK, Đợt Doanh nghiệp</small>
-                    </div>
-                </a>
-            </div>
-        </div>
-
-        <h5 class="section-title group-pdt">2. Phòng Đào Tạo (PDT)</h5>
-        <div class="row g-4">
-            <div class="col-md-6">
-                <div class="card card-function p-3 text-center border-primary" onclick="showMsg('QL Hồ sơ SV')">
-                    <div class="icon-box text-primary"><i class="fas fa-id-card"></i></div>
-                    <h6 class="fw-bold">4. Quản lý Hồ sơ Sinh viên</h6>
-                    <small class="text-muted">Thông tin cá nhân, Lớp, Ngân hàng</small>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card card-function p-3 text-center border-primary" onclick="showMsg('QL Điểm GPA')">
-                    <div class="icon-box text-primary"><i class="fas fa-file-excel"></i></div>
-                    <h6 class="fw-bold">5. Quản lý Điểm GPA</h6>
-                    <small class="text-muted">Import Excel, Nhập điểm kỳ</small>
-                </div>
-            </div>
-        </div>
-
-        <h5 class="section-title group-khoa">3. Giáo Vụ Khoa</h5>
-        <div class="row g-4">
-            <div class="col-md-6">
-                <div class="card card-function p-3 text-center border-info" onclick="showMsg('QL Điểm Rèn luyện')">
-                    <div class="icon-box text-info"><i class="fas fa-running"></i></div>
-                    <h6 class="fw-bold">6. Quản lý Điểm Rèn Luyện</h6>
-                    <small class="text-muted">Nhập ĐRL sinh viên Khoa</small>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card card-function p-3 text-center border-info" onclick="showMsg('Tra cứu SV')">
-                    <div class="icon-box text-info"><i class="fas fa-search"></i></div>
-                    <h6 class="fw-bold">7. Tra cứu Sinh viên Khoa</h6>
-                    <small class="text-muted">Xem lịch sử học bổng (Read-only)</small>
-                </div>
-            </div>
-        </div>
-
-        <h5 class="section-title group-ctsv">4. Phòng Công Tác Sinh Viên (P.CTSV)</h5>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <a href="../PCTSV/QLDN.html" class="text-decoration-none text-dark">
-                <div class="card card-function p-3 text-center border-success" onclick="showMsg('QL Doanh nghiệp')">
-                    <div class="icon-box text-success"><i class="fas fa-building"></i></div>
-                    <h6 class="fw-bold">8. QL Doanh nghiệp Tài trợ</h6>
-                    <small class="text-muted">Hồ sơ FPT, Viettel...</small>
-                </div>
-                </a>    
-            </div>
-            <div class="col-md-4">
-                <a href="../PCTSV/PBNS.html" class="text-decoration-none text-dark">
-                <div class="card card-function p-3 text-center border-success" onclick="showMsg('Phân bổ ngân sách')">
-                    <div class="icon-box text-success"><i class="fas fa-chart-pie"></i></div>
-                    <h6 class="fw-bold">9. Phân bổ Ngân sách</h6>
-                    <small class="text-muted">Chia suất/tiền cho các Khoa</small>
-                </div>
-                </a>
-            </div>
-            <div class="col-md-4">
-                <a href="../PCTSV/DuyetDHD.html" class="text-decoration-none text-dark">
-                <div class="card card-function p-3 text-center border-success" onclick="showMsg('Duyệt điểm HĐ')">
-                    <div class="icon-box text-success"><i class="fas fa-tasks"></i></div>
-                    <h6 class="fw-bold">10. Duyệt Điểm Hoạt động</h6>
-                    <small class="text-muted">Xem minh chứng & Duyệt điểm</small>
-                </div>
-                </a>
-            </div>
-
-            <div class="col-md-4">
-                <a href="../PCTSV/HBKK.html" class="text-decoration-none text-dark">
-                    <div class="card card-function p-3 text-center border-success bg-white shadow">
-                        <span class="badge bg-danger badge-ready">Đã hoàn thiện</span>
-                        <div class="icon-box text-success"><i class="fas fa-star"></i></div>
-                        <h6 class="fw-bold text-uppercase">11. Xét duyệt HB Khuyến Khích</h6>
-                        <small class="text-success fw-bold">Quét hệ thống & Chốt danh sách</small>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-md-4">
-                <a href="../PCTSV/HBTT.html" class="text-decoration-none text-dark">
-                    <div class="card card-function p-3 text-center border-success bg-white shadow">
-                        <span class="badge bg-danger badge-ready">Đã hoàn thiện</span>
-                        <div class="icon-box text-success"><i class="fas fa-hand-holding-heart"></i></div>
-                        <h6 class="fw-bold text-uppercase">12. Xét duyệt HB Thử Thách</h6>
-                        <small class="text-success fw-bold">Xem sổ hộ nghèo & Thẩm định</small>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-md-4">
-                <a href="../PCTSV/HBDN.html" class="text-decoration-none text-dark">
-                    <div class="card card-function p-3 text-center border-success bg-white shadow">
-                        <span class="badge bg-danger badge-ready">Đã hoàn thiện</span>
-                        <div class="icon-box text-success"><i class="fas fa-briefcase"></i></div>
-                        <h6 class="fw-bold text-uppercase">13. Xét duyệt HB Doanh Nghiệp</h6>
-                        <small class="text-success fw-bold">Xem CV & Duyệt ứng viên</small>
-                    </div>
-                </a>
             </div>
         </div>
     </div>
 
-    <footer class="bg-dark text-white text-center py-3 mt-5">
-        <p class="mb-0">Đồ án Thực tập chuyên môn - Hệ thống Quản lý Học bổng UTE &copy; 2025</p>
+    <div class="container pb-5">
+        
+        <div class="section-container" data-group="admin">
+            <div class="section-header">
+                <span class="section-badge" style="background-color: var(--color-admin);">ADMIN</span>
+                <h5 style="color: var(--color-admin);">1. Quản Trị Hệ Thống</h5>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4 col-sm-6 function-item">
+                    <a href="../admin/nguoidung.html" class="card-function group-admin">
+                        <div class="icon-wrapper"><i class="fas fa-users-cog"></i></div>
+                        <div class="card-title">1. Quản lý Người dùng & Phân quyền</div>
+                        <div class="card-desc">Quản lý tài khoản, phân quyền vai trò cho cán bộ và sinh viên.</div>
+                    </a>
+                </div>
+                <div class="col-md-4 col-sm-6 function-item">
+                    <a href="../admin/namhoc.html" class="card-function group-admin">
+                        <div class="icon-wrapper"><i class="fas fa-calendar-alt"></i></div>
+                        <div class="card-title">2. Thiết lập Năm học & Học kỳ</div>
+                        <div class="card-desc">Cấu hình thời gian, mở/đóng học kỳ và kích hoạt Trigger.</div>
+                    </a>
+                </div>
+                <div class="col-md-4 col-sm-6 function-item">
+                    <a href="../admin/hocbong.html" class="card-function group-admin">
+                        <div class="icon-wrapper"><i class="fas fa-list-check"></i></div>
+                        <div class="card-title">3. Thiết lập Đợt & Tiêu chí</div>
+                        <div class="card-desc">Cài đặt tiêu chí xét duyệt HBKK và các đợt HB doanh nghiệp.</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-container" data-group="pdt">
+            <div class="section-header">
+                <span class="section-badge" style="background-color: var(--color-pdt);">PDT</span>
+                <h5 style="color: var(--color-pdt);">2. Phòng Đào Tạo</h5>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6 function-item">
+                    <div class="card-function group-pdt" onclick="showMsg('Quản lý Hồ sơ SV')">
+                        <div class="icon-wrapper"><i class="fas fa-id-card"></i></div>
+                        <div class="card-title">4. Quản lý Hồ sơ Sinh viên</div>
+                        <div class="card-desc">Cập nhật thông tin cá nhân, lớp học và tài khoản ngân hàng.</div>
+                    </div>
+                </div>
+                <div class="col-md-6 function-item">
+                    <div class="card-function group-pdt" onclick="showMsg('Quản lý Điểm GPA')">
+                        <div class="icon-wrapper"><i class="fas fa-file-excel"></i></div>
+                        <div class="card-title">5. Quản lý Điểm GPA</div>
+                        <div class="card-desc">Import điểm từ Excel hoặc nhập trực tiếp điểm trung bình học kỳ.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-container" data-group="khoa">
+            <div class="section-header">
+                <span class="section-badge" style="background-color: var(--color-khoa);">KHOA</span>
+                <h5 style="color: var(--color-khoa);">3. Giáo Vụ Khoa</h5>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6 function-item">
+                    <div class="card-function group-khoa" onclick="showMsg('Quản lý Điểm Rèn luyện')">
+                        <div class="icon-wrapper"><i class="fas fa-running"></i></div>
+                        <div class="card-title">6. Quản lý Điểm Rèn Luyện</div>
+                        <div class="card-desc">Nhập và duyệt điểm rèn luyện cho sinh viên thuộc Khoa.</div>
+                    </div>
+                </div>
+                <div class="col-md-6 function-item">
+                    <div class="card-function group-khoa" onclick="showMsg('Tra cứu SV')">
+                        <div class="icon-wrapper"><i class="fas fa-search"></i></div>
+                        <div class="card-title">7. Tra cứu Sinh viên Khoa</div>
+                        <div class="card-desc">Tra cứu thông tin và xem lịch sử nhận học bổng (Chế độ xem).</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-container" data-group="ctsv">
+            <div class="section-header">
+                <span class="section-badge" style="background-color: var(--color-ctsv);">P.CTSV</span>
+                <h5 style="color: var(--color-ctsv);">4. Phòng Công Tác Sinh Viên</h5>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4 col-sm-6 function-item">
+                    <a href="../PCTSV/QLDN.html" class="card-function group-ctsv">
+                        <div class="icon-wrapper"><i class="fas fa-building"></i></div>
+                        <div class="card-title">8. Quản lý Doanh nghiệp Tài trợ</div>
+                        <div class="card-desc">Quản lý thông tin đối tác FPT, Viettel, VNPT...</div>
+                    </a>
+                </div>
+                <div class="col-md-4 col-sm-6 function-item">
+                    <a href="../PCTSV/PBNS.html" class="card-function group-ctsv">
+                        <div class="icon-wrapper"><i class="fas fa-chart-pie"></i></div>
+                        <div class="card-title">9. Phân bổ Ngân sách</div>
+                        <div class="card-desc">Phân chia ngân sách và suất học bổng cho từng Khoa.</div>
+                    </a>
+                </div>
+                <div class="col-md-4 col-sm-6 function-item">
+                    <a href="../PCTSV/DuyetDHD.html" class="card-function group-ctsv">
+                        <div class="icon-wrapper"><i class="fas fa-tasks"></i></div>
+                        <div class="card-title">10. Duyệt Điểm Hoạt động</div>
+                        <div class="card-desc">Kiểm tra minh chứng và phê duyệt điểm cộng hoạt động.</div>
+                    </a>
+                </div>
+                <div class="col-md-4 col-sm-6 function-item">
+                    <a href="../PCTSV/HBKK.html" class="card-function group-ctsv">
+                        <div class="icon-wrapper"><i class="fas fa-star"></i></div>
+                        <div class="card-title">11. Xét duyệt HB Khuyến Khích</div>
+                        <div class="card-desc">Quét hệ thống, xếp hạng và chốt danh sách HBKK.</div>
+                    </a>
+                </div>
+                <div class="col-md-4 col-sm-6 function-item">
+                    <a href="../PCTSV/HBTT.html" class="card-function group-ctsv">
+                        <div class="icon-wrapper"><i class="fas fa-hand-holding-heart"></i></div>
+                        <div class="card-title">12. Xét duyệt HB Thử Thách</div>
+                        <div class="card-desc">Thẩm định hồ sơ hoàn cảnh khó khăn và duyệt cấp.</div>
+                    </a>
+                </div>
+                <div class="col-md-4 col-sm-6 function-item">
+                    <a href="../PCTSV/HBDN.html" class="card-function group-ctsv">
+                        <div class="icon-wrapper"><i class="fas fa-briefcase"></i></div>
+                        <div class="card-title">13. Xét duyệt HB Doanh Nghiệp</div>
+                        <div class="card-desc">Xem xét CV ứng viên và phê duyệt theo tiêu chí DN.</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="bg-white text-center py-4 mt-5 border-top">
+        <div class="container">
+            <p class="mb-1 fw-bold text-secondary">HỆ THỐNG QUẢN LÝ HỌC BỔNG UTE</p>
+            <small class="text-muted">Đồ án Thực tập chuyên môn - &copy; 2025</small>
+        </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function showMsg(featureName) {
             alert("Chức năng [" + featureName + "] đang được phát triển trong giai đoạn tiếp theo!");
+        }
+
+        // Script tìm kiếm nhanh chức năng
+        function filterFunctions() {
+            var input, filter, cards, cardContainer, h5, title, i;
+            input = document.getElementById("functionSearch");
+            filter = input.value.toUpperCase();
+            cards = document.getElementsByClassName("function-item");
+
+            for (i = 0; i < cards.length; i++) {
+                title = cards[i].querySelector(".card-title");
+                if (title.innerText.toUpperCase().indexOf(filter) > -1) {
+                    cards[i].style.display = "";
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
         }
     </script>
 </body>

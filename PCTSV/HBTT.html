@@ -2,49 +2,200 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Xét Duyệt HB Thử Thách</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xét Duyệt HB Thử Thách - PCTSV</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        .minh-chung-link { text-decoration: none; font-weight: bold; }
-        .minh-chung-link:hover { text-decoration: underline; }
+        /* --- 1. GIAO DIỆN CHUẨN PCTSV (GREEN THEME) --- */
+        body { 
+            background: linear-gradient(135deg, #134E5E 0%, #71B280 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            min-height: 100vh;
+            background: #1a3c34;
+            color: white;
+            width: 250px;
+            position: fixed;
+            top: 0; left: 0;
+            z-index: 1000;
+            transition: all 0.3s;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .brand-logo {
+            padding: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            background: #14302a;
+            border-bottom: 1px solid #2a5c52;
+        }
+
+        .sidebar .nav-link {
+            color: #a8d5cc;
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            text-decoration: none;
+            display: block;
+        }
+
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            color: #fff;
+            background: #2a5c52;
+            border-left: 4px solid #71B280;
+        }
+
+        /* Main Content */
+        .main-wrapper {
+            margin-left: 250px;
+            padding: 30px;
+            transition: all 0.3s;
+        }
+
+        /* Header */
+        .admin-header {
+            background: white;
+            padding: 15px 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* --- 2. CSS CÁC THÀNH PHẦN CON --- */
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .card h2 {
+            color: #134E5E;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 3px solid #71B280;
+            padding-bottom: 10px;
+        }
+
+        /* Form & Inputs */
+        .form-select-custom {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            width: 100%;
+        }
+        .form-select-custom:focus {
+            border-color: #71B280;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(113, 178, 128, 0.2);
+        }
+
+        /* Table */
+        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 10px; }
+        th { 
+            background: #f8f9fa; 
+            color: #134E5E; 
+            padding: 15px; 
+            font-weight: bold; 
+            border-bottom: 2px solid #71B280; 
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+        td { padding: 12px 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
+        tr:hover { background-color: #f1f8f6; }
+
+        /* Custom Input in Table */
+        .input-score {
+            width: 80px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 5px;
+            font-weight: bold;
+            color: #134E5E;
+        }
+        .input-score:focus { border-color: #71B280; outline: none; }
+
+        /* Buttons & Links */
+        .btn-action {
+            background: linear-gradient(135deg, #134E5E 0%, #71B280 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .btn-action:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(19, 78, 94, 0.3); color: white; }
+        
+        .minh-chung-link { text-decoration: none; font-weight: bold; color: #134E5E; }
+        .minh-chung-link:hover { text-decoration: underline; color: #71B280; }
+
+        /* Status Badges */
+        .badge { padding: 6px 12px; border-radius: 20px; font-weight: 600; }
     </style>
 </head>
-<body class="bg-light">
-<div class="container-fluid pt-3">
-    <a href="../TrangChu/index.html" class="btn btn-outline-secondary btn-sm mb-2">
-        <i class="fas fa-arrow-left me-2"></i>Quay lại Trang chủ
-    </a>
-</div>
-<div class="container-fluid py-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-            <h5 class="mb-0"><i class="fas fa-hand-holding-heart me-2"></i>XÉT DUYỆT HỌC BỔNG THỬ THÁCH (VƯỢT KHÓ)</h5>
-            <span class="badge bg-light text-dark" id="status-badge">Đang tải...</span>
-        </div>
+<body>
+
+    <div id="sidebar-container"></div>
+
+    <div class="main-wrapper">
         
-        <div class="card-body">
-            <div class="row mb-3">
-                <div class="col-md-3">
-                    <label class="form-label fw-bold">Năm học:</label>
-                    <select id="cboNamHoc" class="form-select" onchange="fetchData()">
+        <header class="admin-header">
+            <h4 class="m-0 fw-bold text-secondary">
+                <i class="fas fa-hand-holding-heart me-2 text-success"></i>Xét Duyệt HB Thử Thách
+            </h4>
+            <div class="dropdown">
+                <a href="#" class="text-decoration-none text-dark dropdown-toggle" data-bs-toggle="dropdown">
+                    <img src="https://via.placeholder.com/30" class="rounded-circle me-1">
+                    <span>Xin chào, <b>Cán bộ CTSV</b></span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item text-danger" href="#">Đăng xuất</a></li>
+                </ul>
+            </div>
+        </header>
+
+        <div class="card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="m-0 border-0 p-0">📋 Danh sách Hồ sơ</h2>
+                <span class="badge bg-secondary fs-6" id="status-badge">Đang tải...</span>
+            </div>
+            
+            <div class="row mb-4 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold text-secondary">Năm học:</label>
+                    <select id="cboNamHoc" class="form-select form-select-custom" onchange="fetchData()">
                         <option value="2024-2025">2024-2025</option>
                         <option value="2023-2024">2023-2024</option>
                     </select>
                 </div>
-                <div class="col-md-9 text-end align-self-end">
-                    <button class="btn btn-primary" onclick="fetchData()"><i class="fas fa-sync me-2"></i>Tải lại danh sách</button>
+                <div class="col-md-8 text-end">
+                    <button class="btn-action" onclick="fetchData()">
+                        <i class="fas fa-sync me-2"></i>Tải lại danh sách
+                    </button>
                 </div>
             </div>
 
             <div class="table-responsive">
-                <table class="table table-bordered table-hover align-middle">
-                    <thead class="table-light text-center">
+                <table class="table-hover">
+                    <thead>
                         <tr>
                             <th>Thông tin Sinh viên</th>
-                            <th>Điểm TB Năm<br>(GPA / ĐRL)</th>
+                            <th>Điểm TB Năm<br><small>(GPA / ĐRL)</small></th>
                             <th>Minh chứng</th>
-                            <th>Điểm Tự Đánh Giá</th>
+                            <th>Điểm Tự ĐG</th>
                             <th width="150px">Điểm Thẩm Định</th>
                             <th>Trạng thái</th>
                             <th width="120px">Thao tác</th>
@@ -56,137 +207,197 @@
             </div>
         </div>
     </div>
-</div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        fetchData();
-    });
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    async function fetchData() {
-        let namHoc = document.getElementById('cboNamHoc').value;
-        try {
-            let res = await fetch(`http://localhost:3000/api/xetduyet-hbtt?namHoc=${namHoc}`);
-            let data = await res.json();
-            
-            let tbody = document.getElementById('table-body');
-            tbody.innerHTML = '';
-            
-            let pendingCount = 0;
+    <script>
+        const MENUS = {
+            ADMIN: [
+                { title: 'Tổng quan', url: 'Dashboard.html', icon: 'fa-tachometer-alt' },
+                { title: 'Người dùng', url: 'nguoidung.html', icon: 'fa-users-cog' },
+                { title: 'Năm học', url: 'namhoc.html', icon: 'fa-calendar-alt' },
+                { title: 'Học bổng', url: 'hocbong.html', icon: 'fa-hand-holding-usd' }
+            ],
+            PCTSV: [
+                { title: 'QL Doanh nghiệp', url: 'QLDN.html', icon: 'fa-building' },
+                { title: 'Phân bổ ngân sách', url: 'PBNS.html', icon: 'fa-chart-pie' },
+                { title: 'Duyệt Điểm HĐ', url: 'DuyetDHD.html', icon: 'fa-tasks' },
+                { title: 'Duyệt HB Khuyến khích', url: 'HBKK.html', icon: 'fa-star' },
+                { title: 'Duyệt HB Thử thách', url: 'HBTT.html', icon: 'fa-hand-holding-heart' },
+                { title: 'Duyệt HB Doanh nghiệp', url: 'HBDN.html', icon: 'fa-briefcase' }
+            ]
+        };
 
-            if(data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4">Không có hồ sơ nào nộp cho năm học này.</td></tr>`;
-                document.getElementById('status-badge').innerText = "0 hồ sơ";
+        function createSidebar(role, activePage) {
+            const container = document.getElementById('sidebar-container');
+            if (!container) return;
+
+            const menuItems = MENUS[role] || [];
+            const brandIcon = 'fa-university'; 
+            const brandTitle = 'P. CÔNG TÁC SV';
+
+            let html = `
+                <nav class="sidebar">
+                    <div class="brand-logo">
+                        <i class="fas ${brandIcon} me-2"></i> ${brandTitle}
+                    </div>
+                    <div class="nav flex-column">
+            `;
+
+            menuItems.forEach(item => {
+                const isActive = activePage.includes(item.url) ? 'active' : '';
+                html += `
+                    <a href="${item.url}" class="nav-link ${isActive}">
+                        <i class="fas ${item.icon} me-2"></i> ${item.title}
+                    </a>
+                `;
+            });
+
+            html += `
+                    </div>
+                    <div class="mt-auto p-3 border-top border-secondary" style="position: absolute; bottom: 0; width: 100%;">
+                        <a href="../TrangChu/index.html" class="nav-link text-white">
+                            <i class="fas fa-sign-out-alt me-2"></i> Thoát
+                        </a>
+                    </div>
+                </nav>
+            `;
+            container.innerHTML = html;
+        }
+
+        // Kích hoạt sidebar cho trang này
+        createSidebar('PCTSV', 'HBTT.html');
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetchData();
+        });
+
+        async function fetchData() {
+            let namHoc = document.getElementById('cboNamHoc').value;
+            try {
+                let res = await fetch(`http://localhost:3000/api/xetduyet-hbtt?namHoc=${namHoc}`);
+                let data = await res.json();
+                
+                let tbody = document.getElementById('table-body');
+                tbody.innerHTML = '';
+                
+                let pendingCount = 0;
+
+                if(data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-muted">Không có hồ sơ nào nộp cho năm học này.</td></tr>`;
+                    document.getElementById('status-badge').innerText = "0 hồ sơ";
+                    return;
+                }
+
+                data.forEach(item => {
+                    if (item.TrangThai === 'Chờ duyệt') pendingCount++;
+
+                    // Logic hiển thị màu sắc trạng thái
+                    let statusColor = "bg-secondary";
+                    if(item.TrangThai === 'Đạt') statusColor = "bg-success";
+                    if(item.TrangThai === 'Không đạt') statusColor = "bg-danger";
+                    if(item.TrangThai === 'Chờ duyệt') statusColor = "bg-warning text-dark";
+                    
+                    // Nếu đã duyệt rồi thì khóa nút, khóa ô nhập
+                    let isDisabled = item.TrangThai !== 'Chờ duyệt' ? 'disabled' : '';
+                    let isReadonly = item.TrangThai !== 'Chờ duyệt' ? 'readonly' : '';
+
+                    let row = `
+                        <tr>
+                            <td>
+                                <strong>${item.MaSV} - ${item.HoTen}</strong><br>
+                                <small class="text-muted">${item.TenLop}</small>
+                            </td>
+                            <td class="text-center fw-bold">
+                                <span class="text-primary">${item.DiemGPA_Nam}</span> / 
+                                <span class="text-info">${item.DiemRL_Nam}</span>
+                            </td>
+                            <td class="text-center">
+                                <a href="${item.LinkMinhChung || '#'}" target="_blank" class="minh-chung-link">
+                                    <i class="fas fa-external-link-alt me-1"></i>Xem file
+                                </a>
+                            </td>
+                            <td class="text-center fs-6 fw-bold">${item.DiemTuDanhGia}</td>
+                            <td class="text-center">
+                                <input type="number" id="input-${item.MaSV}" class="input-score" 
+                                       value="${item.DiemThamDinh}" ${isReadonly} min="0" max="100">
+                            </td>
+                            <td class="text-center">
+                                <span class="badge ${statusColor}">${item.TrangThai}</span>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-sm btn-outline-success" title="Duyệt" ${isDisabled}
+                                        onclick="updateStatus('${item.MaSV}', '${item.NamHoc}', '${item.MaTieuChi}', 'Đạt')">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" title="Từ chối" ${isDisabled}
+                                        onclick="updateStatus('${item.MaSV}', '${item.NamHoc}', '${item.MaTieuChi}', 'Không đạt')">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+
+                document.getElementById('status-badge').innerText = `Chờ xử lý: ${pendingCount} hồ sơ`;
+
+            } catch (error) {
+                console.error(error);
+                // alert("Lỗi tải dữ liệu!");
+            }
+        }
+
+        // HÀM GỬI LỆNH DUYỆT / TỪ CHỐI
+        async function updateStatus(maSV, namHoc, maTieuChi, trangThaiMoi) {
+            // Lấy điểm thẩm định từ ô nhập
+            let inputDiem = document.getElementById(`input-${maSV}`);
+            let diemThamDinh = inputDiem.value;
+
+            if(!diemThamDinh || diemThamDinh < 0) {
+                alert("Vui lòng nhập điểm thẩm định hợp lệ!");
                 return;
             }
 
-            data.forEach(item => {
-                if (item.TrangThai === 'Chờ duyệt') pendingCount++;
-
-                // Logic hiển thị màu sắc trạng thái
-                let statusColor = "bg-secondary";
-                if(item.TrangThai === 'Đạt') statusColor = "bg-success";
-                if(item.TrangThai === 'Không đạt') statusColor = "bg-danger";
+            // Hỏi lại cho chắc
+            let confirmMsg = trangThaiMoi === 'Đạt' 
+                ? `Duyệt sinh viên ${maSV} với điểm thẩm định là ${diemThamDinh}?`
+                : `Từ chối hồ sơ của sinh viên ${maSV}?`;
                 
-                // Nếu đã duyệt rồi thì khóa nút, khóa ô nhập
-                let isDisabled = item.TrangThai !== 'Chờ duyệt' ? 'disabled' : '';
-                let isReadonly = item.TrangThai !== 'Chờ duyệt' ? 'readonly' : '';
+            if (!confirm(confirmMsg)) return;
 
-                let row = `
-                    <tr>
-                        <td>
-                            <strong>${item.MaSV} - ${item.HoTen}</strong><br>
-                            <small class="text-muted">${item.TenLop}</small>
-                        </td>
-                        <td class="text-center fw-bold">
-                            <span class="text-primary">${item.DiemGPA_Nam}</span> / 
-                            <span class="text-info">${item.DiemRL_Nam}</span>
-                        </td>
-                        <td class="text-center">
-                            <a href="${item.LinkMinhChung || '#'}" target="_blank" class="minh-chung-link text-primary">
-                                <i class="fas fa-external-link-alt me-1"></i>Xem file
-                            </a>
-                        </td>
-                        <td class="text-center fs-5 text-secondary fw-bold">${item.DiemTuDanhGia}</td>
-                        <td class="text-center">
-                            <input type="number" id="input-${item.MaSV}" class="form-control text-center fw-bold text-success" 
-                                   value="${item.DiemThamDinh}" ${isReadonly} min="0" max="100">
-                        </td>
-                        <td class="text-center">
-                            <span class="badge ${statusColor}">${item.TrangThai}</span>
-                        </td>
-                        <td class="text-center">
-                            <div class="btn-group" role="group">
-                                <button class="btn btn-outline-success btn-sm" title="Duyệt" ${isDisabled}
-                                    onclick="updateStatus('${item.MaSV}', '${item.NamHoc}', '${item.MaTieuChi}', 'Đạt')">
-                                    <i class="fas fa-check"></i>
-                                </button>
-                                <button class="btn btn-outline-danger btn-sm" title="Từ chối" ${isDisabled}
-                                    onclick="updateStatus('${item.MaSV}', '${item.NamHoc}', '${item.MaTieuChi}', 'Không đạt')">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
+            try {
+                // Gửi API
+                let res = await fetch('http://localhost:3000/api/duyet-hbtt', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        maSV: maSV,
+                        namHoc: namHoc,
+                        maTieuChi: maTieuChi,
+                        diemThamDinh: diemThamDinh,
+                        trangThai: trangThaiMoi,
+                        ghiChu: trangThaiMoi === 'Không đạt' ? 'Điểm thẩm định không đạt' : '' 
+                    })
+                });
 
-            document.getElementById('status-badge').innerText = `Chờ xử lý: ${pendingCount} hồ sơ`;
+                let result = await res.json();
+                if (result.success) {
+                    fetchData(); // Tải lại bảng để thấy trạng thái mới
+                } else {
+                    alert("Lỗi: " + result.message);
+                }
 
-        } catch (error) {
-            console.error(error);
-            alert("Lỗi tải dữ liệu!");
-        }
-    }
-
-    // HÀM GỬI LỆNH DUYỆT / TỪ CHỐI
-    async function updateStatus(maSV, namHoc, maTieuChi, trangThaiMoi) {
-        // Lấy điểm thẩm định từ ô nhập
-        let inputDiem = document.getElementById(`input-${maSV}`);
-        let diemThamDinh = inputDiem.value;
-
-        if(!diemThamDinh || diemThamDinh < 0) {
-            alert("Vui lòng nhập điểm thẩm định hợp lệ!");
-            return;
-        }
-
-        // Hỏi lại cho chắc
-        let confirmMsg = trangThaiMoi === 'Đạt' 
-            ? `Duyệt sinh viên ${maSV} với điểm thẩm định là ${diemThamDinh}?`
-            : `Từ chối hồ sơ của sinh viên ${maSV}?`;
-            
-        if (!confirm(confirmMsg)) return;
-
-        try {
-            // Gửi API
-            let res = await fetch('http://localhost:3000/api/duyet-hbtt', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    maSV: maSV,
-                    namHoc: namHoc,
-                    maTieuChi: maTieuChi,
-                    diemThamDinh: diemThamDinh,
-                    trangThai: trangThaiMoi,
-                    ghiChu: trangThaiMoi === 'Không đạt' ? 'Điểm thẩm định không đạt' : '' 
-                })
-            });
-
-            let result = await res.json();
-            if (result.success) {
-                // alert("Cập nhật thành công!");
-                fetchData(); // Tải lại bảng để thấy trạng thái mới
-            } else {
-                alert("Lỗi: " + result.message);
+            } catch (error) {
+                console.error(error);
+                alert("Lỗi kết nối khi lưu!");
             }
-
-        } catch (error) {
-            console.error(error);
-            alert("Lỗi kết nối khi lưu!");
         }
-    }
-</script>
+    </script>
 
 </body>
 </html>
