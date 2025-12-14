@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duyệt Điểm Hoạt Động - P.CTSV</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #f5576c;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .form-title {
+            color: #f5576c;
+            font-size: 1.5em;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #f5576c;
+        }
+        
+        .filter-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #f5576c;
+        }
+        
+        .btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(245, 87, 108, 0.4);
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .data-table th {
+            background: #f5f5f5;
+            font-weight: bold;
+            color: #f5576c;
+            position: sticky;
+            top: 0;
+        }
+        
+        .data-table tr:hover {
+            background: #f9f9f9;
+        }
+        
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f5576c;
+        }
+        
+        .modal-header h3 {
+            color: #f5576c;
+            margin: 0;
+        }
+        
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .info-row {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: #666;
+        }
+        
+        .link-button {
+            color: #007bff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .link-button:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✅ DUYỆT ĐIỂM HOẠT ĐỘNG</h1>
+            <p>Phòng Công Tác Sinh Viên - UTE</p>
+        </div>
+        
+        <h2 class="form-title">Xem Các Hoạt Động SV Tự Khai Báo, Xem Minh Chứng → Duyệt Điểm</h2>
+        
+        <!-- Bộ lọc -->
+        <div class="filter-section">
+            <h3 style="color: #f5576c; margin-bottom: 15px;">🔍 Bộ Lọc</h3>
+            <div class="filter-row">
+                <div class="form-group">
+                    <label>Học Kỳ</label>
+                    <select id="filterHK">
+                        <option value="">Tất cả</option>
+                        <option value="HK1">Học kỳ 1 - 2024-2025</option>
+                        <option value="HK2" selected>Học kỳ 2 - 2024-2025</option>
+                        <option value="HK3">Học kỳ 3 - 2024-2025</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Trạng Thái</label>
+                    <select id="filterStatus">
+                        <option value="">Tất cả</option>
+                        <option value="pending" selected>Chờ duyệt</option>
+                        <option value="approved">Đạt</option>
+                        <option value="rejected">Không đạt</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Mã SV</label>
+                    <input type="text" id="filterMaSV" placeholder="VD: SV001">
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" onclick="applyFilter()">🔍 Lọc Dữ Liệu</button>
+        </div>
+        
+        <!-- Bảng dữ liệu -->
+        <div style="overflow-x: auto;">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Mã ĐHD</th>
+                        <th>Mã SV</th>
+                        <th>Họ Tên</th>
+                        <th>Học Kỳ</th>
+                        <th>Tên Hoạt Động</th>
+                        <th>Điểm Tự ĐG</th>
+                        <th>Điểm Chốt</th>
+                        <th>Trạng Thái</th>
+                        <th>Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody id="tableHoatDong">
+                    <tr data-status="approved">
+                        <td>DHD001</td>
+                        <td>SV001</td>
+                        <td>Nguyễn Văn An</td>
+                        <td>HK2</td>
+                        <td>Mùa hè xanh</td>
+                        <td>10</td>
+                        <td>10</td>
+                        <td><span class="status-badge status-approved">Đạt</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-warning" onclick="viewDetail('DHD001')" style="padding: 5px 12px;">👁️ Xem</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-status="pending">
+                        <td>DHD006</td>
+                        <td>SV009</td>
+                        <td>Hoàng Văn Hùng</td>
+                        <td>HK2</td>
+                        <td>Hackathon 2024</td>
+                        <td>20</td>
+                        <td>-</td>
+                        <td><span class="status-badge status-pending">Chờ duyệt</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-warning" onclick="viewDetail('DHD006')" style="padding: 5px 12px;">👁️ Xem</button>
+                                <button class="btn btn-success" onclick="approveActivity('DHD006')" style="padding: 5px 12px;">✔️ Duyệt</button>
+                                <button class="btn btn-danger" onclick="rejectActivity('DHD006')" style="padding: 5px 12px;">✖️ Từ chối</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-status="approved">
+                        <td>DHD005</td>
+                        <td>SV008</td>
+                        <td>Phan Văn Minh</td>
+                        <td>HK2</td>
+                        <td>Nghiên cứu KH</td>
+                        <td>15</td>
+                        <td>15</td>
+                        <td><span class="status-badge status-approved">Đạt</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-warning" onclick="viewDetail('DHD005')" style="padding: 5px 12px;">👁️ Xem</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-status="pending">
+                        <td>DHD011</td>
+                        <td>SV016</td>
+                        <td>Lý Thị Quýt</td>
+                        <td>HK2</td>
+                        <td>Thi Olympic Toán</td>
+                        <td>10</td>
+                        <td>-</td>
+                        <td><span class="status-badge status-pending">Chờ duyệt</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-warning" onclick="viewDetail('DHD011')" style="padding: 5px 12px;">👁️ Xem</button>
+                                <button class="btn btn-success" onclick="approveActivity('DHD011')" style="padding: 5px 12px;">✔️ Duyệt</button>
+                                <button class="btn btn-danger" onclick="rejectActivity('DHD011')" style="padding: 5px 12px;">✖️ Từ chối</button>
+                            </div>
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Modal Chi Tiết -->
+    <div id="modalDetail" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📋 Chi Tiết Hoạt Động</h3>
+            </div>
+            
+            <div id="modalBody">
+                <div class="info-row">
+                    <span class="info-label">Mã ĐHD:</span>
+                    <span id="detailMaDHD">DHD001</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Mã SV:</span>
+                    <span id="detailMaSV">SV001</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Họ Tên:</span>
+                    <span id="detailHoTen">Nguyễn Văn An</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Tên Hoạt Động:</span>
+                    <span id="detailTenHD">Mùa hè xanh</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Điểm Tự Đánh Giá:</span>
+                    <span id="detailDiemTuDG">10</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Minh Chứng:</span>
+                    <a href="#" class="link-button" id="detailLink" target="_blank">Xem minh chứng</a>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Điểm Chốt:</span>
+                    <span id="detailDiemChot">10</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Ghi Chú:</span>
+                    <span id="detailGhiChu">-</span>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeModal()" style="flex: 1;">Đóng</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Duyệt Điểm -->
+    <div id="modalApprove" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>✅ Duyệt Điểm Hoạt Động</h3>
+            </div>
+            
+            <form id="formApprove" onsubmit="handleApprove(event)">
+                <div class="info-row">
+                    <span class="info-label">Mã Hoạt Động:</span>
+                    <span id="approveMaDHD"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label>Điểm Chốt <span style="color: red;">*</span></label>
+                    <input type="number" id="approveDiemChot" min="0" max="100" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Ghi Chú</label>
+                    <textarea id="approveGhiChu" rows="3" placeholder="Nhập ghi chú (nếu có)"></textarea>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" style="flex: 1;">✔️ Xác Nhận Duyệt</button>
+                    <button type="button" class="btn btn-danger" onclick="closeModalApprove()">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        let currentMaDHD = null;
+        
+        function viewDetail(maDHD) {
+            document.getElementById('modalDetail').classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('modalDetail').classList.remove('active');
+        }
+        
+        function approveActivity(maDHD) {
+            currentMaDHD = maDHD;
+            document.getElementById('approveMaDHD').textContent = maDHD;
+            document.getElementById('modalApprove').classList.add('active');
+        }
+        
+        function closeModalApprove() {
+            document.getElementById('modalApprove').classList.remove('active');
+            document.getElementById('formApprove').reset();
+        }
+        
+        function handleApprove(event) {
+            event.preventDefault();
+            
+            const diemChot = document.getElementById('approveDiemChot').value;
+            const ghiChu = document.getElementById('approveGhiChu').value;
+            
+            // Tìm và cập nhật dòng trong bảng
+            const table = document.getElementById('tableHoatDong');
+            for (let row of table.rows) {
+                if (row.cells[0].textContent === currentMaDHD) {
+                    row.cells[6].textContent = diemChot;
+                    row.cells[7].innerHTML = '<span class="status-badge status-approved">Đạt</span>';
+                    row.cells[8].innerHTML = `
+                        <div class="action-buttons">
+                            <button class="btn btn-warning" onclick="viewDetail('${currentMaDHD}')" style="padding: 5px 12px;">👁️ Xem</button>
+                        </div>
+                    `;
+                    row.setAttribute('data-status', 'approved');
+                    break;
+                }
+            }
+            
+            alert('✅ Đã duyệt hoạt động thành công!');
+            closeModalApprove();
+        }
+        
+        function rejectActivity(maDHD) {
+            const reason = prompt('Nhập lý do từ chối:');
+            if (reason) {
+                const table = document.getElementById('tableHoatDong');
+                for (let row of table.rows) {
+                    if (row.cells[0].textContent === maDHD) {
+                        row.cells[6].textContent = '0';
+                        row.cells[7].innerHTML = '<span class="status-badge status-rejected">Không đạt</span>';
+                        row.cells[8].innerHTML = `
+                            <div class="action-buttons">
+                                <button class="btn btn-warning" onclick="viewDetail('${maDHD}')" style="padding: 5px 12px;">👁️ Xem</button>
+                            </div>
+                        `;
+                        row.setAttribute('data-status', 'rejected');
+                        break;
+                    }
+                }
+                alert('❌ Đã từ chối hoạt động!');
+            }
+        }
+        
+        function applyFilter() {
+            const statusFilter = document.getElementById('filterStatus').value;
+            const table = document.getElementById('tableHoatDong');
+            
+            for (let row of table.rows) {
+                const rowStatus = row.getAttribute('data-status');
+                
+                if (statusFilter === '' || rowStatus === statusFilter) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        }
+        
+        // Đóng modal khi click bên ngoài
+        window.onclick = function(event) {
+            const modalDetail = document.getElementById('modalDetail');
+            const modalApprove = document.getElementById('modalApprove');
+            
+            if (event.target === modalDetail) {
+                closeModal();
+            }
+            if (event.target === modalApprove) {
+                closeModalApprove();
+            }
+        }
+    </script>
+</body>
+</html>

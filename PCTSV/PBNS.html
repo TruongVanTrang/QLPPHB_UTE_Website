@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phân Bổ Ngân Sách - P.CTSV</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #11998e;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .form-title {
+            color: #11998e;
+            font-size: 1.5em;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #11998e;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group label .required {
+            color: red;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #11998e;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            flex: 1;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(17, 153, 142, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+            flex: 1;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        .note {
+            background: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+        
+        .note strong {
+            color: #0c5460;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .data-table th {
+            background: #f5f5f5;
+            font-weight: bold;
+            color: #11998e;
+        }
+        
+        .data-table tr:hover {
+            background: #f9f9f9;
+        }
+        
+        .btn-small {
+            padding: 5px 15px;
+            font-size: 14px;
+        }
+        
+        .summary-card {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .summary-card h3 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .summary-card p {
+            font-size: 2em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💰 PHÂN BỔ NGÂN SÁCH HỌC BỔNG</h1>
+            <p>Phòng Công Tác Sinh Viên - UTE</p>
+        </div>
+        
+        <div class="summary-card">
+            <h3>📊 Tổng Ngân Sách Đã Phân Bổ</h3>
+            <p id="tongNganSach">135.000.000đ</p>
+        </div>
+        
+        <h2 class="form-title">Nhập Số Suất / Số Tiền Phân Bổ Cho Từng Khoa Trong Kỳ</h2>
+        
+        <form id="formNganSach" onsubmit="handleSubmit(event)">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Học Kỳ <span class="required">*</span></label>
+                    <select id="maHK" required>
+                        <option value="">-- Chọn Học Kỳ --</option>
+                        <option value="HK1">Học kỳ 1 - 2024-2025</option>
+                        <option value="HK2">Học kỳ 2 - 2024-2025</option>
+                        <option value="HK3">Học kỳ 3 - 2024-2025</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Khoa <span class="required">*</span></label>
+                    <select id="maKhoa" required>
+                        <option value="">-- Chọn Khoa --</option>
+                        <option value="CNS">Công nghệ số</option>
+                        <option value="CK">Cơ khí</option>
+                        <option value="XD">Kỹ thuật xây dựng</option>
+                        <option value="DDT">Điện - Điện tử</option>
+                        <option value="HHMT">Hóa học và Môi trường</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Tiêu Chí Học Bổng <span class="required">*</span></label>
+                <select id="maTieuChi" required onchange="calculateTotal()">
+                    <option value="">-- Chọn Loại Học Bổng --</option>
+                    <option value="TC001" data-amount="5000000">Học bổng Khuyến khích A (5.000.000đ)</option>
+                    <option value="TC002" data-amount="3000000">Học bổng Khuyến khích B (3.000.000đ)</option>
+                    <option value="TC003" data-amount="2000000">Học bổng Thử thách (2.000.000đ)</option>
+                </select>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Số Lượng Suất <span class="required">*</span></label>
+                    <input type="number" id="soLuongSuat" placeholder="VD: 10" min="1" required onchange="calculateTotal()">
+                </div>
+                
+                <div class="form-group">
+                    <label>Tổng Tiền (VNĐ) <span class="required">*</span></label>
+                    <input type="number" id="tongTien" placeholder="Tự động tính" readonly style="background: #f5f5f5;">
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button type="submit" class="btn btn-primary">💾 Lưu Phân Bổ</button>
+                <button type="reset" class="btn btn-secondary">🔄 Làm Mới</button>
+            </div>
+        </form>
+        
+        <div class="note">
+            <strong>📌 Lưu ý:</strong> Tổng tiền = Số suất × Mức học bổng. Hệ thống sẽ sử dụng thông tin này để xét duyệt học bổng Khuyến khích.
+        </div>
+        
+        <h3 style="margin-top: 30px; color: #11998e;">📊 Phân Bổ Ngân Sách Hiện Tại</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Học Kỳ</th>
+                    <th>Khoa</th>
+                    <th>Loại HB</th>
+                    <th>Số Suất</th>
+                    <th>Tổng Tiền</th>
+                    <th>Thao Tác</th>
+                </tr>
+            </thead>
+            <tbody id="tableNganSach">
+                <tr>
+                    <td>HK2</td>
+                    <td>CNS</td>
+                    <td>HB Khuyến khích A</td>
+                    <td>10</td>
+                    <td>50.000.000đ</td>
+                    <td>
+                        <button class="btn btn-secondary btn-small" onclick="editRow(this)">✏️ Sửa</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>HK2</td>
+                    <td>CNS</td>
+                    <td>HB Khuyến khích B</td>
+                    <td>20</td>
+                    <td>60.000.000đ</td>
+                    <td>
+                        <button class="btn btn-secondary btn-small" onclick="editRow(this)">✏️ Sửa</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>HK2</td>
+                    <td>CK</td>
+                    <td>HB Khuyến khích B</td>
+                    <td>5</td>
+                    <td>25.000.000đ</td>
+                    <td>
+                        <button class="btn btn-secondary btn-small" onclick="editRow(this)">✏️ Sửa</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+        function calculateTotal() {
+            const select = document.getElementById('maTieuChi');
+            const soLuong = document.getElementById('soLuongSuat').value;
+            const selectedOption = select.options[select.selectedIndex];
+            const amount = selectedOption.getAttribute('data-amount');
+            
+            if (amount && soLuong) {
+                const total = parseInt(amount) * parseInt(soLuong);
+                document.getElementById('tongTien').value = total;
+            }
+        }
+        
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('vi-VN', { 
+                style: 'currency', 
+                currency: 'VND' 
+            }).format(amount);
+        }
+        
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            const maHK = document.getElementById('maHK');
+            const maKhoa = document.getElementById('maKhoa');
+            const maTieuChi = document.getElementById('maTieuChi');
+            const soLuongSuat = document.getElementById('soLuongSuat').value;
+            const tongTien = document.getElementById('tongTien').value;
+            
+            const table = document.getElementById('tableNganSach');
+            const newRow = table.insertRow();
+            
+            newRow.innerHTML = `
+                <td>${maHK.options[maHK.selectedIndex].text}</td>
+                <td>${maKhoa.options[maKhoa.selectedIndex].text}</td>
+                <td>${maTieuChi.options[maTieuChi.selectedIndex].text.split('(')[0]}</td>
+                <td>${soLuongSuat}</td>
+                <td>${formatCurrency(tongTien)}</td>
+                <td>
+                    <button class="btn btn-secondary btn-small" onclick="editRow(this)">✏️ Sửa</button>
+                </td>
+            `;
+            
+            alert('✅ Đã phân bổ ngân sách thành công!');
+            document.getElementById('formNganSach').reset();
+            updateTongNganSach();
+        }
+        
+        function updateTongNganSach() {
+            const table = document.getElementById('tableNganSach');
+            let total = 0;
+            
+            for (let i = 0; i < table.rows.length; i++) {
+                const cellText = table.rows[i].cells[4].textContent;
+                const amount = parseInt(cellText.replace(/[^\d]/g, ''));
+                total += amount;
+            }
+            
+            document.getElementById('tongNganSach').textContent = formatCurrency(total);
+        }
+        
+        function editRow(btn) {
+            alert('Chức năng chỉnh sửa đang được phát triển');
+        }
+    </script>
+</body>
+</html>
