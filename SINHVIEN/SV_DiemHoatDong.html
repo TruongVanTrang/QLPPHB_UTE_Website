@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sinh viên - Điểm Hoạt Động</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
+        .sidebar { min-height: 100vh; background: #d35400; color: white; width: 250px; position: fixed; top: 0; left: 0; z-index: 1000; }
+        .brand-logo { background: #a04000; padding: 20px; font-weight: bold; text-align: center; }
+        .sidebar .nav-link { color: #ffe6cc; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { background: #e67e22; color: white; border-left: 4px solid #fff; }
+        .main-wrapper { margin-left: 250px; padding: 30px; }
+        .card { border: none; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 25px; }
+        .btn-orange { background: #e67e22; color: white; border: none; }
+        .btn-orange:hover { background: #d35400; color: white; }
+    </style>
+</head>
+<body>
+    <div id="sidebar-container"></div> <div class="main-wrapper">
+        <h3 class="fw-bold mb-4 text-secondary"><i class="fas fa-tasks me-2"></i>Quản Lý Điểm Hoạt Động</h3>
+
+        <div class="card p-4">
+            <h5 class="text-danger fw-bold border-bottom pb-2">➕ Khai báo hoạt động</h5>
+            <form id="frmDHD">
+                <input type="hidden" id="editIndex" value="-1"> <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Học kỳ</label>
+                        <select class="form-select" id="maHK" required>
+                            <option value="HK2_2024">HK2 - 2024-2025</option>
+                            <option value="HK1_2024">HK1 - 2024-2025</option>
+                        </select>
+                    </div>
+                    <div class="col-md-8">
+                        <label class="form-label fw-bold">Tên hoạt động</label>
+                        <input type="text" class="form-control" id="tenHoatDong" placeholder="VD: Hiến máu nhân đạo..." required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Điểm tự chấm</label>
+                        <input type="number" class="form-control" id="diemTuCham" min="0" max="100" required>
+                    </div>
+                    <div class="col-md-8">
+                        <label class="form-label fw-bold">Link minh chứng</label>
+                        <input type="url" class="form-control" id="linkMinhChung" placeholder="https://..." required>
+                    </div>
+                    <div class="col-12 text-end">
+                        <button type="button" class="btn btn-secondary me-2" onclick="resetForm()">Hủy</button>
+                        <button type="submit" class="btn btn-orange px-4" id="btnSave"><i class="fas fa-save me-2"></i>Lưu hồ sơ</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="card p-4">
+            <h5 class="text-secondary fw-bold border-bottom pb-2">📋 Danh sách đã khai báo</h5>
+            <table class="table table-hover align-middle">
+                <thead class="table-warning">
+                    <tr>
+                        <th>Học kỳ</th>
+                        <th>Tên hoạt động</th>
+                        <th>Điểm</th>
+                        <th>Minh chứng</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="tblBody">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // --- 1. Load Sidebar (Dùng chung) ---
+        const SV_MENU = [
+            { title: 'Thông báo', url: 'SV_ThongBao.html', icon: 'fa-bell' }, // <-- Thêm dòng này
+            { title: 'Nhập Điểm HĐ', url: 'SV_DiemHoatDong.html', icon: 'fa-tasks' },
+            { title: 'Đăng ký Học bổng', url: 'SV_DangKyHB.html', icon: 'fa-file-signature' },
+            { title: 'Lịch sử & Khiếu nại', url: 'SV_TienIch.html', icon: 'fa-history' }
+        ];
+        function loadSidebar() {
+            let html = `<nav class="sidebar"><div class="brand-logo"><i class="fas fa-user-graduate me-2"></i>CỔNG SINH VIÊN</div><div class="nav flex-column">`;
+            const currentPage = window.location.pathname.split('/').pop();
+            SV_MENU.forEach(item => {
+                const active = currentPage === item.url ? 'active' : '';
+                html += `<a href="${item.url}" class="nav-link ${active}"><i class="fas ${item.icon} me-2"></i>${item.title}</a>`;
+            });
+            html += `</div><div class="mt-auto p-3 border-top border-secondary position-absolute bottom-0 w-100"><a href="../TrangChu/index.html" class="nav-link text-white"><i class="fas fa-sign-out-alt me-2"></i>Thoát</a></div></nav>`;
+            document.getElementById('sidebar-container').innerHTML = html;
+        }
+        loadSidebar();
+
+        // --- 2. LOGIC CRUD (Lưu LocalStorage) ---
+        
+        // Dữ liệu mẫu ban đầu
+        const initData = [
+            { hk: 'HK2_2024', ten: 'Mùa hè xanh', diem: 10, link: '#', status: 'Chờ duyệt' },
+            { hk: 'HK1_2024', ten: 'Thi Olympic Toán', diem: 15, link: '#', status: 'Đạt' }
+        ];
+
+        // Lấy dữ liệu từ LocalStorage hoặc dùng dữ liệu mẫu
+        let dataList = JSON.parse(localStorage.getItem('sv_diemHoatDong')) || initData;
+
+        function renderTable() {
+            const tbody = document.getElementById('tblBody');
+            tbody.innerHTML = '';
+            dataList.forEach((item, index) => {
+                let badge = item.status === 'Đạt' ? 'bg-success' : 'bg-warning text-dark';
+                let disabled = item.status === 'Đạt' ? 'disabled' : ''; // Nếu Đạt rồi thì ko cho sửa xóa
+                
+                let row = `
+                    <tr>
+                        <td>${item.hk}</td>
+                        <td>${item.ten}</td>
+                        <td class="fw-bold">${item.diem}</td>
+                        <td><a href="${item.link}" target="_blank">Xem</a></td>
+                        <td><span class="badge ${badge}">${item.status}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="editItem(${index})" ${disabled}><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteItem(${index})" ${disabled}><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+            localStorage.setItem('sv_diemHoatDong', JSON.stringify(dataList));
+        }
+
+        // Thêm hoặc Cập nhật
+        document.getElementById('frmDHD').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            let idx = document.getElementById('editIndex').value;
+            let newItem = {
+                hk: document.getElementById('maHK').value,
+                ten: document.getElementById('tenHoatDong').value,
+                diem: document.getElementById('diemTuCham').value,
+                link: document.getElementById('linkMinhChung').value,
+                status: 'Chờ duyệt' // Mặc định khi mới nhập/sửa là chờ duyệt
+            };
+
+            if(idx == -1) {
+                // Thêm mới
+                dataList.push(newItem);
+                alert("✅ Đã thêm hoạt động mới!");
+            } else {
+                // Cập nhật
+                dataList[idx] = newItem;
+                alert("✅ Đã cập nhật thành công!");
+                document.getElementById('editIndex').value = -1;
+                document.getElementById('btnSave').innerHTML = '<i class="fas fa-save me-2"></i>Lưu hồ sơ';
+            }
+
+            resetForm();
+            renderTable();
+        });
+
+        // Hàm điền dữ liệu lên form để sửa
+        window.editItem = function(index) {
+            let item = dataList[index];
+            document.getElementById('maHK').value = item.hk;
+            document.getElementById('tenHoatDong').value = item.ten;
+            document.getElementById('diemTuCham').value = item.diem;
+            document.getElementById('linkMinhChung').value = item.link;
+            
+            document.getElementById('editIndex').value = index;
+            document.getElementById('btnSave').innerHTML = '<i class="fas fa-sync me-2"></i>Cập nhật';
+            window.scrollTo(0, 0);
+        }
+
+        // Hàm xóa
+        window.deleteItem = function(index) {
+            if(confirm("Bạn có chắc muốn xóa hoạt động này?")) {
+                dataList.splice(index, 1);
+                renderTable();
+            }
+        }
+
+        window.resetForm = function() {
+            document.getElementById('frmDHD').reset();
+            document.getElementById('editIndex').value = -1;
+            document.getElementById('btnSave').innerHTML = '<i class="fas fa-save me-2"></i>Lưu hồ sơ';
+        }
+
+        // Chạy lần đầu
+        renderTable();
+    </script>
+</body>
+</html>

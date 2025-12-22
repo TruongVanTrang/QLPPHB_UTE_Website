@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sinh viên - Thông Báo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
+        .sidebar { min-height: 100vh; background: #d35400; color: white; width: 250px; position: fixed; top: 0; left: 0; z-index: 1000; }
+        .main-wrapper { margin-left: 250px; padding: 30px; }
+        
+        /* Notification Card Styles */
+        .notif-card {
+            border-left: 5px solid #ddd;
+            transition: all 0.2s;
+            cursor: pointer;
+            background: white;
+        }
+        .notif-card:hover { transform: translateX(5px); }
+        
+        /* Trạng thái chưa đọc */
+        .notif-unread {
+            border-left-color: #fd7e14; /* Màu cam */
+            background-color: #fff8f0;
+        }
+        .notif-unread .notif-title { font-weight: bold; color: #d35400; }
+        
+        /* Trạng thái đã đọc */
+        .notif-read {
+            border-left-color: #adb5bd; /* Màu xám */
+            opacity: 0.8;
+        }
+        
+        /* Icon types */
+        .icon-box { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; }
+        .bg-hb { background-color: #28a745; } /* Học bổng */
+        .bg-kn { background-color: #dc3545; } /* Khiếu nại */
+        .bg-rl { background-color: #17a2b8; } /* Rèn luyện */
+        .bg-sys { background-color: #6c757d; } /* Hệ thống */
+
+    </style>
+</head>
+<body>
+    <div id="sidebar-container"></div>
+
+    <div class="main-wrapper">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-bold text-secondary m-0"><i class="fas fa-bell me-2"></i>Thông Báo Của Tôi</h3>
+            <button class="btn btn-sm btn-outline-secondary" onclick="markAllRead()">
+                <i class="fas fa-check-double me-1"></i> Đánh dấu tất cả là đã đọc
+            </button>
+        </div>
+
+        <div class="mb-3">
+            <button class="btn btn-light border fw-bold me-2 active" onclick="filterNotif('all')">Tất cả</button>
+            <button class="btn btn-light border me-2" onclick="filterNotif('unread')">Chưa đọc</button>
+            <button class="btn btn-light border" onclick="filterNotif('HocBong')">Kết quả Học bổng</button>
+        </div>
+
+        <div class="list-group" id="notifList">
+            </div>
+        
+        <div id="emptyState" class="text-center mt-5 d-none">
+            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+            <p class="text-muted">Không có thông báo nào.</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const CURRENT_USER = 'SV001';
+
+        // --- 1. SIDEBAR (Cập nhật thêm menu Thông báo) ---
+        const SV_MENU = [
+            { title: 'Thông báo', url: 'SV_ThongBao.html', icon: 'fa-bell' }, // Mới thêm
+            { title: 'Nhập Điểm HĐ', url: 'SV_DiemHoatDong.html', icon: 'fa-tasks' },
+            { title: 'Đăng ký Học bổng', url: 'SV_DangKyHB.html', icon: 'fa-file-signature' },
+            { title: 'Lịch sử & Khiếu nại', url: 'SV_TienIch.html', icon: 'fa-history' }
+        ];
+        
+        document.getElementById('sidebar-container').innerHTML = `
+            <nav class="sidebar p-3">
+                <div class="text-center mb-4 fw-bold fs-5">CỔNG SINH VIÊN</div>
+                <div class="nav flex-column">
+                    ${SV_MENU.map(i => {
+                        const active = window.location.pathname.includes(i.url) ? 'active' : '';
+                        return `<a href="${i.url}" class="nav-link text-white mb-2 ${active}"><i class="fas ${i.icon} me-2"></i>${i.title}</a>`
+                    }).join('')}
+                </div>
+                <div class="mt-auto pt-3 border-top"><a href="../TrangChu/index.html" class="nav-link text-white">Thoát</a></div>
+            </nav>`;
+
+        // --- 2. DỮ LIỆU MẪU (Mock Data tương ứng với DB) ---
+        const mockNotifications = [
+            {
+                MaTB: 1, MaSV: 'SV001',
+                LoaiTB: 'HocBong',
+                TieuDe: 'Kết quả Học bổng Doanh nghiệp',
+                NoiDung: 'Chúc mừng! Hồ sơ ứng tuyển học bổng "FPT Software Talent" của bạn đã được DUYỆT.',
+                ThoiGian: 'Vừa xong',
+                TrangThai: 0 // Chưa đọc
+            },
+            {
+                MaTB: 2, MaSV: 'SV001',
+                LoaiTB: 'KhieuNai',
+                TieuDe: 'Phản hồi khiếu nại KN001',
+                NoiDung: 'Phòng CTSV đã trả lời khiếu nại về điểm rèn luyện của bạn. Vui lòng kiểm tra chi tiết.',
+                ThoiGian: '2 giờ trước',
+                TrangThai: 0 // Chưa đọc
+            },
+            {
+                MaTB: 3, MaSV: 'SV001',
+                LoaiTB: 'HeThong',
+                TieuDe: 'Cập nhật tiêu chí Học bổng KK',
+                NoiDung: 'Nhà trường vừa cập nhật tiêu chí xét HB Khuyến khích cho HK2 năm học 2024-2025.',
+                ThoiGian: '1 ngày trước',
+                TrangThai: 1 // Đã đọc
+            },
+            {
+                MaTB: 4, MaSV: 'SV001',
+                LoaiTB: 'RenLuyen',
+                TieuDe: 'Xác nhận Điểm Rèn Luyện',
+                NoiDung: 'Điểm rèn luyện HK1 của bạn đã được Khoa xác nhận. Điểm chính thức: 85 (Tốt).',
+                ThoiGian: '3 ngày trước',
+                TrangThai: 1 // Đã đọc
+            }
+        ];
+
+        // Lấy dữ liệu từ LocalStorage hoặc dùng Mock
+        let notifData = JSON.parse(localStorage.getItem('db_ThongBao')) || mockNotifications;
+
+        // --- 3. RENDER LOGIC ---
+        function renderNotifications(filter = 'all') {
+            const list = document.getElementById('notifList');
+            const empty = document.getElementById('emptyState');
+            list.innerHTML = '';
+
+            // Lọc dữ liệu
+            let displayData = notifData.filter(x => x.MaSV === CURRENT_USER);
+            if (filter === 'unread') displayData = displayData.filter(x => x.TrangThai === 0);
+            else if (filter !== 'all') displayData = displayData.filter(x => x.LoaiTB === filter);
+
+            if (displayData.length === 0) {
+                empty.classList.remove('d-none');
+                return;
+            } else {
+                empty.classList.add('d-none');
+            }
+
+            displayData.forEach((item, index) => {
+                let statusClass = item.TrangThai === 0 ? 'notif-unread' : 'notif-read';
+                let iconClass = '';
+                let icon = '';
+
+                // Chọn icon theo loại
+                switch(item.LoaiTB) {
+                    case 'HocBong': iconClass = 'bg-hb'; icon = 'fa-graduation-cap'; break;
+                    case 'KhieuNai': iconClass = 'bg-kn'; icon = 'fa-exclamation-triangle'; break;
+                    case 'RenLuyen': iconClass = 'bg-rl'; icon = 'fa-star'; break;
+                    default: iconClass = 'bg-sys'; icon = 'fa-info'; break;
+                }
+
+                let html = `
+                    <div class="list-group-item p-3 mb-2 shadow-sm notif-card ${statusClass}" onclick="readNotif(${item.MaTB})">
+                        <div class="d-flex align-items-start">
+                            <div class="icon-box ${iconClass} flex-shrink-0">
+                                <i class="fas ${icon}"></i>
+                            </div>
+                            <div class="ms-3 w-100">
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="notif-title mb-1">${item.TieuDe} ${item.TrangThai === 0 ? '<span class="badge bg-danger ms-2" style="font-size: 0.6rem">Mới</span>' : ''}</h6>
+                                    <small class="text-muted" style="font-size: 0.8rem">${item.ThoiGian}</small>
+                                </div>
+                                <p class="mb-0 text-secondary small">${item.NoiDung}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                list.innerHTML += html;
+            });
+        }
+
+        // --- 4. HÀM XỬ LÝ SỰ KIỆN ---
+        
+        // Đánh dấu đã đọc khi click
+        window.readNotif = function(id) {
+            let item = notifData.find(x => x.MaTB === id);
+            if(item && item.TrangThai === 0) {
+                item.TrangThai = 1;
+                localStorage.setItem('db_ThongBao', JSON.stringify(notifData));
+                renderNotifications(); // Re-render để cập nhật giao diện
+            }
+        }
+
+        // Đánh dấu tất cả đã đọc
+        window.markAllRead = function() {
+            notifData.forEach(x => x.TrangThai = 1);
+            localStorage.setItem('db_ThongBao', JSON.stringify(notifData));
+            renderNotifications();
+            alert("✅ Đã đánh dấu tất cả là đã đọc!");
+        }
+
+        // Bộ lọc
+        window.filterNotif = function(type) {
+            renderNotifications(type);
+        }
+
+        // Init
+        renderNotifications();
+
+    </script>
+</body>
+</html>

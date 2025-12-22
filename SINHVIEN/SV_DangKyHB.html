@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sinh viên - Đăng Ký Học Bổng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
+        .sidebar { min-height: 100vh; background: #d35400; color: white; width: 250px; position: fixed; top: 0; left: 0; z-index: 1000; }
+        .brand-logo { background: #a04000; padding: 20px; font-weight: bold; text-align: center; }
+        .sidebar .nav-link { color: #ffe6cc; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { background: #e67e22; color: white; border-left: 4px solid #fff; }
+        .main-wrapper { margin-left: 250px; padding: 30px; }
+        .hb-card { border: 1px solid #ddd; border-radius: 10px; background: white; transition: 0.3s; overflow: hidden; }
+        .hb-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+        .hb-header { background: #e67e22; color: white; padding: 15px; font-weight: bold; }
+        .hb-body { padding: 20px; }
+        .badge-custom { background: #fce4ec; color: #c2185b; padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar-container"></div>
+
+    <div class="main-wrapper">
+        <h3 class="fw-bold mb-4 text-secondary"><i class="fas fa-file-signature me-2"></i>Đăng Ký Học Bổng</h3>
+
+        <ul class="nav nav-pills mb-4" id="pills-tab">
+            <li class="nav-item"><button class="nav-link active bg-secondary text-white me-2" data-bs-toggle="pill" data-bs-target="#tab-dn">HB Doanh Nghiệp</button></li>
+            <li class="nav-item"><button class="nav-link bg-secondary text-white" data-bs-toggle="pill" data-bs-target="#tab-tt">HB Thử Thách</button></li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="tab-dn">
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="hb-card h-100">
+                            <div class="hb-header d-flex justify-content-between">
+                                <span>FPT Software Talent</span>
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="hb-body">
+                                <p><i class="fas fa-money-bill-wave me-2 text-success"></i>Trị giá: <strong>10.000.000 VNĐ</strong></p>
+                                <p><i class="fas fa-calendar-alt me-2 text-primary"></i>Hạn: 01/05/2025</p>
+                                <div class="mb-3">
+                                    <span class="badge-custom">GPA > 3.5</span>
+                                    <span class="badge-custom">ĐRL > 80</span>
+                                </div>
+                                <button class="btn btn-outline-warning w-100 fw-bold" onclick="nopHoSo('DN_FPT')">Ứng tuyển ngay</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="hb-card h-100">
+                            <div class="hb-header d-flex justify-content-between">
+                                <span>Viettel Future Star</span>
+                                <i class="fas fa-wifi"></i>
+                            </div>
+                            <div class="hb-body">
+                                <p><i class="fas fa-money-bill-wave me-2 text-success"></i>Trị giá: <strong>7.000.000 VNĐ</strong></p>
+                                <p><i class="fas fa-calendar-alt me-2 text-primary"></i>Hạn: 01/06/2025</p>
+                                <div class="mb-3">
+                                    <span class="badge-custom">GPA > 3.2</span>
+                                    <span class="badge-custom">Tiếng Anh</span>
+                                </div>
+                                <button class="btn btn-outline-warning w-100 fw-bold" onclick="nopHoSo('DN_VTL')">Ứng tuyển ngay</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="tab-tt">
+                <div class="card p-4 border-0 shadow-sm">
+                    <h5 class="text-danger fw-bold"><i class="fas fa-hand-holding-heart me-2"></i>Học bổng Vượt khó (Thử thách)</h5>
+                    <p class="text-muted">Dành cho sinh viên có hoàn cảnh khó khăn, hộ nghèo/cận nghèo vươn lên trong học tập.</p>
+                    <form id="frmHBTT">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Chọn năm học</label>
+                            <select class="form-select w-50"><option>2024-2025</option></select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Link minh chứng (Sổ hộ nghèo/Giấy xác nhận)</label>
+                            <input type="url" class="form-control" placeholder="Link Google Drive..." required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Trình bày hoàn cảnh (Ngắn gọn)</label>
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                        <button class="btn btn-danger"><i class="fas fa-paper-plane me-2"></i>Gửi hồ sơ xét duyệt</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // --- Sidebar Logic (Giống file trên) ---
+        const SV_MENU = [
+            { title: 'Thông báo', url: 'SV_ThongBao.html', icon: 'fa-bell' }, // <-- Thêm dòng này
+            { title: 'Nhập Điểm HĐ', url: 'SV_DiemHoatDong.html', icon: 'fa-tasks' },
+            { title: 'Đăng ký Học bổng', url: 'SV_DangKyHB.html', icon: 'fa-file-signature' },
+            { title: 'Lịch sử & Khiếu nại', url: 'SV_TienIch.html', icon: 'fa-history' }
+        ];
+        // (Copy hàm loadSidebar từ file trên vào đây)
+        function loadSidebar() {
+            let html = `<nav class="sidebar"><div class="brand-logo"><i class="fas fa-user-graduate me-2"></i>CỔNG SINH VIÊN</div><div class="nav flex-column">`;
+            const currentPage = window.location.pathname.split('/').pop();
+            SV_MENU.forEach(item => {
+                const active = currentPage === item.url ? 'active' : '';
+                html += `<a href="${item.url}" class="nav-link ${active}"><i class="fas ${item.icon} me-2"></i>${item.title}</a>`;
+            });
+            html += `</div><div class="mt-auto p-3 border-top border-secondary position-absolute bottom-0 w-100"><a href="../TrangChu/index.html" class="nav-link text-white"><i class="fas fa-sign-out-alt me-2"></i>Thoát</a></div></nav>`;
+            document.getElementById('sidebar-container').innerHTML = html;
+        }
+        loadSidebar();
+
+        function nopHoSo(maDot) {
+            let linkCV = prompt("Vui lòng nhập Link CV (PDF) của bạn để ứng tuyển:");
+            if(linkCV) {
+                alert(`Đã nộp hồ sơ vào đợt ${maDot} thành công! \nVui lòng theo dõi kết quả tại trang Lịch sử.`);
+                // Logic: Insert vào bảng HB_DoanhNghiep & LichSuDangKiHB
+            }
+        }
+    </script>
+</body>
+</html>
