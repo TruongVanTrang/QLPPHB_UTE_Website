@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xét Duyệt HB Doanh Nghiệp - PCTSV</title>
+    <title>Duyệt Điểm Hoạt Động - PCTSV</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -11,10 +11,11 @@
         /* --- GIAO DIỆN CHUẨN PCTSV (GREEN THEME) --- */
         body { 
             background: linear-gradient(135deg, #134E5E 0%, #71B280 100%);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             min-height: 100vh;
         }
         
+        /* Sidebar */
         .sidebar {
             min-height: 100vh; background: #1a3c34; color: white; width: 250px;
             position: fixed; top: 0; left: 0; z-index: 1000;
@@ -24,23 +25,29 @@
         .sidebar .nav-link { color: #a8d5cc; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .sidebar .nav-link:hover, .sidebar .nav-link.active { color: #fff; background: #2a5c52; border-left: 4px solid #71B280; }
 
+        /* Main Content */
         .main-wrapper { margin-left: 250px; padding: 30px; transition: all 0.3s; }
         .admin-header { background: white; padding: 15px 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 30px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
 
+        /* Card & Elements */
         .card { background: white; border-radius: 15px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 30px; }
         .form-select-custom { padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; width: 100%; }
         
+        /* Table Styles */
         table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 10px; }
-        th { background: #f8f9fa; color: #134E5E; padding: 15px; font-weight: bold; border-bottom: 2px solid #71B280; text-transform: uppercase; font-size: 0.85rem; }
+        th { background: #f8f9fa; color: #134E5E; padding: 15px; font-weight: bold; border-bottom: 2px solid #71B280; text-transform: uppercase; font-size: 0.85rem; text-align: center; }
         td { padding: 12px 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
         tr:hover { background-color: #f1f8f6; }
 
-        .badge-score { font-size: 0.8rem; padding: 6px 10px; border-radius: 6px; margin-right: 3px; display: inline-block; min-width: 40px; text-align: center;}
-        .bg-gpa { background-color: #e3f2fd; color: #0d47a1; border: 1px solid #bbdefb; }
-        .bg-drl { background-color: #f3e5f5; color: #4a148c; border: 1px solid #e1bee7; }
-        .bg-hd { background-color: #fff3e0; color: #e65100; border: 1px solid #ffe0b2; }
+        .input-score { width: 80px; text-align: center; border: 2px solid #e0e0e0; border-radius: 6px; padding: 5px; font-weight: bold; color: #d35400; }
+        .input-score:focus { border-color: #d35400; outline: none; }
+
+        .btn-action { background: linear-gradient(135deg, #134E5E 0%, #71B280 100%); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; transition: all 0.3s; }
+        .minh-chung-link { text-decoration: none; font-weight: bold; color: #134E5E; }
+        .minh-chung-link:hover { text-decoration: underline; color: #71B280; }
+        .badge { padding: 6px 12px; border-radius: 20px; font-weight: 600; }
         
-        /* STT Label */
+        /* STT Label Color */
         .stt-label { color: #dc3545; font-weight: 900; margin-right: 5px; }
     </style>
 </head>
@@ -51,7 +58,7 @@
     <div class="main-wrapper">
         <header class="admin-header">
             <h4 class="m-0 fw-bold text-secondary">
-                <i class="fas fa-building me-2 text-success"></i>Xét Duyệt HB Doanh Nghiệp
+                <i class="fas fa-tasks me-2 text-success"></i>Duyệt Điểm Hoạt Động
             </h4>
             <div class="dropdown">
                 <a href="#" class="text-decoration-none text-dark dropdown-toggle" data-bs-toggle="dropdown">
@@ -63,18 +70,34 @@
         </header>
 
         <div class="card">
-            <h2>📋 Danh sách Ứng viên</h2>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold text-secondary"><i class="fas fa-filter me-2"></i>Bộ Lọc & Tìm Kiếm</h5>
+            </div>
             
-            <div class="row mb-4 align-items-end">
-                <div class="col-md-6">
-                    <label class="form-label fw-bold text-secondary"><span class="stt-label">1.</span>Chọn Đợt Tài Trợ / Doanh Nghiệp:</label>
-                    <select id="cboDotHB" class="form-select form-select-custom" onchange="fetchData()">
-                        <option value="">-- Đang tải danh sách... --</option>
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <label class="form-label fw-bold text-secondary"><span class="stt-label">1.</span>Học Kỳ:</label>
+                    <select id="filterHK" class="form-select form-select-custom">
+                        <option value="HK2">Học kỳ 2 (2024-2025)</option>
+                        <option value="HK1">Học kỳ 1 (2024-2025)</option>
                     </select>
                 </div>
-                <div class="col-md-6 text-end">
-                    <button class="btn btn-success text-white fw-bold">
-                        <i class="fas fa-file-excel me-2"></i>Xuất Excel gửi DN
+                <div class="col-md-3">
+                    <label class="form-label fw-bold text-secondary"><span class="stt-label">2.</span>Trạng Thái:</label>
+                    <select id="filterStatus" class="form-select form-select-custom">
+                        <option value="">-- Tất cả --</option>
+                        <option value="Chờ duyệt" selected>Chờ duyệt</option>
+                        <option value="Đạt">Đạt</option>
+                        <option value="Không đạt">Không đạt</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold text-secondary"><span class="stt-label">3.</span>Mã SV:</label>
+                    <input type="text" id="filterMaSV" class="form-control form-select-custom" placeholder="Nhập MSSV...">
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button class="btn-action w-100" onclick="fetchData()">
+                        <i class="fas fa-search me-2"></i>Lọc Dữ Liệu
                     </button>
                 </div>
             </div>
@@ -83,19 +106,14 @@
                 <table class="table-hover">
                     <thead>
                         <tr>
-                            <th><span class="stt-label">2.</span>MSSV</th>
-                            <th><span class="stt-label">3.</span>Họ Tên</th>
-                            <th><span class="stt-label">4.</span>Lớp</th>
-                            
-                            <th class="text-center">
-                                <span class="stt-label">5.</span>GPA / 
-                                <span class="stt-label">6.</span>ĐRL / 
-                                <span class="stt-label">7.</span>Đ.HĐ
-                            </th>
-                            
-                            <th class="text-center"><span class="stt-label">8.</span>Hồ sơ (CV)</th>
-                            <th class="text-center"><span class="stt-label">9.</span>Trạng thái</th>
-                            <th class="text-center" width="120px"><span class="stt-label">10.</span>Thao tác</th>
+                            <th><span class="stt-label">4.</span>Mã ĐHD</th>
+                            <th><span class="stt-label">5.</span>Thông tin Sinh viên</th>
+                            <th><span class="stt-label">6.</span>Tên Hoạt Động</th>
+                            <th><span class="stt-label">7.</span>Minh chứng</th>
+                            <th class="text-center"><span class="stt-label">8.</span>Điểm Tự ĐG</th>
+                            <th class="text-center" width="120px"><span class="stt-label">9.</span>Điểm Chốt</th>
+                            <th class="text-center"><span class="stt-label">10.</span>Trạng Thái</th>
+                            <th class="text-center">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody id="table-body">
@@ -108,16 +126,16 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // --- Sidebar Logic (Đồng bộ với HBKK, HBTT, DuyetDHD) ---
+        // --- Sidebar Logic (Đồng bộ) ---
         const MENUS = {
             ADMIN: [],
             PCTSV: [
                 { title: 'QL Doanh nghiệp', url: 'QLDN.html', icon: 'fa-building' },
-                { title: 'Duyệt Điểm HĐ', url: 'DuyetDHD.html', icon: 'fa-tasks' },
+                { title: 'Duyệt Điểm HĐ', url: 'DuyetDHD.html', icon: 'fa-tasks' }, // Active
                 { title: 'Duyệt HB Khuyến khích', url: 'HBKK.html', icon: 'fa-star' },
                 { title: 'Duyệt HB Thử thách', url: 'HBTT.html', icon: 'fa-hand-holding-heart' },
-                { title: 'Duyệt HB Doanh nghiệp', url: 'HBDN.html', icon: 'fa-briefcase' }, // Active
-                { title: 'Xử lý Khiếu nại', url: 'XuLyKhieuNai.html', icon: 'fa-gavel' }
+                { title: 'Duyệt HB Doanh nghiệp', url: 'HBDN.html', icon: 'fa-briefcase' },
+                { title: 'Xử lý Khiếu nại', url: 'PCTSV_XuLyKhieuNai.html', icon: 'fa-gavel' }
             ]
         };
 
@@ -133,106 +151,95 @@
             html += `</div><div class="mt-auto p-3 border-top border-secondary position-absolute bottom-0 w-100"><a href="../TrangChu/index.html" class="nav-link text-white"><i class="fas fa-sign-out-alt me-2"></i> Thoát</a></div></nav>`;
             container.innerHTML = html;
         }
-        createSidebar('PCTSV', 'HBDN.html');
+        createSidebar('PCTSV', 'DuyetDHD.html');
     </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            loadDotHB(); 
+            fetchData();
         });
 
-        // 1. Tải danh sách đợt (Giả lập bảng TieuChiHocBong join DoanhNghiep)
-        async function loadDotHB() {
-            // Giả lập dữ liệu
-            const data = [
-                { MaDotDN: 'DNFPT', TenDot: 'FPT Software Talent', DonViTaiTro: 'FPT Software' },
-                { MaDotDN: 'DNVTL', TenDot: 'Viettel Future Star', DonViTaiTro: 'Viettel' }
-            ];
-            
-            let cbo = document.getElementById('cboDotHB');
-            cbo.innerHTML = ''; 
-
-            if(data.length === 0) {
-                cbo.innerHTML = '<option>Chưa có đợt tài trợ nào</option>';
-                return;
-            }
-
-            data.forEach(dot => {
-                let option = document.createElement("option");
-                option.value = dot.MaDotDN; 
-                option.text = `${dot.TenDot} (${dot.DonViTaiTro})`;
-                cbo.appendChild(option);
-            });
-            fetchData(); // Load luôn đợt đầu tiên
-        }
-
-        // 2. Tải danh sách ứng viên (Mock Data JOIN bảng HB_DoanhNghiep, SinhVien, Lop)
+        // 1. Tải danh sách hoạt động từ API
         async function fetchData() {
-            let maDot = document.getElementById('cboDotHB').value;
-            if(!maDot) return;
-
-            // Giả lập dữ liệu trả về từ API
-            const data = [
-                { MaSV: 'SV001', HoTen: 'Nguyễn Văn An', TenLop: '21DTHC1', DiemGPA: 3.6, DiemRL: 85, DiemHD: 10, LinkCV: '#', TrangThai: 'Chờ duyệt', MaDotDN: maDot },
-                { MaSV: 'SV005', HoTen: 'Lê Thị Bình', TenLop: '21CK01', DiemGPA: 3.2, DiemRL: 80, DiemHD: 5, LinkCV: '#', TrangThai: 'Đạt', MaDotDN: maDot }
-            ];
+            let hk = document.getElementById('filterHK').value;
+            let status = document.getElementById('filterStatus').value;
+            let msv = document.getElementById('filterMaSV').value;
 
             let tbody = document.getElementById('table-body');
-            tbody.innerHTML = '';
+            tbody.innerHTML = '<tr><td colspan="8" class="text-center py-4">Đang tải dữ liệu...</td></tr>';
 
-            if(data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted">Chưa có sinh viên nào nộp đơn.</td></tr>';
+            try {
+                // Gọi API (Giả sử bạn sẽ tạo route này ở Server Node.js)
+                // URL mẫu: /api/duyet-dhd?hk=HK2&status=Chờ duyệt&msv=...
+                let url = `http://localhost:3000/api/duyet-dhd?hk=${hk}&status=${status}&msv=${msv}`;
+                
+                // --- MOCK DATA (Nếu chưa có API thật thì dùng cái này để test giao diện) ---
+                // let res = await fetch(url); let data = await res.json();
+                let data = [
+                    { MaDHD: 'DHD001', MaSV: 'SV001', HoTen: 'Nguyễn Văn A', TenHoatDong: 'Mùa hè xanh 2024', LinkMinhChung: '#', DiemTuDanhGia: 15, DiemChot: null, TrangThai: 'Chờ duyệt' },
+                    { MaDHD: 'DHD002', MaSV: 'SV002', HoTen: 'Trần Thị B', TenHoatDong: 'Hiến máu nhân đạo', LinkMinhChung: '#', DiemTuDanhGia: 5, DiemChot: 5, TrangThai: 'Đạt' }
+                ];
+                // --------------------------------------------------------------------------
+
+                tbody.innerHTML = '';
+                if(data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="8" class="text-center py-4 text-muted">Không có dữ liệu.</td></tr>`;
+                    return;
+                }
+
+                data.forEach(item => {
+                    let statusColor = item.TrangThai === 'Đạt' ? "bg-success" : (item.TrangThai === 'Không đạt' ? "bg-danger" : "bg-warning text-dark");
+                    let isDisabled = item.TrangThai !== 'Chờ duyệt' ? 'disabled' : '';
+                    let isReadonly = item.TrangThai !== 'Chờ duyệt' ? 'readonly' : '';
+                    let diemHienThi = item.DiemChot !== null ? item.DiemChot : item.DiemTuDanhGia;
+
+                    let row = `
+                        <tr>
+                            <td class="fw-bold text-secondary">${item.MaDHD}</td>
+                            <td>
+                                <strong>${item.MaSV}</strong><br>
+                                <small>${item.HoTen}</small>
+                            </td>
+                            <td>${item.TenHoatDong}</td>
+                            <td class="text-center">
+                                <a href="${item.LinkMinhChung}" target="_blank" class="minh-chung-link"><i class="fas fa-link me-1"></i>Xem</a>
+                            </td>
+                            <td class="text-center fw-bold">${item.DiemTuDanhGia}</td>
+                            <td class="text-center">
+                                <input type="number" id="diem-${item.MaDHD}" class="input-score" value="${diemHienThi}" ${isReadonly}>
+                            </td>
+                            <td class="text-center"><span class="badge ${statusColor}">${item.TrangThai}</span></td>
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-success" title="Duyệt" ${isDisabled} onclick="updateStatus('${item.MaDHD}', 'Đạt')"><i class="fas fa-check"></i></button>
+                                    <button class="btn btn-outline-danger" title="Từ chối" ${isDisabled} onclick="updateStatus('${item.MaDHD}', 'Không đạt')"><i class="fas fa-times"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+
+            } catch (error) {
+                console.error(error);
+                tbody.innerHTML = `<tr><td colspan="8" class="text-center text-danger">Lỗi kết nối!</td></tr>`;
+            }
+        }
+
+        // 2. Cập nhật trạng thái
+        async function updateStatus(maDHD, trangThai) {
+            let diemChot = document.getElementById(`diem-${maDHD}`).value;
+            if (trangThai === 'Đạt' && (!diemChot || diemChot < 0)) {
+                alert("Vui lòng nhập điểm chốt hợp lệ!");
                 return;
             }
+            if (!confirm(`Xác nhận ${trangThai} cho hoạt động này?`)) return;
 
-            data.forEach((sv) => {
-                let badgeClass = sv.TrangThai === 'Đạt' ? "bg-success" : (sv.TrangThai === 'Không đạt' ? "bg-danger" : "bg-warning text-dark");
-                let disabled = sv.TrangThai !== 'Chờ duyệt' ? 'disabled' : '';
-
-                let row = `
-                    <tr>
-                        <td class="fw-bold">${sv.MaSV}</td>
-                        <td>${sv.HoTen}</td>
-                        <td>${sv.TenLop}</td>
-                        <td class="text-center">
-                            <span class="badge badge-score bg-gpa" title="GPA">${sv.DiemGPA}</span>
-                            <span class="badge badge-score bg-drl" title="ĐRL">${sv.DiemRL}</span>
-                            <span class="badge badge-score bg-hd" title="ĐHĐ">${sv.DiemHD || 0}</span>
-                        </td>
-                        <td class="text-center">
-                            <a href="${sv.LinkCV || '#'}" target="_blank" class="btn btn-sm btn-outline-secondary">
-                                <i class="fab fa-google-drive me-1"></i>CV
-                            </a>
-                        </td>
-                        <td class="text-center">
-                            <span class="badge ${badgeClass}">${sv.TrangThai}</span>
-                        </td>
-                        <td class="text-center">
-                            <div class="btn-group">
-                                <button class="btn btn-sm btn-success" title="Duyệt" ${disabled} 
-                                    onclick="updateStatus('${sv.MaSV}', '${sv.MaDotDN}', 'Đạt')">
-                                    <i class="fas fa-check"></i>
-                                </button>
-                                <button class="btn btn-sm btn-danger" title="Loại" ${disabled}
-                                    onclick="updateStatus('${sv.MaSV}', '${sv.MaDotDN}', 'Không đạt')">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
-        }
-
-        // 3. Cập nhật trạng thái
-        async function updateStatus(maSV, maDot, trangThai) {
-            if(!confirm(`Xác nhận ${trangThai} hồ sơ của ${maSV}?`)) return;
-            // Logic gọi API update ở đây
-            alert(`Đã cập nhật trạng thái ${trangThai} cho sinh viên ${maSV}`);
-            // fetchData(); // Refresh lại sau khi update
+            // Gọi API Update (Giả lập)
+            console.log(`Update: ${maDHD} -> ${trangThai}, Điểm: ${diemChot}`);
+            alert("Đã cập nhật thành công!");
+            // fetchData(); // Refresh lại
         }
     </script>
-
 </body>
 </html>

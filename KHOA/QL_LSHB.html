@@ -200,47 +200,45 @@
 
         // --- VIEW DETAIL MODAL ---
         window.viewDetail = function(maSV) {
-            const sv = students.find(s => s.MaSV === maSV);
-            const hbList = lichSuData.filter(h => h.MaSV === maSV);
+    const sv = students.find(s => s.MaSV === maSV);
+    const hbList = lichSuData.filter(h => h.MaSV === maSV);
 
-            // Hiển thị thông tin chung
-            document.getElementById('studentDetail').innerHTML = `
-                <div class="col-md-6"><p><strong>Mã SV:</strong> ${sv.MaSV}</p></div>
-                <div class="col-md-6"><p><strong>Họ tên:</strong> ${sv.HoTen}</p></div>
-                <div class="col-md-6"><p><strong>Lớp:</strong> ${sv.MaLop}</p></div>
-                <div class="col-md-6"><p><strong>Tổng tiền đã nhận:</strong> <span class="text-danger fw-bold">${formatCurrency(hbList.reduce((acc, curr) => acc + curr.SoTien, 0))}</span></p></div>
-            `;
+    document.getElementById('studentDetail').innerHTML = `
+        <div class="col-md-6"><p><strong><span class="stt-label">2.</span>Mã SV:</strong> ${sv.MaSV}</p></div>
+        <div class="col-md-6"><p><strong><span class="stt-label">3.</span>Họ tên:</strong> ${sv.HoTen}</p></div>
+        <div class="col-md-6"><p><strong><span class="stt-label">4.</span>Lớp:</strong> ${sv.MaLop}</p></div>
+        <div class="col-md-6"><p><strong>Tổng tiền đã nhận:</strong> <span class="text-danger fw-bold">${formatCurrency(hbList.reduce((acc, curr) => acc + curr.SoTien, 0))}</span></p></div>
+    `;
 
-            // Hiển thị bảng lịch sử
-            const hbBody = document.querySelector('#hbTable tbody');
-            hbBody.innerHTML = '';
-            
-            if(hbList.length === 0) {
-                hbBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Sinh viên này chưa nhận được học bổng nào.</td></tr>';
-            } else {
-                hbList.forEach(hb => {
-                    let badgeClass = "";
-                    let tenLoai = "";
-                    
-                    if(hb.LoaiHocBong === "KhuyenKhich") { badgeClass = "bg-kk"; tenLoai = "Khuyến khích"; }
-                    else if(hb.LoaiHocBong === "ThuThach") { badgeClass = "bg-tt"; tenLoai = "Thử thách"; }
-                    else { badgeClass = "bg-dn"; tenLoai = "Doanh nghiệp"; }
+        const hbBody = document.querySelector('#hbTable tbody');
+        hbBody.innerHTML = '';
+        
+        if(hbList.length === 0) {
+            hbBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Sinh viên này chưa nhận được học bổng nào.</td></tr>';
+        } else {
+            hbList.forEach(hb => {
+                let badgeClass = "";
+                let tenLoai = "";
+                
+                if(hb.LoaiHocBong === "KhuyenKhich") { badgeClass = "bg-kk"; tenLoai = "Khuyến khích"; }
+                else if(hb.LoaiHocBong === "ThuThach") { badgeClass = "bg-tt"; tenLoai = "Thử thách"; }
+                else { badgeClass = "bg-dn"; tenLoai = "Doanh nghiệp"; }
 
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${hb.NamHoc}</td>
-                        <td class="fw-bold text-primary">${hb.TenHocBong}</td>
-                        <td><span class="hb-badge ${badgeClass}">${tenLoai}</span></td>
-                        <td class="text-danger fw-bold">${formatCurrency(hb.SoTien)}</td>
-                        <td>${hb.NgayXet}</td>
-                        <td><span class="badge bg-success">${hb.TrangThai}</span></td>
-                    `;
-                    hbBody.appendChild(tr);
-                });
-            }
-
-            document.getElementById('detailModal').classList.add('active');
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${hb.NamHoc}</td>
+                    <td class="fw-bold text-primary">${hb.TenHocBong}</td>
+                    <td><span class="hb-badge ${badgeClass}">${tenLoai}</span></td>
+                    <td class="text-danger fw-bold">${formatCurrency(hb.SoTien)}</td>
+                    <td>${hb.NgayXet}</td>
+                    <td><span class="badge bg-success">${hb.TrangThai}</span></td>
+                `;
+                hbBody.appendChild(tr);
+            });
         }
+
+        document.getElementById('detailModal').classList.add('active');
+    }
 
         function formatCurrency(amount) {
             return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
