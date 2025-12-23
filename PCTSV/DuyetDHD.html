@@ -179,7 +179,7 @@
             <h2 class="mb-3">🔍 Bộ Lọc & Tìm Kiếm</h2>
             <div class="filter-row">
                 <div class="form-group">
-                    <label>Học Kỳ</label>
+                    <label>Học Kỳ (1)</label>
                     <select id="filterHK">
                         <option value="">Tất cả</option>
                         <option value="HK1">Học kỳ 1 - 2024-2025</option>
@@ -188,7 +188,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Trạng Thái</label>
+                    <label>Trạng Thái (2)</label>
                     <select id="filterStatus">
                         <option value="">Tất cả</option>
                         <option value="pending" selected>Chờ duyệt</option>
@@ -197,27 +197,27 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Mã SV</label>
+                    <label>Mã SV (3)</label>
                     <input type="text" id="filterMaSV" placeholder="VD: SV001">
                 </div>
             </div>
-            <button class="btn btn-primary" onclick="applyFilter()">🔍 Lọc Dữ Liệu</button>
+            <button class="btn btn-primary" onclick="applyFilter()">🔍 Lọc Dữ Liệu (4)</button>
         </div>
 
         <div class="card">
-            <h2>📋 Danh Sách Hoạt Động Cần Duyệt</h2>
+            <h2>📋 Danh Sách Hoạt Động Cần Duyệt </h2>
             <div style="overflow-x: auto;">
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>Mã ĐHD</th>
-                            <th>Mã SV</th>
-                            <th>Họ Tên</th>
-                            <th>Học Kỳ</th>
-                            <th>Tên Hoạt Động</th>
-                            <th>Điểm Tự ĐG</th>
-                            <th>Điểm Chốt</th>
-                            <th>Trạng Thái</th>
+                            <th>Mã ĐHD (5)</th>
+                            <th>Mã SV (6)</th>
+                            <th>Họ Tên (7)</th>
+                            <th>Học Kỳ (8)</th>
+                            <th>Tên Hoạt Động (9)</th>
+                            <th>Điểm Tự ĐG (10)</th>
+                            <th>Điểm Chốt(11)</th>
+                            <th>Trạng Thái(12)</th>
                             <th>Thao Tác</th>
                         </tr>
                     </thead>
@@ -231,7 +231,7 @@
                             <td>10</td>
                             <td>10</td>
                             <td><span class="status-badge status-approved">Đạt</span></td>
-                            <td><div class="action-buttons"><button class="btn btn-warning" onclick="viewDetail('DHD001')" style="padding: 5px 10px;">👁️</button></div></td>
+                            <td><div class="action-buttons"><button class="btn btn-warning" onclick="viewDetail('DHD001')" style="padding: 5px 10px;">👁️ (13)</button></div></td>
                         </tr>
                         <tr data-status="pending">
                             <td>DHD006</td>
@@ -244,9 +244,9 @@
                             <td><span class="status-badge status-pending">Chờ duyệt</span></td>
                             <td>
                                 <div class="action-buttons">
-                                    <button class="btn btn-warning" onclick="viewDetail('DHD006')" style="padding: 5px 10px;">👁️</button>
-                                    <button class="btn btn-success" onclick="approveActivity('DHD006')" style="padding: 5px 10px;">✔️</button>
-                                    <button class="btn btn-danger" onclick="rejectActivity('DHD006')" style="padding: 5px 10px;">✖️</button>
+                                    <button class="btn btn-warning" onclick="viewDetail('DHD006')" style="padding: 5px 10px;">👁️ (13)</button>
+                                    <button class="btn btn-success" onclick="approveActivity('DHD006')" style="padding: 5px 10px;">✔️ (14)</button>
+                                    <button class="btn btn-danger" onclick="rejectActivity('DHD006')" style="padding: 5px 10px;">✖️ (15)</button>
                                 </div>
                             </td>
                         </tr>
@@ -259,7 +259,7 @@
                             <td>15</td>
                             <td>15</td>
                             <td><span class="status-badge status-approved">Đạt</span></td>
-                            <td><div class="action-buttons"><button class="btn btn-warning" onclick="viewDetail('DHD005')" style="padding: 5px 10px;">👁️</button></div></td>
+                            <td><div class="action-buttons"><button class="btn btn-warning" onclick="viewDetail('DHD005')" style="padding: 5px 10px;">👁️ (13)</button></div></td>
                         </tr>
                         <tr data-status="pending">
                             <td>DHD011</td>
@@ -272,9 +272,9 @@
                             <td><span class="status-badge status-pending">Chờ duyệt</span></td>
                             <td>
                                 <div class="action-buttons">
-                                    <button class="btn btn-warning" onclick="viewDetail('DHD011')" style="padding: 5px 10px;">👁️</button>
-                                    <button class="btn btn-success" onclick="approveActivity('DHD011')" style="padding: 5px 10px;">✔️</button>
-                                    <button class="btn btn-danger" onclick="rejectActivity('DHD011')" style="padding: 5px 10px;">✖️</button>
+                                    <button class="btn btn-warning" onclick="viewDetail('DHD011')" style="padding: 5px 10px;">👁️ (13)</button>
+                                    <button class="btn btn-success" onclick="approveActivity('DHD011')" style="padding: 5px 10px;">✔️ (14)</button>
+                                    <button class="btn btn-danger" onclick="rejectActivity('DHD011')" style="padding: 5px 10px;">✖️ (15)</button>
                                 </div>
                             </td>
                         </tr>
