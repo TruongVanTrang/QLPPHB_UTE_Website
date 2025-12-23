@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- 1. GIAO DIỆN CHUẨN PCTSV (GREEN THEME) --- */
+        /* --- GIAO DIỆN CHUẨN PCTSV (GREEN THEME) --- */
         body { 
             background: linear-gradient(135deg, #134E5E 0%, #71B280 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -17,130 +17,37 @@
         
         /* Sidebar */
         .sidebar {
-            min-height: 100vh;
-            background: #1a3c34;
-            color: white;
-            width: 250px;
-            position: fixed;
-            top: 0; left: 0;
-            z-index: 1000;
-            transition: all 0.3s;
+            min-height: 100vh; background: #1a3c34; color: white; width: 250px;
+            position: fixed; top: 0; left: 0; z-index: 1000;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
         }
-        
-        .brand-logo {
-            padding: 20px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-align: center;
-            background: #14302a;
-            border-bottom: 1px solid #2a5c52;
-        }
-
-        .sidebar .nav-link {
-            color: #a8d5cc;
-            padding: 15px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            text-decoration: none;
-            display: block;
-        }
-
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
-            color: #fff;
-            background: #2a5c52;
-            border-left: 4px solid #71B280;
-        }
+        .brand-logo { padding: 20px; font-size: 1.5rem; font-weight: bold; text-align: center; background: #14302a; border-bottom: 1px solid #2a5c52; }
+        .sidebar .nav-link { color: #a8d5cc; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { color: #fff; background: #2a5c52; border-left: 4px solid #71B280; }
 
         /* Main Content */
-        .main-wrapper {
-            margin-left: 250px;
-            padding: 30px;
-            transition: all 0.3s;
-        }
+        .main-wrapper { margin-left: 250px; padding: 30px; transition: all 0.3s; }
+        .admin-header { background: white; padding: 15px 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 30px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
 
-        /* Header */
-        .admin-header {
-            background: white;
-            padding: 15px 25px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* --- 2. CSS CÁC THÀNH PHẦN CON --- */
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-
-        .card h2 {
-            color: #134E5E;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            border-bottom: 3px solid #71B280;
-            padding-bottom: 10px;
-        }
-
-        /* Custom Form Elements */
-        .form-select-custom {
-            padding: 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            width: 100%;
-        }
-        .form-select-custom:focus {
-            border-color: #71B280;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(113, 178, 128, 0.2);
-        }
+        /* Card & Elements */
+        .card { background: white; border-radius: 15px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .form-select-custom { padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; width: 100%; }
+        .form-select-custom:focus { border-color: #71B280; outline: none; box-shadow: 0 0 0 3px rgba(113, 178, 128, 0.2); }
 
         /* Stats Cards */
-        .alert-custom {
-            border: none;
-            border-radius: 10px;
-            color: white;
-            padding: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
+        .alert-custom { border: none; border-radius: 10px; color: white; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); height: 100%; display: flex; flex-direction: column; justify-content: center; }
+        .bg-gradient-money { background: linear-gradient(45deg, #f39c12, #f1c40f); }
         .bg-gradient-info { background: linear-gradient(45deg, #17a2b8, #89dceb); }
-        .bg-gradient-success { background: linear-gradient(45deg, #28a745, #85e097); }
         .bg-gradient-danger { background: linear-gradient(45deg, #dc3545, #ff8fa3); }
 
         /* Table */
         table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 10px; }
-        th { 
-            background: #f8f9fa; 
-            color: #134E5E; 
-            padding: 15px; 
-            font-weight: bold; 
-            border-bottom: 2px solid #71B280; 
-            text-transform: uppercase;
-            font-size: 0.85rem;
-        }
+        th { background: #f8f9fa; color: #134E5E; padding: 15px; font-weight: bold; border-bottom: 2px solid #71B280; font-size: 0.85rem; text-transform: uppercase;}
         td { padding: 12px 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
         tr:hover { background-color: #f1f8f6; }
 
-        /* Buttons */
-        .btn-action {
-            background: linear-gradient(135deg, #134E5E 0%, #71B280 100%);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-        .btn-action:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(19, 78, 94, 0.3);
-            color: white;
-        }
+        .btn-action { background: linear-gradient(135deg, #134E5E 0%, #71B280 100%); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; transition: all 0.3s; }
+        .btn-action:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(19, 78, 94, 0.3); color: white; }
     </style>
 </head>
 <body>
@@ -167,19 +74,19 @@
         <div class="card mb-4">
             <div class="row g-3 align-items-end">
                 <div class="col-md-3">
-                    <label class="form-label fw-bold text-secondary">Học kỳ:</label>
+                    <label class="form-label fw-bold text-secondary">1. Học kỳ:</label>
                     <select class="form-select form-select-custom"><option>Học kỳ 2 (2024-2025)</option></select>
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label fw-bold text-secondary">Loại Học Bổng:</label>
-                    <select id="cboLoaiHB" class="form-select form-select-custom">
+                    <label class="form-label fw-bold text-secondary">2. Loại Học Bổng:</label>
+                    <select id="cboLoaiHB" class="form-select form-select-custom" onchange="updateCriteriaInfo()">
                         <option value="">-- Tất cả --</option>
                         <option value="A">Loại A (Xuất sắc)</option>
                         <option value="B">Loại B (Giỏi)</option>
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label fw-bold text-secondary">Khoa:</label>
+                    <label class="form-label fw-bold text-secondary">3. Khoa:</label>
                     <select id="cboKhoa" class="form-select form-select-custom">
                         <option value="">-- Tất cả các Khoa --</option>
                     </select>
@@ -194,21 +101,33 @@
 
         <div class="row mb-4">
             <div class="col-md-4">
-                <div class="alert-custom bg-gradient-info d-flex justify-content-between align-items-center">
-                    <span><i class="fas fa-coins me-2"></i>Ngân sách Khoa:</span>
-                    <span class="fw-bold fs-5">50.000.000 VNĐ</span>
+                <div class="alert-custom bg-gradient-money">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span style="opacity: 0.9;"><i class="fas fa-money-bill-wave me-2"></i>4. Mức Học Bổng:</span>
+                        <i class="fas fa-info-circle" title="Dựa trên bảng TieuChiHocBong"></i>
+                    </div>
+                    <span id="lblMucHocBong" class="fw-bold fs-4">-- VNĐ</span>
                 </div>
             </div>
+            
             <div class="col-md-4">
-                <div class="alert-custom bg-gradient-success d-flex justify-content-between align-items-center">
-                    <span><i class="fas fa-users me-2"></i>Chỉ tiêu suất:</span>
-                    <span class="fw-bold fs-5">15 Suất</span>
+                <div class="alert-custom bg-gradient-info">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span style="opacity: 0.9;"><i class="fas fa-clipboard-check me-2"></i>5. Điều Kiện Sàn:</span>
+                    </div>
+                    <div class="d-flex justify-content-between mt-1">
+                        <span id="lblDieuKienGPA" class="fw-bold fs-5">GPA: --</span>
+                        <span id="lblDieuKienDRL" class="fw-bold fs-5">ĐRL: --</span>
+                    </div>
                 </div>
             </div>
+
             <div class="col-md-4">
-                <div class="alert-custom bg-gradient-danger d-flex justify-content-between align-items-center">
-                    <span><i class="fas fa-check-circle me-2"></i>Đang chọn:</span>
-                    <span id="counter-text" class="fw-bold fs-5">0 / 15</span>
+                <div class="alert-custom bg-gradient-danger">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span style="opacity: 0.9;"><i class="fas fa-check-circle me-2"></i>6. Chỉ Tiêu (Đã Chọn/Tổng):</span>
+                    </div>
+                    <span id="counter-text" class="fw-bold fs-4">0 / 15</span>
                 </div>
             </div>
         </div>
@@ -218,15 +137,15 @@
                 <table class="table table-hover mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th class="text-center" width="5%"><input type="checkbox" class="form-check-input"></th>
-                            <th>MSSV</th>
-                            <th>Họ Tên</th>
-                            <th>Lớp</th>
-                            <th class="text-center">GPA</th>
-                            <th class="text-center">ĐRL</th>
-                            <th class="text-center">Đ.HĐ</th>
+                            <th class="text-center" width="5%"><input type="checkbox" class="form-check-input" onclick="toggleAll(this)"></th>
+                            <th>7. MSSV</th>
+                            <th>8. Họ Tên</th>
+                            <th>9. Lớp</th>
+                            <th class="text-center">10. GPA</th>
+                            <th class="text-center">11. ĐRL</th>
+                            <th class="text-center">12. Đ.HĐ</th>
                             <th class="text-center">Xếp hạng</th>
-                            <th>Ghi chú (Hệ thống)</th>
+                            <th>Ghi chú Hệ thống</th>
                         </tr>
                     </thead>
                     <tbody id="table-body">
@@ -243,60 +162,23 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        // --- Sidebar Logic ---
         const MENUS = {
-            ADMIN: [
-                { title: 'Tổng quan', url: 'Dashboard.html', icon: 'fa-tachometer-alt' },
-                { title: 'Người dùng', url: 'nguoidung.html', icon: 'fa-users-cog' },
-                { title: 'Năm học', url: 'namhoc.html', icon: 'fa-calendar-alt' },
-                { title: 'Học bổng', url: 'hocbong.html', icon: 'fa-hand-holding-usd' }
-            ],
-            PCTSV: [
-                { title: 'QL Doanh nghiệp', url: 'QLDN.html', icon: 'fa-building' },
-                { title: 'Duyệt Điểm HĐ', url: 'DuyetDHD.html', icon: 'fa-tasks' },
-                { title: 'Duyệt HB Khuyến khích', url: 'HBKK.html', icon: 'fa-star' },
-                { title: 'Duyệt HB Thử thách', url: 'HBTT.html', icon: 'fa-hand-holding-heart' },
-                { title: 'Duyệt HB Doanh nghiệp', url: 'HBDN.html', icon: 'fa-briefcase' }
-            ]
+            ADMIN: [{ title: 'Tổng quan', url: 'Dashboard.html', icon: 'fa-tachometer-alt' },{ title: 'Người dùng', url: 'nguoidung.html', icon: 'fa-users-cog' },{ title: 'Năm học', url: 'namhoc.html', icon: 'fa-calendar-alt' },{ title: 'Học bổng', url: 'hocbong.html', icon: 'fa-hand-holding-usd' }],
+            PCTSV: [{ title: 'QL Doanh nghiệp', url: 'QLDN.html', icon: 'fa-building' },{ title: 'Duyệt Điểm HĐ', url: 'DuyetDHD.html', icon: 'fa-tasks' },{ title: 'Duyệt HB Khuyến khích', url: 'HBKK.html', icon: 'fa-star' },{ title: 'Duyệt HB Thử thách', url: 'HBTT.html', icon: 'fa-hand-holding-heart' },{ title: 'Duyệt HB Doanh nghiệp', url: 'HBDN.html', icon: 'fa-briefcase' },{ title: 'Xử lý Khiếu nại', url: 'PCTSV_XuLyKhieuNai.html', icon: 'fa-gavel' }]
         };
-
         function createSidebar(role, activePage) {
             const container = document.getElementById('sidebar-container');
             if (!container) return;
-
             const menuItems = MENUS[role] || [];
-            const brandIcon = 'fa-university'; 
-            const brandTitle = 'P. CÔNG TÁC SV';
-
-            let html = `
-                <nav class="sidebar">
-                    <div class="brand-logo">
-                        <i class="fas ${brandIcon} me-2"></i> ${brandTitle}
-                    </div>
-                    <div class="nav flex-column">
-            `;
-
+            let html = `<nav class="sidebar"><div class="brand-logo"><i class="fas fa-university me-2"></i> P. CÔNG TÁC SV</div><div class="nav flex-column">`;
             menuItems.forEach(item => {
                 const isActive = activePage.includes(item.url) ? 'active' : '';
-                html += `
-                    <a href="${item.url}" class="nav-link ${isActive}">
-                        <i class="fas ${item.icon} me-2"></i> ${item.title}
-                    </a>
-                `;
+                html += `<a href="${item.url}" class="nav-link ${isActive}"><i class="fas ${item.icon} me-2"></i> ${item.title}</a>`;
             });
-
-            html += `
-                    </div>
-                    <div class="mt-auto p-3 border-top border-secondary" style="position: absolute; bottom: 0; width: 100%;">
-                        <a href="../TrangChu/index.html" class="nav-link text-white">
-                            <i class="fas fa-sign-out-alt me-2"></i> Thoát
-                        </a>
-                    </div>
-                </nav>
-            `;
+            html += `</div><div class="mt-auto p-3 border-top border-secondary position-absolute bottom-0 w-100"><a href="../TrangChu/index.html" class="nav-link text-white"><i class="fas fa-sign-out-alt me-2"></i> Thoát</a></div></nav>`;
             container.innerHTML = html;
         }
-
-        // Kích hoạt sidebar cho trang này
         createSidebar('PCTSV', 'HBKK.html');
     </script>
 
@@ -305,89 +187,97 @@
             loadDSKhoa(); 
         });
 
-        // HÀM 1: LẤY DANH SÁCH KHOA TỪ SERVER
+        // 1. Tải danh sách Khoa từ API
         async function loadDSKhoa() {
             try {
                 let response = await fetch('http://localhost:3000/api/khoa');
                 let data = await response.json();
-                
                 let cbo = document.getElementById('cboKhoa');
-                
+                // Xóa option cũ nếu cần
+                // cbo.innerHTML = '<option value="">-- Tất cả các Khoa --</option>'; 
                 data.forEach(khoa => {
                     let option = document.createElement("option");
                     option.value = khoa.MaKhoa; 
                     option.text = khoa.TenKhoa; 
                     cbo.appendChild(option);
                 });
-            } catch (error) {
-                console.error("Lỗi tải khoa:", error);
+            } catch (error) { console.error("Lỗi tải khoa:", error); }
+        }
+
+        // 2. Logic cập nhật thông tin tiêu chí (Client-side)
+        function updateCriteriaInfo() {
+            const loaiHB = document.getElementById('cboLoaiHB').value;
+            const lblTien = document.getElementById('lblMucHocBong');
+            const lblGPA = document.getElementById('lblDieuKienGPA');
+            const lblDRL = document.getElementById('lblDieuKienDRL');
+
+            // Giả lập dữ liệu từ bảng TieuChiHocBong (Cần lấy từ API nếu muốn động)
+            if (loaiHB === 'A') {
+                lblTien.innerText = "5.000.000 VNĐ";
+                lblGPA.innerText = "GPA ≥ 3.6";
+                lblDRL.innerText = "ĐRL ≥ 85";
+            } else if (loaiHB === 'B') {
+                lblTien.innerText = "3.000.000 VNĐ";
+                lblGPA.innerText = "3.2 ≤ GPA < 3.6";
+                lblDRL.innerText = "ĐRL ≥ 75";
+            } else {
+                lblTien.innerText = "-- VNĐ";
+                lblGPA.innerText = "GPA: --";
+                lblDRL.innerText = "ĐRL: --";
             }
         }
 
-        // HÀM 2: QUÉT HỆ THỐNG (Có lọc theo Khoa)
+        // 3. Gọi API Lấy danh sách xét duyệt
         async function fetchData() {
-            console.log("--> Đã bấm nút Quét!"); 
-
             try {
-                // 1. Lấy giá trị từ CẢ 2 ô chọn (Khoa và Loại HB)
-                let cboKhoa = document.getElementById('cboKhoa');
-                let maKhoa = cboKhoa ? cboKhoa.value : ""; 
+                let maKhoa = document.getElementById('cboKhoa').value; 
+                let loaiHB = document.getElementById('cboLoaiHB').value; 
 
-                let cboLoai = document.getElementById('cboLoaiHB');
-                let loaiHB = cboLoai ? cboLoai.value : ""; 
-
-                console.log(`Đang lọc: Khoa=[${maKhoa}], Loại=[${loaiHB}]`);
-
-                // 2. Gọi API với đủ 2 tham số
+                // Gọi đúng API của Node.js Server
                 let url = `http://localhost:3000/api/xetduyet-hbkk?maKhoa=${maKhoa}&loaiHB=${loaiHB}`;
-                
-                console.log("Đang gọi URL:", url);
-
                 let response = await fetch(url);
                 let data = await response.json();
                 
-                // 3. Phần hiển thị bảng
                 let tbody = document.getElementById('table-body');
                 tbody.innerHTML = ''; 
 
                 if (data.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted py-3">Không tìm thấy sinh viên nào thỏa điều kiện</td></tr>';
-                    if(typeof updateCounter === "function") updateCounter();
+                    tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted py-4">Không tìm thấy sinh viên nào thỏa điều kiện</td></tr>';
+                    updateCounter();
                     return;
                 }
 
                 data.forEach((sv, index) => {
-                    let isKyLuat = sv.GhiChuSystem && sv.GhiChuSystem.includes("Kỷ Luật");
+                    // Logic hiển thị: Nếu có ghi chú đặc biệt (ví dụ Kỷ luật) thì disable
+                    let isKyLuat = sv.GhiChuSystem && sv.GhiChuSystem.includes("Kỷ Luật"); // Cần BE trả về nếu có
                     let rowClass = isKyLuat ? "table-secondary" : "";
                     let badgeClass = isKyLuat ? "bg-danger" : "bg-success";
                     let disabledCheck = isKyLuat ? "disabled" : "checked";
+                    let ghiChuText = sv.GhiChuSystem || "Đủ điều kiện";
 
                     let row = `
                         <tr class="${rowClass}">
-                            <td class="text-center"><input type="checkbox" class="form-check-input student-checkbox" ${disabledCheck}></td>
+                            <td class="text-center"><input type="checkbox" class="form-check-input student-checkbox" ${disabledCheck} onchange="updateCounter()"></td>
                             <td>${sv.MaSV}</td>
                             <td>${sv.HoTen}</td>
                             <td>${sv.TenLop}</td>
                             <td class="text-center fw-bold text-primary">${sv.GPA}</td>
                             <td class="text-center">${sv.DiemRL}</td>
                             <td class="text-center">${sv.DiemHD}</td>
-                            <td class="text-center">#${index + 1}</td>
-                            <td><span class="badge ${badgeClass}">${sv.GhiChuSystem}</span></td>
+                            <td class="text-center fw-bold">#${index + 1}</td>
+                            <td><span class="badge ${badgeClass}">${ghiChuText}</span></td>
                         </tr>
                     `;
                     tbody.innerHTML += row;
                 });
-
-                // Cập nhật bộ đếm
-                if(typeof updateCounter === "function") updateCounter();
+                updateCounter();
 
             } catch (error) {
                 console.error("Lỗi:", error);
-                // alert("Lỗi tải dữ liệu! Xem chi tiết trong Console (F12).");
+                alert("Lỗi kết nối Server! Đảm bảo server Node.js đang chạy.");
             }
         }
 
-        // 3. HÀM ĐẾM SỐ LƯỢNG ĐANG CHỌN
         function updateCounter() {
             let checkedBoxes = document.querySelectorAll('#table-body input[type="checkbox"]:checked');
             let count = checkedBoxes.length;
@@ -395,15 +285,17 @@
 
             let label = document.getElementById('counter-text');
             label.innerText = `${count} / ${quota}`;
+            
+            if (count > quota) label.classList.add("text-warning");
+            else label.classList.remove("text-warning");
+        }
 
-            if (count > quota) {
-                label.className = "fw-bold fs-5 text-white"; 
-                label.parentElement.className = "alert-custom bg-gradient-danger d-flex justify-content-between align-items-center";
-                label.innerText += " (Vượt quá!)";
-            } else {
-                label.className = "fw-bold fs-5 text-white"; 
-                label.parentElement.className = "alert-custom bg-gradient-danger d-flex justify-content-between align-items-center";
+        function toggleAll(source) {
+            let checkboxes = document.querySelectorAll('.student-checkbox:not(:disabled)');
+            for(let i=0; i<checkboxes.length; i++) {
+                checkboxes[i].checked = source.checked;
             }
+            updateCounter();
         }
     </script>
 

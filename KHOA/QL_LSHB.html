@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- 1. GIAO DIỆN CHUẨN KHOA (CYAN THEME) --- */
+        /* --- GIAO DIỆN CHUẨN KHOA (CYAN THEME) --- */
         body { 
             background: linear-gradient(135deg, #0dcaf0 0%, #0099cc 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -17,138 +17,46 @@
         
         /* Sidebar Menu */
         .sidebar {
-            min-height: 100vh;
-            background: #004d61;
-            color: white;
-            width: 250px;
-            position: fixed;
-            top: 0; left: 0;
-            z-index: 1000;
-            transition: all 0.3s;
+            min-height: 100vh; background: #004d61; color: white; width: 250px;
+            position: fixed; top: 0; left: 0; z-index: 1000;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
         }
-        
-        .brand-logo {
-            padding: 20px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-align: center;
-            background: #003a4d;
-            border-bottom: 1px solid #0dcaf0;
-        }
+        .brand-logo { padding: 20px; font-size: 1.5rem; font-weight: bold; text-align: center; background: #003a4d; border-bottom: 1px solid #0dcaf0; }
+        .sidebar .nav-link { color: #a8eeff; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); text-decoration: none; display: block; }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { background: #007a99; color: white; border-left: 4px solid #0dcaf0; }
 
-        .sidebar .nav-link {
-            color: #a8eeff;
-            padding: 15px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            text-decoration: none;
-            display: block;
-        }
+        .main-wrapper { margin-left: 250px; padding: 30px; transition: all 0.3s; }
+        .admin-header { background: white; padding: 15px 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 30px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
 
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
-            color: #fff;
-            background: #007a99;
-            border-left: 4px solid #0dcaf0;
-        }
-
-        /* Main Content */
-        .main-wrapper {
-            margin-left: 250px;
-            padding: 30px;
-            transition: all 0.3s;
-        }
-
-        /* Header */
-        .admin-header {
-            background: white;
-            padding: 15px 25px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* --- 2. CSS CÁC THÀNH PHẦN CON --- */
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-
-        .card h2 {
-            color: #0099cc;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            border-bottom: 3px solid #0dcaf0;
-            padding-bottom: 10px;
-        }
+        .card { background: white; border-radius: 15px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .card h2 { color: #0099cc; margin-bottom: 20px; font-size: 1.5em; border-bottom: 3px solid #0dcaf0; padding-bottom: 10px; }
 
         /* Filter Section */
-        .filter-section {
-            background: #e0faff;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            border: 1px solid #b3e5fc;
-        }
-        .filter-section label { font-weight: bold; color: #006064; }
-        .filter-select {
-            padding: 8px 12px;
-            border: 1px solid #81d4fa;
-            border-radius: 5px;
-            min-width: 250px;
-            outline: none;
-        }
-        .filter-select:focus { border-color: #0099cc; box-shadow: 0 0 0 3px rgba(0, 153, 204, 0.2); }
+        .filter-section { background: #e0faff; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; gap: 15px; border: 1px solid #b3e5fc; }
+        .filter-select { padding: 8px 12px; border: 1px solid #81d4fa; border-radius: 5px; min-width: 250px; outline: none; }
 
         /* Table */
         .data-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .data-table th { 
-            background: #f0fdff; 
-            font-weight: bold; 
-            color: #007a99; 
-            padding: 12px; text-align: left; 
-            border-bottom: 2px solid #0dcaf0; 
-        }
+        .data-table th { background: #f0fdff; font-weight: bold; color: #007a99; padding: 12px; text-align: left; border-bottom: 2px solid #0dcaf0; }
         .data-table td { padding: 12px; border-bottom: 1px solid #e0e0e0; font-size: 0.95rem; }
         .data-table tr:hover { background: #e0f7fa; }
 
-        /* Buttons & Modal */
-        .btn-view {
-            background: #0dcaf0;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 5px;
-            font-size: 13px;
-            font-weight: bold;
-            transition: 0.2s;
-        }
+        .btn-view { background: #0dcaf0; color: white; border: none; padding: 6px 12px; border-radius: 5px; font-size: 13px; font-weight: bold; transition: 0.2s; }
         .btn-view:hover { background: #0099cc; color: white; }
 
-        /* Modal Styles */
+        /* Modal */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1050; justify-content: center; align-items: center; }
         .modal.active { display: flex; }
         .modal-content { background: white; padding: 30px; border-radius: 15px; max-width: 1000px; width: 90%; max-height: 90vh; overflow-y: auto; position: relative; margin-left: 100px;}
         .close-modal { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #aaa; }
-        .close-modal:hover { color: #dc3545; }
-
-        /* Student Detail Info */
-        .student-info p { margin-bottom: 8px; font-size: 1rem; }
-        .student-info strong { color: #006064; width: 120px; display: inline-block; }
-
-        /* Badge Học Bổng */
+        
         .hb-badge { padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: bold; color: white; }
-        .bg-kk { background: #28a745; }
-        .bg-tt { background: #fd7e14; }
-        .bg-dn { background: #6f42c1; }
+        .bg-kk { background: #28a745; } /* Khuyến khích */
+        .bg-tt { background: #fd7e14; } /* Thử thách */
+        .bg-dn { background: #6f42c1; } /* Doanh nghiệp */
+
+        /* STT Label */
+        .stt-label { color: #dc3545; font-weight: 900; margin-right: 5px; }
     </style>
 </head>
 <body>
@@ -156,7 +64,6 @@
     <div id="sidebar-container"></div>
 
     <div class="main-wrapper">
-        
         <header class="admin-header">
             <h4 class="m-0 fw-bold text-secondary">
                 <i class="fas fa-search me-2 text-info"></i>Tra Cứu Lịch Sử Học Bổng
@@ -164,11 +71,8 @@
             <div class="dropdown">
                 <a href="#" class="text-decoration-none text-dark dropdown-toggle" data-bs-toggle="dropdown">
                     <img src="https://via.placeholder.com/30" class="rounded-circle me-1">
-                    <span>Xin chào, <b>Giáo vụ Khoa</b></span>
+                     <b>Giáo vụ Khoa CNTT</b>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item text-danger" href="#">Đăng xuất</a></li>
-                </ul>
             </div>
         </header>
 
@@ -176,12 +80,12 @@
             <h2>🔍 Tra Cứu Sinh Viên Theo Khoa</h2>
             
             <div class="filter-section">
-                <label><i class="fas fa-filter me-2"></i>Chọn Khoa:</label>
+                <label><i class="fas fa-filter me-2"></i><span class="stt-label">1.</span>Chọn Khoa:</label>
                 <select id="khoaFilter" class="filter-select" onchange="filterStudents()">
                     <option value="">-- Tất cả các khoa --</option>
                     <option value="CNTT">Công Nghệ Thông Tin (CNTT)</option>
-                    <option value="XD">Xây Dựng (XD)</option>
-                    <option value="KTCK">Kỹ Thuật Cơ Khí (KTCK)</option>
+                    <option value="XD">Kỹ thuật Xây Dựng (XD)</option>
+                    <option value="CK">Cơ Khí (CK)</option>
                 </select>
             </div>
 
@@ -189,10 +93,10 @@
                 <table class="data-table" id="studentTable">
                     <thead>
                         <tr>
-                            <th>Mã SV</th>
-                            <th>Họ Tên</th>
-                            <th>Lớp</th>
-                            <th>Khoa</th>
+                            <th><span class="stt-label">2.</span>Mã SV</th>
+                            <th><span class="stt-label">3.</span>Họ Tên</th>
+                            <th><span class="stt-label">4.</span>Lớp</th>
+                            <th><span class="stt-label">1.</span>Khoa</th>
                             <th>Hành Động</th>
                         </tr>
                     </thead>
@@ -208,19 +112,20 @@
             <span class="close-modal" onclick="closeModal()">&times;</span>
             <h3 class="text-info mb-4 border-bottom pb-2">Hồ Sơ Sinh Viên</h3>
             
-            <div id="studentDetail" class="student-info mb-4"></div>
+            <div id="studentDetail" class="mb-4 row">
+                </div>
             
-            <h4 class="text-secondary mb-3"><i class="fas fa-history me-2"></i>Lịch Sử Nhận Học Bổng</h4>
+            <h4 class="text-secondary mb-3"><i class="fas fa-history me-2"></i>Lịch Sử Nhận Học Bổng (View: vw_DanhSachHocBongDaDuyet)</h4>
             <div style="overflow-x: auto;">
                 <table class="data-table" id="hbTable">
                     <thead>
                         <tr>
-                            <th>Năm</th>
-                            <th>Tên Học Bổng</th>
-                            <th>Loại</th>
-                            <th>Giá Trị</th>
-                            <th>Ngày Cấp</th>
-                            <th>Trạng Thái</th>
+                            <th><span class="stt-label">5.</span>Năm Học</th>
+                            <th><span class="stt-label">6.</span>Tên Học Bổng</th>
+                            <th><span class="stt-label">7.</span>Loại HB</th>
+                            <th><span class="stt-label">8.</span>Số Tiền</th>
+                            <th><span class="stt-label">9.</span>Ngày Xét</th>
+                            <th><span class="stt-label">10.</span>Trạng Thái</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -232,138 +137,57 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        const MENUS = {
-            ADMIN: [
-                { title: 'Tổng quan', url: 'Dashboard.html', icon: 'fa-tachometer-alt' },
-                { title: 'Người dùng', url: 'nguoidung.html', icon: 'fa-users-cog' },
-                { title: 'Năm học', url: 'namhoc.html', icon: 'fa-calendar-alt' },
-                { title: 'Học bổng', url: 'hocbong.html', icon: 'fa-hand-holding-usd' }
-            ],
-            PCTSV: [
-                { title: 'QL Doanh nghiệp', url: 'QLDN.html', icon: 'fa-building' },
-                { title: 'Phân bổ ngân sách', url: 'PBNS.html', icon: 'fa-chart-pie' },
-                { title: 'Duyệt Điểm HĐ', url: 'DuyetDHD.html', icon: 'fa-tasks' },
-                { title: 'Duyệt HB Khuyến khích', url: 'HBKK.html', icon: 'fa-star' },
-                { title: 'Duyệt HB Thử thách', url: 'HBTT.html', icon: 'fa-hand-holding-heart' },
-                { title: 'Duyệt HB Doanh nghiệp', url: 'HBDN.html', icon: 'fa-briefcase' }
-            ],
-            PDAOTAO: [
-                { title: 'QL Hồ sơ Sinh viên', url: 'QL_HSSV.html', icon: 'fa-id-card' },
-                { title: 'QL Điểm GPA', url: 'QL_GPA.html', icon: 'fa-file-excel' }
-            ],
-            KHOA: [
-                { title: 'QL Điểm Rèn Luyện', url: 'QL_DRL.html', icon: 'fa-running' },
-                { title: 'Tra cứu Lịch sử HB', url: 'QL_LSHB.html', icon: 'fa-search' }
-            ]
-        };
-
+        // Sidebar Script (Giữ nguyên)
+        const MENUS = { ADMIN: [], PCTSV: [], KHOA: [{title:'QL Điểm Rèn Luyện',url:'QL_DRL.html',icon:'fa-running'},{title:'Tra cứu Lịch sử HB',url:'QL_LSHB.html',icon:'fa-search'}] };
         function createSidebar(role, activePage) {
             const container = document.getElementById('sidebar-container');
-            if (!container) return;
-
-            const menuItems = MENUS[role] || [];
-            
-            // Cấu hình riêng cho KHOA
-            const brandTitle = 'GIÁO VỤ KHOA';
-            const brandIcon = 'fa-chalkboard-teacher';
-
-            let html = `
-                <nav class="sidebar">
-                    <div class="brand-logo">
-                        <i class="fas ${brandIcon} me-2"></i> ${brandTitle}
-                    </div>
-                    <div class="nav flex-column">
-            `;
-
-            menuItems.forEach(item => {
-                const isActive = activePage.includes(item.url) ? 'active' : '';
-                html += `
-                    <a href="${item.url}" class="nav-link ${isActive}">
-                        <i class="fas ${item.icon} me-2"></i> ${item.title}
-                    </a>
-                `;
-            });
-
-            html += `
-                    </div>
-                    <div class="mt-auto p-3 border-top border-secondary" style="position: absolute; bottom: 0; width: 100%;">
-                        <a href="../TrangChu/index.html" class="nav-link text-white">
-                            <i class="fas fa-sign-out-alt me-2"></i> Thoát
-                        </a>
-                    </div>
-                </nav>
-            `;
+            let html = `<nav class="sidebar"><div class="brand-logo"><i class="fas fa-chalkboard-teacher me-2"></i>GIÁO VỤ KHOA</div><div class="nav flex-column">`;
+            MENUS[role].forEach(item => { const isActive = activePage.includes(item.url) ? 'active' : ''; html += `<a href="${item.url}" class="nav-link ${isActive}"><i class="fas ${item.icon} me-2"></i>${item.title}</a>`; });
+            html += `</div><div class="mt-auto p-3 border-top border-secondary position-absolute bottom-0 w-100"><a href="../TrangChu/index.html" class="nav-link text-white"><i class="fas fa-sign-out-alt me-2"></i>Thoát</a></div></nav>`;
             container.innerHTML = html;
         }
-
-        // Gọi hàm tạo Sidebar cho vai trò KHOA
         createSidebar('KHOA', 'QL_LSHB.html');
     </script>
 
     <script>
-        // Dữ liệu mẫu
+        // --- 1. DỮ LIỆU SINH VIÊN (Table SinhVien) ---
         const students = [
-            ...Array.from({length: 20}, (_, i) => ({
-                maSV: `SV21${String(1001+i).padStart(4,'0')}`,
-                hoTen: `Nguyễn Văn ${String.fromCharCode(65+i)}`,
-                lop: ["CNTT21A", "CNTT21B", "CNTT21C"][i%3],
-                khoa: "CNTT"
-            })),
-            ...Array.from({length: 20}, (_, i) => ({
-                maSV: `SV22${String(2001+i).padStart(4,'0')}`,
-                hoTen: `Trần Văn ${String.fromCharCode(65+i)}`,
-                lop: ["XD22A", "XD22B", "XD22C"][i%3],
-                khoa: "XD"
-            })),
-            ...Array.from({length: 20}, (_, i) => ({
-                maSV: `SV23${String(3001+i).padStart(4,'0')}`,
-                hoTen: `Lê Thị ${String.fromCharCode(65+i)}`,
-                lop: ["CK23A", "CK23B", "CK23C"][i%3],
-                khoa: "KTCK"
-            }))
+            { MaSV: 'SV001', HoTen: 'Nguyễn Văn An', MaLop: '21DTHC1', MaKhoa: 'CNTT' },
+            { MaSV: 'SV002', HoTen: 'Lê Thị Bình', MaLop: '21DTHC1', MaKhoa: 'CNTT' },
+            { MaSV: 'SV003', HoTen: 'Phạm Văn Chí', MaLop: '21CK01', MaKhoa: 'CK' },
+            { MaSV: 'SV007', HoTen: 'Đinh Thị Lan', MaLop: '21DTHX1', MaKhoa: 'XD' },
+            { MaSV: 'SV008', HoTen: 'Phan Văn Minh', MaLop: '21DTHC1', MaKhoa: 'CNTT' }
         ];
 
-        const hocbongList = [
-            { ten: "Học bổng Khuyến khích Học tập", loai: "KhuyenKhich", giaTri: "5.000.000đ" },
-            { ten: "Học bổng Thử thách Lập trình", loai: "ThuThach", giaTri: "10.000.000đ" },
-            { ten: "Học bổng Doanh nghiệp Google", loai: "DoanhNghiep", giaTri: "15.000.000đ" },
-            { ten: "Học bổng Khuyến khích Nghiên cứu", loai: "KhuyenKhich", giaTri: "6.000.000đ" },
-            { ten: "Học bổng Doanh nghiệp VinGroup", loai: "DoanhNghiep", giaTri: "12.000.000đ" }
+        // --- 2. DỮ LIỆU LỊCH SỬ HỌC BỔNG (View: vw_DanhSachHocBongDaDuyet) ---
+        // Gồm các trường: MaSV, NamHoc, TenHocBong, LoaiHocBong, SoTien, NgayXet, TrangThai
+        const lichSuData = [
+            { MaSV: 'SV001', NamHoc: '2024-2025', TenHocBong: 'Học bổng Khuyến khích A', LoaiHocBong: 'KhuyenKhich', SoTien: 5000000, NgayXet: '2025-05-20', TrangThai: 'Đạt' },
+            { MaSV: 'SV001', NamHoc: '2024-2025', TenHocBong: 'Học bổng FPT Talent', LoaiHocBong: 'DoanhNghiep', SoTien: 10000000, NgayXet: '2025-05-25', TrangThai: 'Đạt' },
+            { MaSV: 'SV002', NamHoc: '2024-2025', TenHocBong: 'Học bổng Khuyến khích A', LoaiHocBong: 'KhuyenKhich', SoTien: 5000000, NgayXet: '2025-05-20', TrangThai: 'Đạt' },
+            { MaSV: 'SV003', NamHoc: '2024-2025', TenHocBong: 'Học bổng Thử thách', LoaiHocBong: 'ThuThach', SoTien: 2000000, NgayXet: '2024-09-15', TrangThai: 'Đạt' },
+            { MaSV: 'SV008', NamHoc: '2023-2024', TenHocBong: 'Học bổng Khuyến khích B', LoaiHocBong: 'KhuyenKhich', SoTien: 3000000, NgayXet: '2024-01-15', TrangThai: 'Đạt' }
         ];
 
-        const lichSuHocBong = {};
-        students.forEach(sv => {
-            const soLuongHB = Math.floor(Math.random() * 5) + 1; // Ít nhất 1 HB để demo đẹp
-            lichSuHocBong[sv.maSV] = Array.from({length: soLuongHB}, () => {
-                const hb = hocbongList[Math.floor(Math.random() * hocbongList.length)];
-                const nam = 2022 + Math.floor(Math.random() * 4);
-                return {
-                    nam,
-                    ten: hb.ten,
-                    loai: hb.loai,
-                    giaTri: hb.giaTri,
-                    ngayCap: `${Math.floor(Math.random()*28)+1}/${Math.floor(Math.random()*12)+1}/${nam}`,
-                    trangThai: Math.random() > 0.2 ? "Đã cấp" : "Đang xét"
-                };
-            });
-        });
-
+        // --- RENDER TABLE ---
         function renderTable(filterKhoa = "") {
             const tbody = document.querySelector('#studentTable tbody');
             tbody.innerHTML = '';
-            const filtered = filterKhoa ? students.filter(s => s.khoa === filterKhoa) : students;
+            
+            // Lọc theo Khoa
+            const filtered = filterKhoa ? students.filter(s => s.MaKhoa === filterKhoa) : students;
             
             filtered.forEach(sv => {
-                const tenKhoa = sv.khoa === "CNTT" ? "Công Nghệ Thông Tin" 
-                              : sv.khoa === "XD"   ? "Xây Dựng" 
-                              : "Kỹ Thuật Cơ Khí";
+                // Mapping tên khoa hiển thị
+                let tenKhoaHienThi = sv.MaKhoa === "CNTT" ? "Công Nghệ Số" : (sv.MaKhoa === "CK" ? "Cơ Khí" : "Xây Dựng");
+
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td><strong>${sv.maSV}</strong></td>
-                    <td>${sv.hoTen}</td>
-                    <td>${sv.lop}</td>
-                    <td>${tenKhoa}</td>
-                    <td><button class="btn-view" onclick="viewDetail('${sv.maSV}')"><i class="fas fa-eye me-1"></i>Xem</button></td>
+                    <td class="fw-bold">${sv.MaSV}</td>
+                    <td>${sv.HoTen}</td>
+                    <td>${sv.MaLop}</td>
+                    <td>${tenKhoaHienThi}</td>
+                    <td><button class="btn-view" onclick="viewDetail('${sv.MaSV}')"><i class="fas fa-eye me-1"></i>Xem Lịch Sử</button></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -374,42 +198,52 @@
             renderTable(khoa);
         }
 
+        // --- VIEW DETAIL MODAL ---
         window.viewDetail = function(maSV) {
-            const sv = students.find(s => s.maSV === maSV);
-            const hbList = lichSuHocBong[maSV] || [];
-            const tenKhoa = sv.khoa === "CNTT" ? "Công Nghệ Thông Tin" 
-                          : sv.khoa === "XD"   ? "Xây Dựng" 
-                          : "Kỹ Thuật Cơ Khí";
+            const sv = students.find(s => s.MaSV === maSV);
+            const hbList = lichSuData.filter(h => h.MaSV === maSV);
 
+            // Hiển thị thông tin chung
             document.getElementById('studentDetail').innerHTML = `
-                <p><strong>Mã SV:</strong> ${sv.maSV}</p>
-                <p><strong>Họ tên:</strong> ${sv.hoTen}</p>
-                <p><strong>Lớp:</strong> ${sv.lop}</p>
-                <p><strong>Khoa:</strong> ${tenKhoa}</p>
-                <p><strong>Tổng HB đã nhận:</strong> <span class="text-success fw-bold">${hbList.filter(h=>h.trangThai==="Đã cấp").length} suất</span></p>
+                <div class="col-md-6"><p><strong>Mã SV:</strong> ${sv.MaSV}</p></div>
+                <div class="col-md-6"><p><strong>Họ tên:</strong> ${sv.HoTen}</p></div>
+                <div class="col-md-6"><p><strong>Lớp:</strong> ${sv.MaLop}</p></div>
+                <div class="col-md-6"><p><strong>Tổng tiền đã nhận:</strong> <span class="text-danger fw-bold">${formatCurrency(hbList.reduce((acc, curr) => acc + curr.SoTien, 0))}</span></p></div>
             `;
 
+            // Hiển thị bảng lịch sử
             const hbBody = document.querySelector('#hbTable tbody');
             hbBody.innerHTML = '';
-            hbList.forEach(hb => {
-                let loaiHienThi = "", badgeClass = "";
-                if(hb.loai === "KhuyenKhich") { loaiHienThi = "Khuyến khích"; badgeClass = "bg-kk"; }
-                else if(hb.loai === "ThuThach") { loaiHienThi = "Thử thách"; badgeClass = "bg-tt"; }
-                else { loaiHienThi = "Doanh nghiệp"; badgeClass = "bg-dn"; }
+            
+            if(hbList.length === 0) {
+                hbBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Sinh viên này chưa nhận được học bổng nào.</td></tr>';
+            } else {
+                hbList.forEach(hb => {
+                    let badgeClass = "";
+                    let tenLoai = "";
+                    
+                    if(hb.LoaiHocBong === "KhuyenKhich") { badgeClass = "bg-kk"; tenLoai = "Khuyến khích"; }
+                    else if(hb.LoaiHocBong === "ThuThach") { badgeClass = "bg-tt"; tenLoai = "Thử thách"; }
+                    else { badgeClass = "bg-dn"; tenLoai = "Doanh nghiệp"; }
 
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${hb.nam}</td>
-                    <td>${hb.ten}</td>
-                    <td><span class="hb-badge ${badgeClass}">${loaiHienThi}</span></td>
-                    <td class="text-danger fw-bold">${hb.giaTri}</td>
-                    <td>${hb.ngayCap}</td>
-                    <td><span class="badge ${hb.trangThai === 'Đã cấp' ? 'bg-success' : 'bg-warning text-dark'}">${hb.trangThai}</span></td>
-                `;
-                hbBody.appendChild(tr);
-            });
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${hb.NamHoc}</td>
+                        <td class="fw-bold text-primary">${hb.TenHocBong}</td>
+                        <td><span class="hb-badge ${badgeClass}">${tenLoai}</span></td>
+                        <td class="text-danger fw-bold">${formatCurrency(hb.SoTien)}</td>
+                        <td>${hb.NgayXet}</td>
+                        <td><span class="badge bg-success">${hb.TrangThai}</span></td>
+                    `;
+                    hbBody.appendChild(tr);
+                });
+            }
 
             document.getElementById('detailModal').classList.add('active');
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
         }
 
         window.closeModal = function() {

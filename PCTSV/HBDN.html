@@ -8,118 +8,40 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- 1. GIAO DIỆN CHUẨN PCTSV (GREEN THEME) --- */
+        /* --- GIAO DIỆN CHUẨN PCTSV (GREEN THEME) --- */
         body { 
             background: linear-gradient(135deg, #134E5E 0%, #71B280 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
         }
         
-        /* Sidebar */
         .sidebar {
-            min-height: 100vh;
-            background: #1a3c34;
-            color: white;
-            width: 250px;
-            position: fixed;
-            top: 0; left: 0;
-            z-index: 1000;
-            transition: all 0.3s;
+            min-height: 100vh; background: #1a3c34; color: white; width: 250px;
+            position: fixed; top: 0; left: 0; z-index: 1000;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
         }
+        .brand-logo { padding: 20px; font-size: 1.5rem; font-weight: bold; text-align: center; background: #14302a; border-bottom: 1px solid #2a5c52; }
+        .sidebar .nav-link { color: #a8d5cc; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { color: #fff; background: #2a5c52; border-left: 4px solid #71B280; }
+
+        .main-wrapper { margin-left: 250px; padding: 30px; transition: all 0.3s; }
+        .admin-header { background: white; padding: 15px 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 30px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
+
+        .card { background: white; border-radius: 15px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .form-select-custom { padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; width: 100%; }
         
-        .brand-logo {
-            padding: 20px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-align: center;
-            background: #14302a;
-            border-bottom: 1px solid #2a5c52;
-        }
-
-        .sidebar .nav-link {
-            color: #a8d5cc;
-            padding: 15px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            text-decoration: none;
-            display: block;
-        }
-
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
-            color: #fff;
-            background: #2a5c52;
-            border-left: 4px solid #71B280;
-        }
-
-        /* Main Content */
-        .main-wrapper {
-            margin-left: 250px;
-            padding: 30px;
-            transition: all 0.3s;
-        }
-
-        /* Header */
-        .admin-header {
-            background: white;
-            padding: 15px 25px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* --- 2. CSS CÁC THÀNH PHẦN CON --- */
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-
-        .card h2 {
-            color: #134E5E;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            border-bottom: 3px solid #71B280;
-            padding-bottom: 10px;
-        }
-
-        /* Custom Select & Form */
-        .form-select-custom {
-            padding: 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            width: 100%;
-        }
-        .form-select-custom:focus {
-            border-color: #71B280;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(113, 178, 128, 0.2);
-        }
-
-        /* Table Styling */
         table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 10px; }
-        th { 
-            background: #f8f9fa; 
-            color: #134E5E; 
-            padding: 15px; 
-            font-weight: bold; 
-            border-bottom: 2px solid #71B280; 
-            text-transform: uppercase;
-            font-size: 0.85rem;
-        }
+        th { background: #f8f9fa; color: #134E5E; padding: 15px; font-weight: bold; border-bottom: 2px solid #71B280; text-transform: uppercase; font-size: 0.85rem; }
         td { padding: 12px 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
         tr:hover { background-color: #f1f8f6; }
 
-        /* Custom Badges */
-        .badge-score { font-size: 0.8rem; padding: 6px 10px; border-radius: 6px; margin-right: 3px; }
+        .badge-score { font-size: 0.8rem; padding: 6px 10px; border-radius: 6px; margin-right: 3px; display: inline-block; min-width: 40px; text-align: center;}
         .bg-gpa { background-color: #e3f2fd; color: #0d47a1; border: 1px solid #bbdefb; }
         .bg-drl { background-color: #f3e5f5; color: #4a148c; border: 1px solid #e1bee7; }
         .bg-hd { background-color: #fff3e0; color: #e65100; border: 1px solid #ffe0b2; }
-
+        
+        /* STT Label */
+        .stt-label { color: #dc3545; font-weight: 900; margin-right: 5px; }
     </style>
 </head>
 <body>
@@ -127,7 +49,6 @@
     <div id="sidebar-container"></div>
 
     <div class="main-wrapper">
-        
         <header class="admin-header">
             <h4 class="m-0 fw-bold text-secondary">
                 <i class="fas fa-building me-2 text-success"></i>Xét Duyệt HB Doanh Nghiệp
@@ -137,9 +58,7 @@
                     <img src="https://via.placeholder.com/30" class="rounded-circle me-1">
                     <span>Xin chào, <b>Cán bộ CTSV</b></span>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item text-danger" href="#">Đăng xuất</a></li>
-                </ul>
+                <ul class="dropdown-menu dropdown-menu-end"><li><a class="dropdown-item text-danger" href="#">Đăng xuất</a></li></ul>
             </div>
         </header>
 
@@ -148,7 +67,7 @@
             
             <div class="row mb-4 align-items-end">
                 <div class="col-md-6">
-                    <label class="form-label fw-bold text-secondary">Chọn Đợt Tài Trợ / Doanh Nghiệp:</label>
+                    <label class="form-label fw-bold text-secondary"><span class="stt-label">1.</span>Chọn Đợt Tài Trợ / Doanh Nghiệp:</label>
                     <select id="cboDotHB" class="form-select form-select-custom" onchange="fetchData()">
                         <option value="">-- Đang tải danh sách... --</option>
                     </select>
@@ -164,12 +83,19 @@
                 <table class="table-hover">
                     <thead>
                         <tr>
-                            <th width="50px">STT</th>
-                            <th>Thông tin Ứng viên</th>
-                            <th class="text-center">Thành tích<br><small>(GPA / ĐRL / HĐ)</small></th>
-                            <th class="text-center">Hồ sơ (CV)</th>
-                            <th class="text-center">Trạng thái</th>
-                            <th class="text-center">Thao tác</th>
+                            <th><span class="stt-label">2.</span>MSSV</th>
+                            <th><span class="stt-label">3.</span>Họ Tên</th>
+                            <th><span class="stt-label">4.</span>Lớp</th>
+                            
+                            <th class="text-center">
+                                <span class="stt-label">5.</span>GPA / 
+                                <span class="stt-label">6.</span>ĐRL / 
+                                <span class="stt-label">7.</span>Đ.HĐ
+                            </th>
+                            
+                            <th class="text-center"><span class="stt-label">8.</span>Hồ sơ (CV)</th>
+                            <th class="text-center"><span class="stt-label">9.</span>Trạng thái</th>
+                            <th class="text-center" width="120px"><span class="stt-label">10.</span>Thao tác</th>
                         </tr>
                     </thead>
                     <tbody id="table-body">
@@ -182,176 +108,121 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        // --- Sidebar Logic ---
         const MENUS = {
-            ADMIN: [
-                { title: 'Tổng quan', url: 'Dashboard.html', icon: 'fa-tachometer-alt' },
-                { title: 'Người dùng', url: 'nguoidung.html', icon: 'fa-users-cog' },
-                { title: 'Năm học', url: 'namhoc.html', icon: 'fa-calendar-alt' },
-                { title: 'Học bổng', url: 'hocbong.html', icon: 'fa-hand-holding-usd' }
-            ],
+            ADMIN: [],
             PCTSV: [
                 { title: 'QL Doanh nghiệp', url: 'QLDN.html', icon: 'fa-building' },
                 { title: 'Duyệt Điểm HĐ', url: 'DuyetDHD.html', icon: 'fa-tasks' },
                 { title: 'Duyệt HB Khuyến khích', url: 'HBKK.html', icon: 'fa-star' },
                 { title: 'Duyệt HB Thử thách', url: 'HBTT.html', icon: 'fa-hand-holding-heart' },
-                { title: 'Duyệt HB Doanh nghiệp', url: 'HBDN.html', icon: 'fa-briefcase' }
+                { title: 'Duyệt HB Doanh nghiệp', url: 'HBDN.html', icon: 'fa-briefcase' }, // Active
+                { title: 'Xử lý Khiếu nại', url: 'PCTSV_XuLyKhieuNai.html', icon: 'fa-gavel' }
             ]
         };
 
         function createSidebar(role, activePage) {
             const container = document.getElementById('sidebar-container');
             if (!container) return;
-
             const menuItems = MENUS[role] || [];
-            const brandIcon = 'fa-university'; 
-            const brandTitle = 'P. CÔNG TÁC SV';
-
-            let html = `
-                <nav class="sidebar">
-                    <div class="brand-logo">
-                        <i class="fas ${brandIcon} me-2"></i> ${brandTitle}
-                    </div>
-                    <div class="nav flex-column">
-            `;
-
+            let html = `<nav class="sidebar"><div class="brand-logo"><i class="fas fa-university me-2"></i> P. CÔNG TÁC SV</div><div class="nav flex-column">`;
             menuItems.forEach(item => {
                 const isActive = activePage.includes(item.url) ? 'active' : '';
-                html += `
-                    <a href="${item.url}" class="nav-link ${isActive}">
-                        <i class="fas ${item.icon} me-2"></i> ${item.title}
-                    </a>
-                `;
+                html += `<a href="${item.url}" class="nav-link ${isActive}"><i class="fas ${item.icon} me-2"></i> ${item.title}</a>`;
             });
-
-            html += `
-                    </div>
-                    <div class="mt-auto p-3 border-top border-secondary" style="position: absolute; bottom: 0; width: 100%;">
-                        <a href="../TrangChu/index.html" class="nav-link text-white">
-                            <i class="fas fa-sign-out-alt me-2"></i> Thoát
-                        </a>
-                    </div>
-                </nav>
-            `;
+            html += `</div><div class="mt-auto p-3 border-top border-secondary position-absolute bottom-0 w-100"><a href="../TrangChu/index.html" class="nav-link text-white"><i class="fas fa-sign-out-alt me-2"></i> Thoát</a></div></nav>`;
             container.innerHTML = html;
         }
-
-        // Kích hoạt sidebar cho trang này
         createSidebar('PCTSV', 'HBDN.html');
     </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            loadDotHB(); // Tải danh sách đợt trước
+            loadDotHB(); 
         });
 
-        // 1. Tải danh sách các đợt tài trợ vào ComboBox
+        // 1. Tải danh sách đợt (GỌI API THỰC TẾ)
         async function loadDotHB() {
             try {
                 let res = await fetch('http://localhost:3000/api/dot-hb-dn');
                 let data = await res.json();
                 
                 let cbo = document.getElementById('cboDotHB');
-                cbo.innerHTML = ''; // Xóa placeholder
+                cbo.innerHTML = ''; 
 
                 if(data.length === 0) {
-                    cbo.innerHTML = '<option>Chưa có đợt tài trợ nào</option>';
+                    cbo.innerHTML = '<option value="">Chưa có đợt tài trợ nào</option>';
                     return;
                 }
 
                 data.forEach(dot => {
                     let option = document.createElement("option");
-                    option.value = dot.MaDotDN;
-                    option.text = `${dot.TenDot} (${dot.DonViTaiTro})`;
+                    option.value = dot.MaDotDN; 
+                    option.text = `${dot.TenDot} (${dot.DonViTaiTro || 'N/A'})`;
                     cbo.appendChild(option);
                 });
-
-                // Tự động tải dữ liệu của đợt đầu tiên luôn
+                
+                // Tự động load dữ liệu cho đợt đầu tiên
                 fetchData();
 
-            } catch (error) {
+            } catch (error) { 
                 console.error("Lỗi tải đợt:", error);
-                // Demo dữ liệu nếu không có API (Để bạn thấy giao diện)
-                // remove this block in production
-                /*
-                let cbo = document.getElementById('cboDotHB');
-                cbo.innerHTML = '<option value="1">Đợt 1 - FPT Software</option>';
-                let tbody = document.getElementById('table-body');
-                tbody.innerHTML = `
-                    <tr>
-                        <td>1</td>
-                        <td><strong>SV001 - Nguyễn Văn A</strong><br><small class="text-muted">19CNTT1</small></td>
-                        <td class="text-center">
-                            <span class="badge badge-score bg-gpa">3.6</span>
-                            <span class="badge badge-score bg-drl">90</span>
-                            <span class="badge badge-score bg-hd">15</span>
-                        </td>
-                        <td class="text-center"><a href="#" class="btn btn-sm btn-outline-dark"><i class="fas fa-eye"></i> CV</a></td>
-                        <td class="text-center"><span class="badge bg-warning text-dark">Chờ duyệt</span></td>
-                        <td class="text-center">
-                            <button class="btn btn-success btn-sm"><i class="fas fa-check"></i></button>
-                            <button class="btn btn-danger btn-sm"><i class="fas fa-times"></i></button>
-                        </td>
-                    </tr>`;
-                */
+                document.getElementById('cboDotHB').innerHTML = '<option>Lỗi kết nối Server</option>';
             }
         }
 
-        // 2. Tải danh sách ứng viên theo đợt đã chọn
+        // 2. Tải danh sách ứng viên (GỌI API THỰC TẾ)
         async function fetchData() {
             let maDot = document.getElementById('cboDotHB').value;
             if(!maDot) return;
+
+            let tbody = document.getElementById('table-body');
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4">Đang tải dữ liệu...</td></tr>';
 
             try {
                 let res = await fetch(`http://localhost:3000/api/xetduyet-hbdn?maDot=${maDot}`);
                 let data = await res.json();
                 
-                let tbody = document.getElementById('table-body');
                 tbody.innerHTML = '';
 
                 if(data.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-3 text-muted">Chưa có sinh viên nào nộp đơn vào đợt này.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted">Chưa có sinh viên nào nộp đơn.</td></tr>';
                     return;
                 }
 
-                data.forEach((sv, index) => {
-                    // Màu sắc trạng thái
-                    let badgeClass = "bg-secondary";
-                    if(sv.TrangThai === 'Đạt') badgeClass = "bg-success";
-                    if(sv.TrangThai === 'Không đạt') badgeClass = "bg-danger";
-                    if(sv.TrangThai === 'Chờ duyệt') badgeClass = "bg-warning text-dark";
-                    
-                    // Khóa nút nếu đã duyệt
+                data.forEach((sv) => {
+                    let badgeClass = sv.TrangThai === 'Đạt' ? "bg-success" : (sv.TrangThai === 'Không đạt' ? "bg-danger" : "bg-warning text-dark");
                     let disabled = sv.TrangThai !== 'Chờ duyệt' ? 'disabled' : '';
 
                     let row = `
                         <tr>
-                            <td>${index + 1}</td>
-                            <td>
-                                <strong>${sv.MaSV} - ${sv.HoTen}</strong><br>
-                                <small class="text-muted">${sv.TenLop}</small>
-                            </td>
+                            <td class="fw-bold">${sv.MaSV}</td>
+                            <td>${sv.HoTen}</td>
+                            <td>${sv.TenLop}</td>
                             <td class="text-center">
                                 <span class="badge badge-score bg-gpa" title="GPA">${sv.DiemGPA}</span>
-                                <span class="badge badge-score bg-drl" title="Điểm RL">${sv.DiemRL}</span>
-                                <span class="badge badge-score bg-hd" title="Điểm HĐ">${sv.DiemHD || 0}</span>
+                                <span class="badge badge-score bg-drl" title="ĐRL">${sv.DiemRL}</span>
+                                <span class="badge badge-score bg-hd" title="ĐHĐ">${sv.DiemHD || 0}</span>
                             </td>
                             <td class="text-center">
                                 <a href="${sv.LinkCV || '#'}" target="_blank" class="btn btn-sm btn-outline-secondary">
-                                    <i class="fab fa-google-drive me-1"></i>Xem CV
+                                    <i class="fab fa-google-drive me-1"></i>CV
                                 </a>
                             </td>
                             <td class="text-center">
                                 <span class="badge ${badgeClass}">${sv.TrangThai}</span>
                             </td>
                             <td class="text-center">
-                                <button class="btn btn-success btn-sm" title="Duyệt" ${disabled} 
-                                    onclick="updateStatus('${sv.MaSV}', '${sv.MaDotDN}', 'Đạt')">
-                                    <i class="fas fa-check"></i>
-                                </button>
-                                <button class="btn btn-danger btn-sm" title="Loại" ${disabled}
-                                    onclick="updateStatus('${sv.MaSV}', '${sv.MaDotDN}', 'Không đạt')">
-                                    <i class="fas fa-times"></i>
-                                </button>
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-success" title="Duyệt" ${disabled} 
+                                        onclick="updateStatus('${sv.MaSV}', '${sv.MaDotDN}', 'Đạt')">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" title="Loại" ${disabled}
+                                        onclick="updateStatus('${sv.MaSV}', '${sv.MaDotDN}', 'Không đạt')">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     `;
@@ -359,30 +230,32 @@
                 });
 
             } catch (error) {
-                console.error("Lỗi tải SV:", error);
-                // alert("Lỗi tải danh sách ứng viên!");
+                console.error("Lỗi tải ứng viên:", error);
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-danger">Lỗi kết nối Server!</td></tr>';
             }
         }
 
-        // 3. Hàm Duyệt / Loại
+        // 3. Cập nhật trạng thái (GỌI API UPDATE)
         async function updateStatus(maSV, maDot, trangThai) {
-            if(!confirm(`Bạn chắc chắn muốn đánh dấu ${trangThai} cho SV ${maSV}?`)) return;
-
+            if(!confirm(`Xác nhận ${trangThai} hồ sơ của ${maSV}?`)) return;
+            
             try {
                 let res = await fetch('http://localhost:3000/api/duyet-hbdn', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ maSV, maDot, trangThai })
                 });
-
+                
                 let result = await res.json();
+                
                 if(result.success) {
-                    fetchData(); 
+                    alert("✅ " + result.message);
+                    fetchData(); // Refresh lại sau khi update
                 } else {
-                    alert("Lỗi: " + result.message);
+                    alert("❌ Lỗi: " + result.message);
                 }
-            } catch (error) {
-                alert("Lỗi kết nối Server!");
+            } catch (error) { 
+                alert("Lỗi kết nối Server!"); 
             }
         }
     </script>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Học kỳ - UTE Admin</title>
+    <style>
+        :root { --primary: #8c7a6b; --bg: #d9d2c7; --card: #fff; --text: #444; --success: #6b8e6b; --danger: #a95c5c; --warning: #b39e6b; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); }
+
+        /* Sidebar & Layout */
+        .sidebar { position: fixed; left: 0; top: 0; width: 250px; height: 100vh; background: #3a3530; color: white; padding: 20px 0; z-index: 1000; }
+        .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid #4a433b; margin-bottom: 20px; }
+        .menu-item { padding: 15px 25px; cursor: pointer; transition: 0.3s; border-left: 4px solid transparent; display: block; text-decoration: none; color: white; }
+        .menu-item:hover, .menu-item.active { background: #4a433b; border-left-color: var(--primary); }
+        .main-content { margin-left: 250px; padding: 30px; }
+
+        /* Components */
+        .header { background: var(--card); padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); margin-bottom: 30px; }
+        .header h1 { color: var(--primary); font-size: 2em; margin-bottom: 5px; }
+        .card { background: var(--card); border-radius: 15px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); margin-bottom: 30px; }
+        
+        .btn { padding: 10px 20px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #6d5f53; transform: translateY(-2px); }
+
+        .table-container { overflow-x: auto; margin-top: 20px; border-radius: 10px; }
+        table { width: 100%; border-collapse: collapse; background: white; }
+        th { background: var(--primary); color: white; padding: 15px; text-align: left; }
+        td { padding: 12px 15px; border-bottom: 1px solid #eee; }
+        tr:hover { background: #f5f2ed; }
+
+        .badge { padding: 5px 10px; border-radius: 15px; font-size: 0.85rem; font-weight: bold; }
+        .badge-open { background: var(--success); color: white; }
+        .badge-closed { background: var(--danger); color: white; }
+
+        .action-btn { padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer; margin-right: 5px; }
+        .edit { background: #5b7a9d; color: white; }
+        .delete { background: var(--danger); color: white; }
+
+        /* Modal */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
+        .modal-content { background: white; margin: 5% auto; padding: 30px; border-radius: 15px; width: 90%; max-width: 800px; }
+        .close { float: right; font-size: 28px; cursor: pointer; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; }
+        
+        .stt-label { color: #08f6da; font-weight: 900; margin-right: 5px; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header"><h2>🎓 UTE Admin</h2></div>
+        <a href="nguoidung.html" class="menu-item">👥 Người dùng</a>
+        <a href="hocky.html" class="menu-item active">📅 Học kỳ</a>
+        <a href="hocbong.html" class="menu-item">💰 Học bổng</a>
+        <a href="../TrangChu/index.html" class="menu-item" style="margin-top: 20px; border-top: 1px solid #555;">🚪 Thoát</a>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>📚 Quản lý Học Kỳ</h1>
+            <p>Thiết lập danh sách học kỳ trong năm học.</p>
+        </div>
+
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>📋 Danh sách Học Kỳ</h2>
+                <button class="btn btn-primary" onclick="openModal()">➕ Thêm Học Kỳ</button>
+            </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th><span class="stt-label">1.</span>Mã HK</th>
+                            <th><span class="stt-label">2.</span>Tên Học Kỳ</th>
+                            <th><span class="stt-label">3.</span>Năm Học</th>
+                            <th><span class="stt-label">4.</span>Ngày Bắt Đầu</th>
+                            <th><span class="stt-label">5.</span>Ngày Kết Thúc</th>
+                            <th><span class="stt-label">6.</span>Trạng Thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle" style="color: var(--primary);">Thêm Học Kỳ Mới</h2>
+            
+            <form id="formSemester">
+                <input type="hidden" id="editIndex">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label><span class="stt-label">1.</span>Mã Học Kỳ (MaHK) <span style="color:red">*</span></label>
+                        <input type="text" id="maHK" required maxlength="5" placeholder="VD: 242">
+                    </div>
+                    <div class="form-group">
+                        <label><span class="stt-label">2.</span>Tên Học Kỳ (TenHK) <span style="color:red">*</span></label>
+                        <input type="text" id="tenHK" required placeholder="VD: Học kỳ 2">
+                    </div>
+                    <div class="form-group">
+                        <label><span class="stt-label">3.</span>Năm Học (NamHoc) <span style="color:red">*</span></label>
+                        <input type="text" id="namHoc" required placeholder="VD: 2024-2025">
+                    </div>
+                    <div class="form-group">
+                        <label><span class="stt-label">6.</span>Trạng Thái (TrangThai)</label>
+                        <select id="trangThai">
+                            <option value="Mở">Mở</option>
+                            <option value="Đóng">Đóng</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><span class="stt-label">4.</span>Ngày Bắt Đầu (NgayBatDau)</label>
+                        <input type="date" id="ngayBd">
+                    </div>
+                    <div class="form-group">
+                        <label><span class="stt-label">5.</span>Ngày Kết Thúc (NgayKetThuc)</label>
+                        <input type="date" id="ngayKt">
+                    </div>
+                </div>
+                
+                <div style="text-align: right; margin-top: 20px;">
+                    <button type="button" class="btn" style="background: #ccc; margin-right: 10px;" onclick="closeModal()">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu Dữ Liệu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Dữ liệu mẫu khớp với SQL
+        let semesterList = [
+            { maHK: '241', tenHK: 'Học kỳ 1', namHoc: '2024-2025', ngayBd: '2024-08-15', ngayKt: '2024-12-31', trangThai: 'Đóng' },
+            { maHK: '242', tenHK: 'Học kỳ 2', namHoc: '2024-2025', ngayBd: '2025-01-15', ngayKt: '2025-06-15', trangThai: 'Mở' },
+            { maHK: '243', tenHK: 'Học kỳ Hè', namHoc: '2024-2025', ngayBd: '2025-07-01', ngayKt: '2025-08-15', trangThai: 'Mở' }
+        ];
+
+        function formatDate(dateStr) {
+            if(!dateStr) return '';
+            const [y, m, d] = dateStr.split('-');
+            return `${d}/${m}/${y}`;
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            semesterList.forEach((item, index) => {
+                let badgeClass = item.trangThai === 'Mở' ? 'badge-open' : 'badge-closed';
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${item.maHK}</strong></td>
+                        <td>${item.tenHK}</td>
+                        <td>${item.namHoc}</td>
+                        <td>${formatDate(item.ngayBd)}</td>
+                        <td>${formatDate(item.ngayKt)}</td>
+                        <td><span class="badge ${badgeClass}">${item.trangThai}</span></td>
+                        <td>
+                            <button class="action-btn edit" onclick="editItem(${index})">✏️</button>
+                            <button class="action-btn delete" onclick="deleteItem(${index})">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function openModal() {
+            document.getElementById('formSemester').reset();
+            document.getElementById('editIndex').value = '-1';
+            document.getElementById('modalTitle').innerText = 'Thêm Học Kỳ Mới';
+            document.getElementById('maHK').disabled = false;
+            document.getElementById('trangThai').value = 'Mở';
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        function editItem(index) {
+            const item = semesterList[index];
+            document.getElementById('editIndex').value = index;
+            document.getElementById('maHK').value = item.maHK;
+            document.getElementById('maHK').disabled = true; // PK không sửa
+            document.getElementById('tenHK').value = item.tenHK;
+            document.getElementById('namHoc').value = item.namHoc;
+            document.getElementById('ngayBd').value = item.ngayBd;
+            document.getElementById('ngayKt').value = item.ngayKt;
+            document.getElementById('trangThai').value = item.trangThai;
+            
+            document.getElementById('modalTitle').innerText = 'Cập Nhật Học Kỳ';
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        function deleteItem(index) {
+            if(confirm('Xóa học kỳ này? Dữ liệu liên quan có thể bị ảnh hưởng!')) {
+                semesterList.splice(index, 1);
+                renderTable();
+            }
+        }
+
+        document.getElementById('formSemester').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const idx = document.getElementById('editIndex').value;
+            const data = {
+                maHK: document.getElementById('maHK').value.trim(),
+                tenHK: document.getElementById('tenHK').value.trim(),
+                namHoc: document.getElementById('namHoc').value.trim(),
+                ngayBd: document.getElementById('ngayBd').value,
+                ngayKt: document.getElementById('ngayKt').value,
+                trangThai: document.getElementById('trangThai').value
+            };
+
+            if (data.ngayBd && data.ngayKt && new Date(data.ngayBd) > new Date(data.ngayKt)) {
+                alert("Ngày bắt đầu phải nhỏ hơn ngày kết thúc!");
+                return;
+            }
+
+            if(idx == '-1') {
+                if(semesterList.some(x => x.maHK === data.maHK)) {
+                    alert('Mã học kỳ đã tồn tại!');
+                    return;
+                }
+                semesterList.push(data);
+            } else {
+                semesterList[idx] = data;
+            }
+            closeModal();
+            renderTable();
+        });
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('modal')) closeModal();
+        }
+
+        renderTable();
+    </script>
+</body>
+</html>

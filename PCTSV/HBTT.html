@@ -8,142 +8,40 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- 1. GIAO DIỆN CHUẨN PCTSV (GREEN THEME) --- */
+        /* --- GIAO DIỆN CHUẨN PCTSV (GREEN THEME) --- */
         body { 
             background: linear-gradient(135deg, #134E5E 0%, #71B280 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
         }
         
-        /* Sidebar */
-        .sidebar {
-            min-height: 100vh;
-            background: #1a3c34;
-            color: white;
-            width: 250px;
-            position: fixed;
-            top: 0; left: 0;
-            z-index: 1000;
-            transition: all 0.3s;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-        }
+        .sidebar { min-height: 100vh; background: #1a3c34; color: white; width: 250px; position: fixed; top: 0; left: 0; z-index: 1000; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
+        .brand-logo { padding: 20px; font-size: 1.5rem; font-weight: bold; text-align: center; background: #14302a; border-bottom: 1px solid #2a5c52; }
+        .sidebar .nav-link { color: #a8d5cc; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { color: #fff; background: #2a5c52; border-left: 4px solid #71B280; }
+
+        .main-wrapper { margin-left: 250px; padding: 30px; transition: all 0.3s; }
+        .admin-header { background: white; padding: 15px 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 30px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
+
+        .card { background: white; border-radius: 15px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .form-select-custom { padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; width: 100%; }
         
-        .brand-logo {
-            padding: 20px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-align: center;
-            background: #14302a;
-            border-bottom: 1px solid #2a5c52;
-        }
-
-        .sidebar .nav-link {
-            color: #a8d5cc;
-            padding: 15px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            text-decoration: none;
-            display: block;
-        }
-
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
-            color: #fff;
-            background: #2a5c52;
-            border-left: 4px solid #71B280;
-        }
-
-        /* Main Content */
-        .main-wrapper {
-            margin-left: 250px;
-            padding: 30px;
-            transition: all 0.3s;
-        }
-
-        /* Header */
-        .admin-header {
-            background: white;
-            padding: 15px 25px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* --- 2. CSS CÁC THÀNH PHẦN CON --- */
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-
-        .card h2 {
-            color: #134E5E;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            border-bottom: 3px solid #71B280;
-            padding-bottom: 10px;
-        }
-
-        /* Form & Inputs */
-        .form-select-custom {
-            padding: 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            width: 100%;
-        }
-        .form-select-custom:focus {
-            border-color: #71B280;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(113, 178, 128, 0.2);
-        }
-
-        /* Table */
+        /* Table Styles */
         table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 10px; }
-        th { 
-            background: #f8f9fa; 
-            color: #134E5E; 
-            padding: 15px; 
-            font-weight: bold; 
-            border-bottom: 2px solid #71B280; 
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            text-align: center;
-        }
+        th { background: #f8f9fa; color: #134E5E; padding: 15px; font-weight: bold; border-bottom: 2px solid #71B280; text-transform: uppercase; font-size: 0.85rem; text-align: center; }
         td { padding: 12px 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
         tr:hover { background-color: #f1f8f6; }
 
-        /* Custom Input in Table */
-        .input-score {
-            width: 80px;
-            text-align: center;
-            border: 2px solid #e0e0e0;
-            border-radius: 6px;
-            padding: 5px;
-            font-weight: bold;
-            color: #134E5E;
-        }
-        .input-score:focus { border-color: #71B280; outline: none; }
+        .input-score { width: 80px; text-align: center; border: 2px solid #e0e0e0; border-radius: 6px; padding: 5px; font-weight: bold; color: #d35400; }
+        .input-score:focus { border-color: #d35400; outline: none; }
 
-        /* Buttons & Links */
-        .btn-action {
-            background: linear-gradient(135deg, #134E5E 0%, #71B280 100%);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-        .btn-action:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(19, 78, 94, 0.3); color: white; }
-        
+        .btn-action { background: linear-gradient(135deg, #134E5E 0%, #71B280 100%); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; transition: all 0.3s; }
         .minh-chung-link { text-decoration: none; font-weight: bold; color: #134E5E; }
         .minh-chung-link:hover { text-decoration: underline; color: #71B280; }
-
-        /* Status Badges */
         .badge { padding: 6px 12px; border-radius: 20px; font-weight: 600; }
+        
+        /* STT Label Color */
+        .stt-label { color: #dc3545; font-weight: 900; margin-right: 5px; }
     </style>
 </head>
 <body>
@@ -151,7 +49,6 @@
     <div id="sidebar-container"></div>
 
     <div class="main-wrapper">
-        
         <header class="admin-header">
             <h4 class="m-0 fw-bold text-secondary">
                 <i class="fas fa-hand-holding-heart me-2 text-success"></i>Xét Duyệt HB Thử Thách
@@ -161,9 +58,7 @@
                     <img src="https://via.placeholder.com/30" class="rounded-circle me-1">
                     <span>Xin chào, <b>Cán bộ CTSV</b></span>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item text-danger" href="#">Đăng xuất</a></li>
-                </ul>
+                <ul class="dropdown-menu dropdown-menu-end"><li><a class="dropdown-item text-danger" href="#">Đăng xuất</a></li></ul>
             </div>
         </header>
 
@@ -175,7 +70,7 @@
             
             <div class="row mb-4 align-items-end">
                 <div class="col-md-4">
-                    <label class="form-label fw-bold text-secondary">Năm học:</label>
+                    <label class="form-label fw-bold text-secondary"><span class="stt-label">1.</span>Năm học:</label>
                     <select id="cboNamHoc" class="form-select form-select-custom" onchange="fetchData()">
                         <option value="2024-2025">2024-2025</option>
                         <option value="2023-2024">2023-2024</option>
@@ -192,12 +87,12 @@
                 <table class="table-hover">
                     <thead>
                         <tr>
-                            <th>Thông tin Sinh viên</th>
-                            <th>Điểm TB Năm<br><small>(GPA / ĐRL)</small></th>
-                            <th>Minh chứng</th>
-                            <th>Điểm Tự ĐG</th>
-                            <th width="150px">Điểm Thẩm Định</th>
-                            <th>Trạng thái</th>
+                            <th><span class="stt-label">2.</span>Thông tin Sinh viên</th>
+                            <th><span class="stt-label">3.</span>Điểm TB Năm<br><small>(GPA / ĐRL)</small></th>
+                            <th><span class="stt-label">4.</span>Minh chứng</th>
+                            <th><span class="stt-label">5.</span>Điểm Tự ĐG</th>
+                            <th width="150px"><span class="stt-label">6.</span>Điểm Thẩm Định</th>
+                            <th><span class="stt-label">7.</span>Trạng thái</th>
                             <th width="120px">Thao tác</th>
                         </tr>
                     </thead>
@@ -211,60 +106,31 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        // --- Sidebar Logic ---
         const MENUS = {
-            ADMIN: [
-                { title: 'Tổng quan', url: 'Dashboard.html', icon: 'fa-tachometer-alt' },
-                { title: 'Người dùng', url: 'nguoidung.html', icon: 'fa-users-cog' },
-                { title: 'Năm học', url: 'namhoc.html', icon: 'fa-calendar-alt' },
-                { title: 'Học bổng', url: 'hocbong.html', icon: 'fa-hand-holding-usd' }
-            ],
+            ADMIN: [],
             PCTSV: [
                 { title: 'QL Doanh nghiệp', url: 'QLDN.html', icon: 'fa-building' },
                 { title: 'Duyệt Điểm HĐ', url: 'DuyetDHD.html', icon: 'fa-tasks' },
                 { title: 'Duyệt HB Khuyến khích', url: 'HBKK.html', icon: 'fa-star' },
-                { title: 'Duyệt HB Thử thách', url: 'HBTT.html', icon: 'fa-hand-holding-heart' },
-                { title: 'Duyệt HB Doanh nghiệp', url: 'HBDN.html', icon: 'fa-briefcase' }
+                { title: 'Duyệt HB Thử thách', url: 'HBTT.html', icon: 'fa-hand-holding-heart' }, // Active
+                { title: 'Duyệt HB Doanh nghiệp', url: 'HBDN.html', icon: 'fa-briefcase' },
+                { title: 'Xử lý Khiếu nại', url: 'PCTSV_XuLyKhieuNai.html', icon: 'fa-gavel' }
             ]
         };
 
         function createSidebar(role, activePage) {
             const container = document.getElementById('sidebar-container');
             if (!container) return;
-
             const menuItems = MENUS[role] || [];
-            const brandIcon = 'fa-university'; 
-            const brandTitle = 'P. CÔNG TÁC SV';
-
-            let html = `
-                <nav class="sidebar">
-                    <div class="brand-logo">
-                        <i class="fas ${brandIcon} me-2"></i> ${brandTitle}
-                    </div>
-                    <div class="nav flex-column">
-            `;
-
+            let html = `<nav class="sidebar"><div class="brand-logo"><i class="fas fa-university me-2"></i> P. CÔNG TÁC SV</div><div class="nav flex-column">`;
             menuItems.forEach(item => {
                 const isActive = activePage.includes(item.url) ? 'active' : '';
-                html += `
-                    <a href="${item.url}" class="nav-link ${isActive}">
-                        <i class="fas ${item.icon} me-2"></i> ${item.title}
-                    </a>
-                `;
+                html += `<a href="${item.url}" class="nav-link ${isActive}"><i class="fas ${item.icon} me-2"></i> ${item.title}</a>`;
             });
-
-            html += `
-                    </div>
-                    <div class="mt-auto p-3 border-top border-secondary" style="position: absolute; bottom: 0; width: 100%;">
-                        <a href="../TrangChu/index.html" class="nav-link text-white">
-                            <i class="fas fa-sign-out-alt me-2"></i> Thoát
-                        </a>
-                    </div>
-                </nav>
-            `;
+            html += `</div><div class="mt-auto p-3 border-top border-secondary position-absolute bottom-0 w-100"><a href="../TrangChu/index.html" class="nav-link text-white"><i class="fas fa-sign-out-alt me-2"></i> Thoát</a></div></nav>`;
             container.innerHTML = html;
         }
-
-        // Kích hoạt sidebar cho trang này
         createSidebar('PCTSV', 'HBTT.html');
     </script>
 
@@ -273,35 +139,34 @@
             fetchData();
         });
 
+        // 1. Tải danh sách hồ sơ từ API Server
         async function fetchData() {
             let namHoc = document.getElementById('cboNamHoc').value;
+            let tbody = document.getElementById('table-body');
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4">Đang tải dữ liệu...</td></tr>';
+
             try {
+                // GỌI API THỰC TẾ
                 let res = await fetch(`http://localhost:3000/api/xetduyet-hbtt?namHoc=${namHoc}`);
                 let data = await res.json();
                 
-                let tbody = document.getElementById('table-body');
                 tbody.innerHTML = '';
-                
                 let pendingCount = 0;
 
                 if(data.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-muted">Không có hồ sơ nào nộp cho năm học này.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-muted">Không có hồ sơ nào.</td></tr>`;
                     document.getElementById('status-badge').innerText = "0 hồ sơ";
                     return;
                 }
 
                 data.forEach(item => {
                     if (item.TrangThai === 'Chờ duyệt') pendingCount++;
-
-                    // Logic hiển thị màu sắc trạng thái
-                    let statusColor = "bg-secondary";
-                    if(item.TrangThai === 'Đạt') statusColor = "bg-success";
-                    if(item.TrangThai === 'Không đạt') statusColor = "bg-danger";
-                    if(item.TrangThai === 'Chờ duyệt') statusColor = "bg-warning text-dark";
                     
-                    // Nếu đã duyệt rồi thì khóa nút, khóa ô nhập
+                    let statusColor = item.TrangThai === 'Đạt' ? "bg-success" : (item.TrangThai === 'Không đạt' ? "bg-danger" : "bg-warning text-dark");
                     let isDisabled = item.TrangThai !== 'Chờ duyệt' ? 'disabled' : '';
                     let isReadonly = item.TrangThai !== 'Chờ duyệt' ? 'readonly' : '';
+                    // Nếu chưa có điểm thẩm định thì lấy điểm tự đánh giá làm mặc định
+                    let diemHienThi = item.DiemThamDinh !== null ? item.DiemThamDinh : item.DiemTuDanhGia;
 
                     let row = `
                         <tr>
@@ -315,13 +180,13 @@
                             </td>
                             <td class="text-center">
                                 <a href="${item.LinkMinhChung || '#'}" target="_blank" class="minh-chung-link">
-                                    <i class="fas fa-external-link-alt me-1"></i>Xem file
+                                    <i class="fas fa-external-link-alt me-1"></i>Xem
                                 </a>
                             </td>
-                            <td class="text-center fs-6 fw-bold">${item.DiemTuDanhGia}</td>
+                            <td class="text-center fs-6 fw-bold text-secondary">${item.DiemTuDanhGia}</td>
                             <td class="text-center">
                                 <input type="number" id="input-${item.MaSV}" class="input-score" 
-                                       value="${item.DiemThamDinh}" ${isReadonly} min="0" max="100">
+                                       value="${diemHienThi}" ${isReadonly} min="0" max="100">
                             </td>
                             <td class="text-center">
                                 <span class="badge ${statusColor}">${item.TrangThai}</span>
@@ -342,61 +207,47 @@
                     `;
                     tbody.innerHTML += row;
                 });
-
                 document.getElementById('status-badge').innerText = `Chờ xử lý: ${pendingCount} hồ sơ`;
 
-            } catch (error) {
-                console.error(error);
-                // alert("Lỗi tải dữ liệu!");
+            } catch (error) { 
+                console.error(error); 
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger">Lỗi kết nối Server!</td></tr>`;
             }
         }
 
-        // HÀM GỬI LỆNH DUYỆT / TỪ CHỐI
+        // 2. Gửi API Cập nhật trạng thái
         async function updateStatus(maSV, namHoc, maTieuChi, trangThaiMoi) {
-            // Lấy điểm thẩm định từ ô nhập
             let inputDiem = document.getElementById(`input-${maSV}`);
             let diemThamDinh = inputDiem.value;
 
-            if(!diemThamDinh || diemThamDinh < 0) {
-                alert("Vui lòng nhập điểm thẩm định hợp lệ!");
-                return;
-            }
-
-            // Hỏi lại cho chắc
-            let confirmMsg = trangThaiMoi === 'Đạt' 
-                ? `Duyệt sinh viên ${maSV} với điểm thẩm định là ${diemThamDinh}?`
-                : `Từ chối hồ sơ của sinh viên ${maSV}?`;
-                
-            if (!confirm(confirmMsg)) return;
+            if(!diemThamDinh || diemThamDinh < 0) { alert("Điểm thẩm định không hợp lệ!"); return; }
+            if (!confirm(`Xác nhận: ${trangThaiMoi} cho sinh viên ${maSV}?`)) return;
 
             try {
-                // Gửi API
                 let res = await fetch('http://localhost:3000/api/duyet-hbtt', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        maSV: maSV,
-                        namHoc: namHoc,
+                        maSV: maSV, 
+                        namHoc: namHoc, 
                         maTieuChi: maTieuChi,
-                        diemThamDinh: diemThamDinh,
+                        diemThamDinh: diemThamDinh, 
                         trangThai: trangThaiMoi,
-                        ghiChu: trangThaiMoi === 'Không đạt' ? 'Điểm thẩm định không đạt' : '' 
+                        ghiChu: trangThaiMoi === 'Không đạt' ? 'Điểm không đạt yêu cầu' : '' 
                     })
                 });
-
+                
                 let result = await res.json();
                 if (result.success) {
-                    fetchData(); // Tải lại bảng để thấy trạng thái mới
+                    alert("✅ " + result.message);
+                    fetchData(); // Load lại bảng sau khi update
                 } else {
-                    alert("Lỗi: " + result.message);
+                    alert("❌ Lỗi: " + result.message);
                 }
-
-            } catch (error) {
-                console.error(error);
-                alert("Lỗi kết nối khi lưu!");
+            } catch (error) { 
+                alert("Lỗi kết nối Server!"); 
             }
         }
     </script>
-
 </body>
 </html>

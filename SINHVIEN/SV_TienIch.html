@@ -7,7 +7,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* (Style giữ nguyên) */
         body { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
         .sidebar { min-height: 100vh; background: #d35400; color: white; width: 250px; position: fixed; top: 0; left: 0; z-index: 1000; }
         .brand-logo { background: #a04000; padding: 20px; font-weight: bold; text-align: center; }
@@ -15,8 +14,12 @@
         .sidebar .nav-link:hover, .sidebar .nav-link.active { background: #e67e22; color: white; border-left: 4px solid #fff; }
         .main-wrapper { margin-left: 250px; padding: 30px; }
         .card { border: none; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 25px; }
-        .status-wait { color: #fd7e14; font-weight: bold; }
-        .status-success { color: #198754; font-weight: bold; }
+        
+        /* STT Label Style - Màu đỏ nổi bật */
+        .stt-label { color: #dc3545; font-weight: 900; margin-right: 5px; font-size: 1.05em; }
+        .stt-label-sm { color: #dc3545; font-weight: 900; margin-right: 3px; font-size: 0.9em; }
+        
+        .status-badge { font-size: 0.85rem; padding: 5px 10px; border-radius: 20px; }
     </style>
 </head>
 <body>
@@ -26,49 +29,47 @@
         
         <div class="card p-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4 class="text-secondary fw-bold"><i class="fas fa-history me-2"></i>Lịch sử Đăng ký</h4>
-                <button class="btn btn-sm btn-outline-danger" onclick="clearHistory()">Xóa lịch sử</button>
+                <h4 class="text-secondary fw-bold"><i class="fas fa-history me-2"></i>Lịch sử Đăng ký Học bổng</h4>
+                <button class="btn btn-sm btn-outline-danger" onclick="clearHistory()">Xóa lịch sử (Demo)</button>
             </div>
             <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead class="bg-light">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-light">
                         <tr>
-                            <th>Thời gian</th>
-                            <th>Loại HB</th>
-                            <th>Tên đợt</th>
-                            <th>Hành động</th>
-                            <th>Trạng thái</th>
+                            <th><span class="stt-label">1.</span>Thời gian</th>
+                            <th><span class="stt-label">2.</span>Loại HB</th>
+                            <th><span class="stt-label">3.</span>Tên đợt / Năm học</th>
+                            <th><span class="stt-label">4.</span>Hành động</th>
+                            <th><span class="stt-label">5.</span>Trạng thái</th>
                         </tr>
                     </thead>
-                    <tbody id="historyBody">
-                        </tbody>
+                    <tbody id="historyBody"></tbody>
                 </table>
             </div>
         </div>
 
         <div class="card p-4">
-            <h4 class="text-danger fw-bold mb-3"><i class="fas fa-exclamation-triangle me-2"></i>Gửi Khiếu Nại</h4>
+            <h4 class="text-danger fw-bold mb-3"><i class="fas fa-exclamation-triangle me-2"></i>Gửi Khiếu Nại & Phản Hồi</h4>
             <div class="row">
-                <div class="col-md-5">
+                <div class="col-md-5 border-end">
                     <form id="frmKhieuNai">
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Vấn đề</label>
-                            <select class="form-select" id="knVande">
-                                <option>Sai điểm Rèn luyện</option>
-                                <option>Sai điểm GPA</option>
-                                <option>Kết quả chưa thỏa đáng</option>
+                            <label class="form-label fw-bold"><span class="stt-label">6.</span>Học kỳ liên quan</label>
+                            <select class="form-select" id="knMaHK">
+                                <option value="HK2">Học kỳ 2 (2024-2025)</option>
+                                <option value="HK1">Học kỳ 1 (2024-2025)</option>
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Nội dung</label>
-                            <textarea class="form-control" id="knNoidung" rows="3" required></textarea>
+                            <label class="form-label fw-bold"><span class="stt-label">7.</span>Nội dung khiếu nại</label>
+                            <textarea class="form-control" id="knNoidung" rows="4" placeholder="Trình bày rõ vấn đề (Sai điểm, kết quả...)" required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-danger w-100">Gửi khiếu nại</button>
+                        <button type="submit" class="btn btn-danger w-100 fw-bold"><i class="fas fa-paper-plane me-2"></i>Gửi khiếu nại</button>
                     </form>
                 </div>
                 
                 <div class="col-md-7">
-                    <label class="form-label fw-bold text-muted">Danh sách khiếu nại của bạn:</label>
+                    <label class="form-label fw-bold text-muted mb-3">Danh sách khiếu nại của bạn:</label>
                     <div class="list-group" id="knList">
                         </div>
                 </div>
@@ -79,93 +80,148 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        const CURRENT_USER = 'SV001';
+
         // --- 1. Load Sidebar ---
         const SV_MENU = [
-                    { title: 'Thông báo', url: 'SV_ThongBao.html', icon: 'fa-bell' }, // <-- Thêm dòng này
-                    { title: 'Nhập Điểm HĐ', url: 'SV_DiemHoatDong.html', icon: 'fa-tasks' },
-                    { title: 'Đăng ký Học bổng', url: 'SV_DangKyHB.html', icon: 'fa-file-signature' },
-                    { title: 'Lịch sử & Khiếu nại', url: 'SV_TienIch.html', icon: 'fa-history' }
-                ];
-        function loadSidebar() {
-            let html = `<nav class="sidebar"><div class="brand-logo"><i class="fas fa-user-graduate me-2"></i>CỔNG SINH VIÊN</div><div class="nav flex-column">`;
-            const currentPage = window.location.pathname.split('/').pop();
-            SV_MENU.forEach(item => {
-                const active = currentPage === item.url ? 'active' : '';
-                html += `<a href="${item.url}" class="nav-link ${active}"><i class="fas ${item.icon} me-2"></i>${item.title}</a>`;
-            });
-            html += `</div><div class="mt-auto p-3 border-top border-secondary position-absolute bottom-0 w-100"><a href="../TrangChu/index.html" class="nav-link text-white"><i class="fas fa-sign-out-alt me-2"></i>Thoát</a></div></nav>`;
-            document.getElementById('sidebar-container').innerHTML = html;
-        }
-        loadSidebar();
+            { title: 'Thông báo', url: 'SV_ThongBao.html', icon: 'fa-bell' },
+            { title: 'Nhập Điểm HĐ', url: 'SV_DiemHoatDong.html', icon: 'fa-tasks' },
+            { title: 'Đăng ký Học bổng', url: 'SV_DangKyHB.html', icon: 'fa-file-signature' },
+            { title: 'Lịch sử & Khiếu nại', url: 'SV_TienIch.html', icon: 'fa-history' }
+        ];
+        document.getElementById('sidebar-container').innerHTML = `
+            <nav class="sidebar p-3">
+                <div class="text-center mb-4 fw-bold fs-5">CỔNG SINH VIÊN</div>
+                <div class="nav flex-column">
+                    ${SV_MENU.map(i => {
+                        const active = window.location.pathname.includes(i.url) ? 'active' : '';
+                        return `<a href="${i.url}" class="nav-link text-white mb-2 ${active}"><i class="fas ${i.icon} me-2"></i>${i.title}</a>`
+                    }).join('')}
+                </div>
+                <div class="mt-auto pt-3 border-top"><a href="../TrangChu/index.html" class="nav-link text-white">Thoát</a></div>
+            </nav>`;
 
-        // --- 2. LOGIC HIỂN THỊ LỊCH SỬ ---
+        // --- 2. LOGIC LỊCH SỬ ---
+        const sampleHistory = [
+            { MaSV: 'SV001', LoaiHocBong: 'Doanh nghiệp', TenDot: 'FPT Software Talent', ThoiGianDangKy: '2025-02-15 09:30', HanhDong: 'Nộp hồ sơ ứng tuyển', TrangThai: 'Thành công' },
+            { MaSV: 'SV001', LoaiHocBong: 'Thử thách', TenDot: 'Năm học 2024-2025', ThoiGianDangKy: '2024-09-10 14:00', HanhDong: 'Nộp hồ sơ xét duyệt', TrangThai: 'Thành công' },
+            { MaSV: 'SV001', LoaiHocBong: 'Khuyến khích', TenDot: 'Học kỳ 1 (2024-2025)', ThoiGianDangKy: '2025-01-20 08:00', HanhDong: 'Hệ thống tự động xét', TrangThai: 'Thành công' }
+        ];
+
         function renderHistory() {
-            let history = JSON.parse(localStorage.getItem('sv_lichSu')) || [];
+            let history = JSON.parse(localStorage.getItem('db_LichSuDangKiHB'));
+            if (!history || history.length === 0) {
+                history = sampleHistory;
+                localStorage.setItem('db_LichSuDangKiHB', JSON.stringify(history));
+            }
             let tbody = document.getElementById('historyBody');
             tbody.innerHTML = '';
             
-            if(history.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Chưa có lịch sử đăng ký nào.</td></tr>';
-                return;
-            }
+            history.sort((a, b) => new Date(b.ThoiGianDangKy) - new Date(a.ThoiGianDangKy));
 
             history.forEach(item => {
-                let statusClass = item.status === 'Chờ duyệt' ? 'status-wait' : 'status-success';
-                let row = `
+                let color = item.TrangThai === 'Thành công' ? 'text-success' : 'text-danger';
+                tbody.innerHTML += `
                     <tr>
-                        <td>${item.time}</td>
-                        <td>${item.loai}</td>
-                        <td class="fw-bold">${item.dot}</td>
-                        <td>${item.action}</td>
-                        <td class="${statusClass}">${item.status}</td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
+                        <td class="text-muted small">${item.ThoiGianDangKy}</td>
+                        <td>${item.LoaiHocBong}</td>
+                        <td class="fw-bold text-primary">${item.TenDot}</td>
+                        <td>${item.HanhDong}</td>
+                        <td class="${color} fw-bold">${item.TrangThai}</td>
+                    </tr>`;
             });
         }
         
         window.clearHistory = function() {
-            if(confirm("Xóa toàn bộ lịch sử?")) {
-                localStorage.removeItem('sv_lichSu');
+            if(confirm("Reset về dữ liệu mẫu?")) {
+                localStorage.removeItem('db_LichSuDangKiHB');
                 renderHistory();
             }
         }
 
-        // --- 3. LOGIC KHIẾU NẠI ---
-        let khieuNaiList = JSON.parse(localStorage.getItem('sv_khieuNai')) || [
-            { title: 'Sai điểm rèn luyện HK1', time: '3 ngày trước', desc: 'Em chưa được cộng điểm...', reply: 'Đã cập nhật.' }
+        // --- 3. LOGIC KHIẾU NẠI (Mapping đúng 5 cột SQL KhieuNai + 1 cột PhanHoi) ---
+        const sampleKhieuNai = [
+            { 
+                MaKN: 'KN001', MaSV: 'SV001', MaHK: 'HK1', NoiDung: 'Em thấy điểm rèn luyện HK1 của em bị thiếu 5 điểm mục tham gia Mùa hè xanh.', 
+                NgayGui: '2025-01-25', TrangThai: 'Đã xử lý', 
+                PhanHoi: { NoiDungPH: 'Đã kiểm tra minh chứng và cập nhật lại điểm.', KetQua: 'Chấp nhận' } 
+            },
+            { 
+                MaKN: 'KN002', MaSV: 'SV001', MaHK: 'HK2', NoiDung: 'Điểm GPA trên hệ thống khác với bảng điểm cá nhân của em.', 
+                NgayGui: '2025-05-20', TrangThai: 'Chờ xử lý', 
+                PhanHoi: null 
+            }
         ];
 
         function renderKhieuNai() {
-            let list = document.getElementById('knList');
-            list.innerHTML = '';
-            khieuNaiList.forEach(kn => {
-                let replyHtml = kn.reply ? `<small class="text-success"><i class="fas fa-check-circle me-1"></i>Phản hồi: ${kn.reply}</small>` : `<small class="text-secondary"><i class="fas fa-clock me-1"></i>Đang chờ xử lý...</small>`;
-                
+            let listKN = JSON.parse(localStorage.getItem('db_KhieuNai'));
+            if (!listKN || listKN.length === 0) {
+                listKN = sampleKhieuNai;
+                localStorage.setItem('db_KhieuNai', JSON.stringify(listKN));
+            }
+
+            let container = document.getElementById('knList');
+            container.innerHTML = '';
+
+            listKN.forEach(kn => {
+                let replyHtml = '';
+                if (kn.PhanHoi) {
+                    // STT 11: NoiDungPH
+                    replyHtml = `
+                        <div class="mt-2 p-2 bg-light border rounded">
+                            <small class="text-success fw-bold"><span class="stt-label-sm">11.</span><i class="fas fa-reply me-1"></i>Phản hồi từ Khoa:</small>
+                            <div class="small text-dark mt-1">${kn.PhanHoi.NoiDungPH}</div>
+                        </div>`;
+                } else {
+                    replyHtml = `<div class="mt-2 small text-secondary fst-italic"><i class="fas fa-clock me-1"></i>Đang chờ xử lý...</div>`;
+                }
+
+                let badgeClass = kn.TrangThai === 'Đã xử lý' ? 'bg-success' : 'bg-warning text-dark';
+
+                // Render Item với STT 8, 9, 10
+                // Tái sử dụng STT 6 (MaHK), 7 (NoiDung) để hiển thị thông tin
                 let item = `
-                    <div class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h6 class="mb-1 fw-bold">${kn.title}</h6>
-                            <small>${kn.time}</small>
+                    <div class="list-group-item list-group-item-action mb-3 shadow-sm border rounded">
+                        <div class="d-flex w-100 justify-content-between align-items-center border-bottom pb-2 mb-2">
+                            <div>
+                                <span class="stt-label-sm">8.</span><strong class="text-primary me-2">${kn.MaKN}</strong>
+                                <span class="badge bg-secondary"><span class="text-warning fw-bold me-1">6.</span>${kn.MaHK}</span>
+                            </div>
+                            <small class="text-muted"><span class="stt-label-sm">9.</span>${kn.NgayGui}</small>
                         </div>
-                        <p class="mb-1 small text-muted">${kn.desc}</p>
+                        
+                        <div class="mb-2">
+                            <span class="stt-label-sm">7.</span>${kn.NoiDung}
+                        </div>
+
+                        <div class="mb-2">
+                            <span class="stt-label-sm">10.</span><span class="badge ${badgeClass}">${kn.TrangThai}</span>
+                        </div>
+
                         ${replyHtml}
                     </div>
                 `;
-                list.innerHTML += item;
+                container.innerHTML += item;
             });
         }
 
         document.getElementById('frmKhieuNai').addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            let listKN = JSON.parse(localStorage.getItem('db_KhieuNai')) || [];
+            
             let newKN = {
-                title: document.getElementById('knVande').value,
-                time: 'Vừa xong',
-                desc: document.getElementById('knNoidung').value,
-                reply: ''
+                MaKN: 'KN' + Date.now().toString().slice(-4), // Giả lập mã ngắn
+                MaSV: CURRENT_USER,
+                MaHK: document.getElementById('knMaHK').value,
+                NoiDung: document.getElementById('knNoidung').value,
+                NgayGui: new Date().toISOString().slice(0,10),
+                TrangThai: 'Chờ xử lý',
+                PhanHoi: null 
             };
-            khieuNaiList.unshift(newKN);
-            localStorage.setItem('sv_khieuNai', JSON.stringify(khieuNaiList));
+
+            listKN.unshift(newKN);
+            localStorage.setItem('db_KhieuNai', JSON.stringify(listKN));
             
             alert("✅ Đã gửi khiếu nại thành công!");
             document.getElementById('frmKhieuNai').reset();

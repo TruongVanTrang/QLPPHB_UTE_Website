@@ -4,17 +4,17 @@ const cors = require('cors');
 
 const app = express();
 app.use(cors());
+app.use(express.json()); 
 
-// CẤU HÌNH KẾT NỐI (Dành cho Windows Authentication)
+// CẤU HÌNH KẾT NỐI
 const config = {
-   connectionString: 'Driver={ODBC Driver 17 for SQL Server};Server=DESKTOP-TGHEQS6;Database=QLHocBongUTE;Trusted_Connection=yes;'
+    connectionString: 'Driver={ODBC Driver 17 for SQL Server};Server=DESKTOP-TGHEQS6;Database=QLHocBongUTE;Trusted_Connection=yes;'
 };
 
-// Hàm kiểm tra kết nối
 async function connectDB() {
     try {
         await sql.connect(config);
-        console.log("✅ Đã kết nối SQL Server bằng Windows Authentication!");
+        console.log("✅ Đã kết nối SQL Server thành công!");
     } catch (err) {
         console.log("❌ Lỗi kết nối:", err.message);
     }
@@ -22,25 +22,23 @@ async function connectDB() {
 connectDB();
 
 // =============================================================
-// API: XÉT DUYỆT HB KHUYẾN KHÍCH
+// 1. HỌC BỔNG KHUYẾN KHÍCH
 // =============================================================
 app.get('/api/xetduyet-hbkk', async (req, res) => {
     try {
-        let maHK = 'HK2'; 
-        
-        // 1. KHAI BÁO BIẾN TỪ URL
+        // Lấy tham số từ Client (mặc định HK2 nếu không gửi)
+        let maHK = req.query.maHK || 'HK2'; 
         let maKhoa = req.query.maKhoa ? req.query.maKhoa.trim() : ""; 
-        
         let loaiHB = req.query.loaiHB; 
 
-        console.log("---------------------------------------");
-        console.log(`1. Server nhận yêu cầu: Khoa=[${maKhoa}], Loại=[${loaiHB}]`);
+        console.log(`🔍 HBKK: HK=[${maHK}], Khoa=[${maKhoa}], Loại=[${loaiHB}]`);
 
-        // 2. QUERY CƠ BẢN
+        // Query cơ bản
         let sqlQuery = `
             SELECT 
                 sv.MaSV, sv.HoTen, l.TenLop, RTRIM(l.MaKhoa) as MaKhoa,
                 g.GPA, d.DiemRL, 
+                -- Tính tổng điểm hoạt động đã duyệt
                 ISNULL((SELECT SUM(DiemChot) FROM DiemHoatDong hd 
                         WHERE hd.MaSV = sv.MaSV AND hd.MaHK = '${maHK}' AND hd.TrangThai = N'Đạt'), 0) as DiemHD,
                 N'Đủ điều kiện' as GhiChuSystem
@@ -49,42 +47,36 @@ app.get('/api/xetduyet-hbkk', async (req, res) => {
             JOIN GPA_SinhVien g ON sv.MaSV = g.MaSV
             JOIN DiemRenLuyen d ON sv.MaSV = d.MaSV
             WHERE g.MaHK = '${maHK}' 
+              AND d.MaHK = '${maHK}' -- [FIX] Thêm điều kiện HK cho ĐRL
               AND d.DiemRL >= 70
         `;
 
-        // 3. XỬ LÝ LỌC LOẠI HỌC BỔNG (GPA)
+        // Filter Loại A/B (Hardcode tạm thời theo logic phổ biến)
         if (loaiHB === 'A') {
-            console.log("-> Lọc Loại A (GPA >= 3.6)");
             sqlQuery += ` AND g.GPA >= 3.6 `;
-        } 
-        else if (loaiHB === 'B') {
-            console.log("-> Lọc Loại B (3.2 <= GPA < 3.6)");
+        } else if (loaiHB === 'B') {
             sqlQuery += ` AND g.GPA >= 3.2 AND g.GPA < 3.6 `;
-        } 
-        else {
-            console.log("-> Không chọn loại: Lấy tất cả (GPA >= 3.2)");
+        } else {
             sqlQuery += ` AND g.GPA >= 3.2 `;
         }
 
-        // 4. XỬ LÝ LỌC KHOA
-        if (maKhoa && maKhoa !== 'null' && maKhoa !== 'undefined' && maKhoa !== '') {
-            console.log(`-> Lọc Khoa: ${maKhoa}`);
+        // Filter Khoa
+        if (maKhoa && maKhoa !== 'null' && maKhoa !== '') {
             sqlQuery += ` AND RTRIM(l.MaKhoa) = '${maKhoa}' `; 
         }
 
-        sqlQuery += ` ORDER BY g.GPA DESC`;
+        sqlQuery += ` ORDER BY g.GPA DESC, d.DiemRL DESC`; // [FIX] Sắp xếp thêm theo ĐRL
 
-        // 5. CHẠY QUERY
         let result = await sql.query(sqlQuery);
         res.json(result.recordset);
 
     } catch (err) {
-        console.log("❌ Lỗi Server:", err); 
+        console.log("❌ Lỗi HBKK:", err.message); 
         res.status(500).send(err.message);
     }
 });
 
-// [MỚI] API LẤY DANH SÁCH KHOA
+// API Lấy Khoa
 app.get('/api/khoa', async (req, res) => {
     try {
         let result = await sql.query('SELECT * FROM Khoa');
@@ -95,11 +87,13 @@ app.get('/api/khoa', async (req, res) => {
 });
 
 
-// ===================================================
-// API 1: LẤY DANH SÁCH HỒ SƠ THỬ THÁCH (Theo năm học)
+// =============================================================
+// 2. HỌC BỔNG THỬ THÁCH
+// =============================================================
 app.get('/api/xetduyet-hbtt', async (req, res) => {
     try {
         let namHoc = req.query.namHoc || '2024-2025'; 
+        console.log(`🔍 HBTT: Năm học=[${namHoc}]`);
 
         let query = `
             SELECT 
@@ -108,34 +102,29 @@ app.get('/api/xetduyet-hbtt', async (req, res) => {
                 tt.DiemGPA_Nam, tt.DiemRL_Nam, 
                 tt.LinkMinhChung, 
                 tt.DiemTuDanhGia, 
-                ISNULL(tt.DiemThamDinh, tt.DiemTuDanhGia) as DiemThamDinh, -- Mặc định lấy điểm tự đánh giá nếu chưa chấm
+                ISNULL(tt.DiemThamDinh, tt.DiemTuDanhGia) as DiemThamDinh, 
                 ISNULL(tt.TrangThai, N'Chờ duyệt') as TrangThai
             FROM HB_ThuThach tt
             JOIN SinhVien sv ON tt.MaSV = sv.MaSV
             JOIN Lop l ON sv.MaLop = l.MaLop
             WHERE tt.NamHoc = '${namHoc}'
             ORDER BY 
-                CASE WHEN tt.TrangThai = N'Chờ duyệt' THEN 0 ELSE 1 END, -- Ưu tiên hồ sơ chờ lên đầu
+                CASE WHEN tt.TrangThai = N'Chờ duyệt' THEN 0 ELSE 1 END,
                 tt.DiemGPA_Nam DESC
         `;
 
-        console.log("--> Lấy DS HB Thử Thách:", query);
         let result = await sql.query(query);
         res.json(result.recordset);
     } catch (err) {
-        console.log("Lỗi:", err);
+        console.log("❌ Lỗi HBTT:", err.message);
         res.status(500).send(err.message);
     }
 });
 
-// API 2: LƯU KẾT QUẢ DUYỆT (Cập nhật trạng thái + Điểm)
-app.use(express.json());
-
 app.post('/api/duyet-hbtt', async (req, res) => {
     try {
         let { maSV, namHoc, maTieuChi, diemThamDinh, trangThai, ghiChu } = req.body;
-        
-        console.log(`--> Đang duyệt: ${maSV} - ${trangThai} - Điểm: ${diemThamDinh}`);
+        console.log(`👉 Duyệt TT: ${maSV} | ${trangThai} | ${diemThamDinh}`);
 
         let query = `
             UPDATE HB_ThuThach
@@ -143,7 +132,7 @@ app.post('/api/duyet-hbtt', async (req, res) => {
                 DiemThamDinh = ${diemThamDinh},
                 TrangThai = N'${trangThai}',
                 GhiChu = N'${ghiChu}',
-                NgayXet = GETDATE() -- Cập nhật ngày xét
+                NgayXet = GETDATE()
             WHERE MaSV = '${maSV}' 
               AND NamHoc = '${namHoc}' 
               AND MaTieuChi = '${maTieuChi}'
@@ -151,46 +140,55 @@ app.post('/api/duyet-hbtt', async (req, res) => {
 
         await sql.query(query);
         res.json({ success: true, message: "Đã cập nhật thành công!" });
-
     } catch (err) {
-        console.log("Lỗi Update:", err);
+        console.log("❌ Lỗi Update HBTT:", err.message);
         res.status(500).json({ success: false, message: err.message });
     }
 });
 
 
 // =============================================================
-// KHU VỰC API: HỌC BỔNG DOANH NGHIỆP
+// 3. HỌC BỔNG DOANH NGHIỆP
 // =============================================================
 
-// 1. LẤY DANH SÁCH CÁC ĐỢT TÀI TRỢ
+// Lấy danh sách đợt (từ TieuChiHocBong)
 app.get('/api/dot-hb-dn', async (req, res) => {
     try {
-        let result = await sql.query("SELECT MaDotDN, TenDot, MaDN as DonViTaiTro FROM DotHB_DoanhNghiep");
+        // Query chuẩn: Lấy MaTieuChi làm mã đợt, join với bảng DoanhNghiep để lấy tên DN
+        let query = `
+            SELECT 
+                tc.MaTieuChi as MaDotDN, 
+                tc.TenTieuChi as TenDot, 
+                dn.TenDN as DonViTaiTro 
+            FROM TieuChiHocBong tc
+            LEFT JOIN DoanhNghiep dn ON tc.MaDN = dn.MaDN
+            WHERE tc.LoaiHocBong = N'DoanhNghiep' OR tc.LoaiHocBong = N'Doanh nghiệp'
+        `;
+        let result = await sql.query(query);
         res.json(result.recordset);
     } catch (err) {
-        console.log("Lỗi tải đợt:", err);
+        console.log("❌ Lỗi tải đợt DN:", err.message);
         res.status(500).send(err.message);
     }
 });
 
-// 2. LẤY DANH SÁCH ỨNG VIÊN CỦA 1 ĐỢT
+// Lấy danh sách ứng viên
 app.get('/api/xetduyet-hbdn', async (req, res) => {
     try {
-        let maDot = req.query.maDot; 
-        console.log("--> Lấy DS Doanh nghiệp đợt:", maDot);
+        let maDot = req.query.maDot; // MaTieuChi
+        console.log(`🔍 HBDN: Lấy ứng viên đợt [${maDot}]`);
 
         let query = `
             SELECT 
                 dn.MaSV, sv.HoTen, l.TenLop,
-                dn.MaDotDN,
+                dn.MaTieuChi as MaDotDN, 
                 dn.DiemGPA, dn.DiemRL, dn.DiemHD,
                 dn.LinkCV,
                 ISNULL(dn.TrangThai, N'Chờ duyệt') as TrangThai
             FROM HB_DoanhNghiep dn
             JOIN SinhVien sv ON dn.MaSV = sv.MaSV
             JOIN Lop l ON sv.MaLop = l.MaLop
-            WHERE dn.MaDotDN = '${maDot}'
+            WHERE dn.MaTieuChi = '${maDot}'
             ORDER BY 
                 CASE WHEN dn.TrangThai = N'Chờ duyệt' THEN 0 ELSE 1 END, 
                 dn.DiemGPA DESC
@@ -199,36 +197,34 @@ app.get('/api/xetduyet-hbdn', async (req, res) => {
         let result = await sql.query(query);
         res.json(result.recordset);
     } catch (err) {
-        console.log("Lỗi lấy ứng viên:", err);
+        console.log("❌ Lỗi lấy ứng viên DN:", err.message);
         res.status(500).send(err.message);
     }
 });
 
-// 3. DUYỆT / TỪ CHỐI ỨNG VIÊN
+// Duyệt ứng viên
 app.post('/api/duyet-hbdn', async (req, res) => {
     try {
         let { maSV, maDot, trangThai } = req.body;
-        console.log(`--> Duyệt DN: ${maSV} -> ${trangThai}`);
+        console.log(`👉 Duyệt DN: ${maSV} -> ${trangThai}`);
 
         let query = `
             UPDATE HB_DoanhNghiep
             SET 
                 TrangThai = N'${trangThai}',
                 NgayXet = GETDATE()
-            WHERE MaSV = '${maSV}' AND MaDotDN = '${maDot}'
+            WHERE MaSV = '${maSV}' AND MaTieuChi = '${maDot}'
         `;
 
         await sql.query(query);
-        res.json({ success: true, message: "Đã cập nhật trạng thái thành công!" });
+        res.json({ success: true, message: "Đã cập nhật thành công!" });
     } catch (err) {
-        console.log("Lỗi duyệt:", err);
+        console.log("❌ Lỗi duyệt DN:", err.message);
         res.status(500).json({ success: false, message: err.message });
     }
 });
 
-
-// CHẠY SERVER
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log(`Server đang chạy tại http://localhost:${PORT}`);
+    console.log(`🚀 Server đang chạy tại http://localhost:${PORT}`);
 });

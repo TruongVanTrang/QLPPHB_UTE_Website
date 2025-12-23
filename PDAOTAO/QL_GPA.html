@@ -1,435 +1,292 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Điểm GPA - PDT</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8">
+<title>Quản Lý Điểm GPA - Phòng Đào Tạo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        /* --- 1. GIAO DIỆN CHUẨN PHÒNG ĐÀO TẠO (BLUE THEME) --- */
-        body { 
-            background: linear-gradient(135deg, #0d6efd 0%, #0043a8 100%);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
-        }
-        
-        /* Sidebar Menu */
-        .sidebar {
-            min-height: 100vh;
-            background: #002a5c;
-            color: white;
-            width: 250px;
-            position: fixed;
-            top: 0; left: 0;
-            z-index: 1000;
-            transition: all 0.3s;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-        }
-        
-        .brand-logo {
-            padding: 20px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-align: center;
-            background: #001f45;
-            border-bottom: 1px solid #0d6efd;
-        }
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-        .sidebar .nav-link {
-            color: #a8cfff;
-            padding: 15px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            text-decoration: none;
-            display: block;
-        }
+<style>
+    /* --- GIAO DIỆN PHÒNG ĐÀO TẠO (BLUE THEME) --- */
+    body {
+        background: linear-gradient(135deg, #0d6efd, #0043a8);
+        font-family: 'Segoe UI', Tahoma;
+        min-height: 100vh;
+    }
+    .sidebar {
+        width: 250px; background: #002a5c; color: white;
+        position: fixed; top: 0; left: 0; bottom: 0; z-index: 1000;
+    }
+    .sidebar .brand-logo { padding: 20px; background: #001f45; text-align: center; font-weight: bold; font-size: 1.2rem; }
+    .sidebar a { color: #a8cfff; display: block; padding: 15px 20px; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .sidebar a:hover, .sidebar a.active { background: #0043a8; color: white; border-left: 4px solid #0d6efd; }
+    
+    .main-wrapper { margin-left: 250px; padding: 30px; }
+    .card { background: white; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); padding: 25px; margin-bottom: 30px; border: none; }
+    
+    /* Xếp loại Badge */
+    .xepLoai { font-weight: bold; padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; }
+    .xuatSac { background:#d1e7dd; color:#0f5132; }
+    .gioi { background:#cfe2ff; color:#084298; }
+    .kha { background:#fff3cd; color:#664d03; }
+    .trungBinh { background:#ffecb5; color:#856404; }
+    .yeu { background:#f8d7da; color:#842029; }
+    
+    .btn-action { border:none; border-radius:5px; padding:5px 10px; color:white; }
+    .btn-edit { background:#ffc107; color:black; }
+    .btn-delete { background:#dc3545; }
 
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
-            color: #fff;
-            background: #0043a8;
-            border-left: 4px solid #0d6efd;
-        }
-
-        /* Main Content */
-        .main-wrapper {
-            margin-left: 250px;
-            padding: 30px;
-            transition: all 0.3s;
-        }
-
-        /* Header */
-        .admin-header {
-            background: white;
-            padding: 15px 25px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* Card */
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-
-        .card h2 {
-            color: #0d6efd;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            border-bottom: 3px solid #0d6efd;
-            padding-bottom: 10px;
-        }
-
-        /* Form */
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 15px;
-        }
-
-        .form-group { margin-bottom: 15px; }
-        .form-group label { font-weight: 600; margin-bottom: 8px; color: #002a5c; }
-        .form-group .required { color: red; }
-        
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-        .form-group input:focus, .form-group select:focus {
-            outline: none; border-color: #0d6efd;
-            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.2);
-        }
-
-        /* Buttons */
-        .button-group { display: flex; gap: 15px; margin-top: 20px; }
-        .btn-custom {
-            padding: 10px 25px; border: none; border-radius: 8px;
-            font-weight: bold; cursor: pointer; color: white;
-            flex: 1; transition: all 0.3s;
-        }
-        .btn-save { background: linear-gradient(135deg, #0d6efd 0%, #0043a8 100%); }
-        .btn-save:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3); }
-        .btn-reset { background: #f8f9fa; color: #333; border: 1px solid #ddd; }
-        .btn-reset:hover { background: #e2e6ea; }
-        .btn-update { background: #198754; color: white; display: none; }
-        .btn-cancel { background: #dc3545; color: white; display: none; }
-
-        /* Table */
-        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .data-table th { 
-            background: #f0f7ff; 
-            font-weight: bold; 
-            color: #0043a8; 
-            padding: 12px; text-align: left; 
-            border-bottom: 2px solid #0d6efd; 
-        }
-        .data-table td { padding: 12px; border-bottom: 1px solid #e0e0e0; font-size: 0.95rem; }
-        .data-table tr:hover { background: #f8fbff; }
-
-        /* Actions & Badges */
-        .btn-action { padding: 5px 10px; font-size: 13px; border-radius: 5px; border: none; cursor: pointer; margin-right: 5px; color: white; transition: 0.2s; }
-        .btn-edit { background: #ffc107; color: #333; }
-        .btn-edit:hover { background: #e0a800; }
-        .btn-delete { background: #dc3545; }
-        .btn-delete:hover { background: #c82333; }
-
-        .xepLoai { font-weight: bold; padding: 5px 10px; border-radius: 20px; font-size: 0.85rem; display: inline-block; }
-        .xuatSac { background-color: #d1e7dd; color: #0f5132; }
-        .gioi { background-color: #cfe2ff; color: #084298; }
-        .kha { background-color: #fff3cd; color: #664d03; }
-        .trungBinh { background-color: #ffecb5; color: #856404; }
-        .yeu { background-color: #f8d7da; color: #842029; }
-    </style>
+    /* STT Label */
+    .stt-label { color: #dc3545; font-weight: 900; margin-right: 5px; }
+</style>
 </head>
+
 <body>
 
-    <div id="sidebar-container"></div>
+<div class="sidebar">
+    <div class="brand-logo">
+        <i class="fas fa-graduation-cap me-2"></i>P. ĐÀO TẠO
+    </div>
+    <a class="active"><i class="fas fa-file-excel me-2"></i>QL Điểm GPA</a>
+    <a href="QL_HSSV.html"><i class="fas fa-id-card me-2"></i>QL Hồ sơ SV</a>
+    <div style="position: absolute; bottom: 0; width: 100%; border-top: 1px solid rgba(255,255,255,0.1);">
+        <a href="../TrangChu/index.html"><i class="fas fa-sign-out-alt me-2"></i>Thoát</a>
+    </div>
+</div>
 
-    <div class="main-wrapper">
-        
-        <header class="admin-header">
-            <h4 class="m-0 fw-bold text-secondary">
-                <i class="fas fa-file-excel me-2 text-primary"></i>Quản Lý Điểm GPA
-            </h4>
-            <div class="dropdown">
-                <a href="#" class="text-decoration-none text-dark dropdown-toggle" data-bs-toggle="dropdown">
-                    <img src="https://via.placeholder.com/30" class="rounded-circle me-1">
-                    <span>Xin chào, <b>Cán bộ Đào Tạo</b></span>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item text-danger" href="#">Đăng xuất</a></li>
-                </ul>
-            </div>
-        </header>
+<div class="main-wrapper">
 
-        <div class="card">
-            <h2>➕ Form Thêm/Cập Nhật Điểm GPA</h2>
-            <form id="gpaForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Mã SV <span class="required">*</span></label>
-                        <input type="text" id="maSV" required placeholder="VD: 21110123">
-                    </div>
-                    <div class="form-group">
-                        <label>Học Kỳ <span class="required">*</span></label>
-                        <select id="maHK" required>
-                            <option value="">Chọn Học Kỳ</option>
-                            </select>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Điểm GPA <span class="required">*</span></label>
-                        <input type="number" id="gpa" step="0.01" min="0" max="4" required placeholder="VD: 3.45">
-                    </div>
-                    <div class="form-group">
-                        <label>Ngày Cập Nhật <span class="required">*</span></label>
-                        <input type="date" id="ngayCapNhat" required>
-                    </div>
-                </div>
-                
-                <div class="button-group">
-                    <button type="submit" id="submitBtn" class="btn-custom btn-save"><i class="fas fa-plus me-2"></i>Thêm Điểm GPA</button>
-                    <button type="button" id="updateBtn" class="btn-custom btn-update"><i class="fas fa-save me-2"></i>Cập Nhật Điểm</button>
-                    <button type="button" id="cancelBtn" class="btn-custom btn-cancel"><i class="fas fa-times me-2"></i>Hủy</button>
-                    <button type="reset" class="btn-custom btn-reset">Làm Mới</button>
-                </div>
-            </form>
-        </div>
-
-        <div class="card">
-            <h2>📋 Danh Sách Điểm GPA</h2>
-            <div style="overflow-x: auto;">
-                <table class="data-table" id="gpaTable">
-                    <thead>
-                        <tr>
-                            <th>Mã SV</th>
-                            <th>Học Kỳ</th>
-                            <th>Điểm GPA</th>
-                            <th>Xếp Loại</th>
-                            <th>Ngày Cập Nhật</th>
-                            <th>Hành Động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        </tbody>
-                </table>
-            </div>
+    <div class="card d-flex justify-content-between align-items-center flex-row">
+        <h4 class="text-primary m-0 fw-bold">
+            <i class="fas fa-file-excel me-2"></i>Quản Lý Điểm GPA
+        </h4>
+        <div class="d-flex align-items-center">
+            <img src="https://via.placeholder.com/35" class="rounded-circle me-2">
+            <b>Cán bộ Đào Tạo</b>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="card" id="formCard" style="display:none; border-top: 4px solid #0d6efd;">
+        <h5 class="text-primary mb-3 border-bottom pb-2">
+            <i class="fas fa-edit me-2"></i>Nhập / Cập nhật điểm GPA
+        </h5>
 
-    <script>
-        const MENUS = {
-            ADMIN: [
-                { title: 'Tổng quan', url: 'Dashboard.html', icon: 'fa-tachometer-alt' },
-                { title: 'Người dùng', url: 'nguoidung.html', icon: 'fa-users-cog' },
-                { title: 'Năm học', url: 'namhoc.html', icon: 'fa-calendar-alt' },
-                { title: 'Học bổng', url: 'hocbong.html', icon: 'fa-hand-holding-usd' }
-            ],
-            PCTSV: [
-                { title: 'QL Doanh nghiệp', url: 'QLDN.html', icon: 'fa-building' },
-                { title: 'Phân bổ ngân sách', url: 'PBNS.html', icon: 'fa-chart-pie' },
-                { title: 'Duyệt Điểm HĐ', url: 'DuyetDHD.html', icon: 'fa-tasks' },
-                { title: 'Duyệt HB Khuyến khích', url: 'HBKK.html', icon: 'fa-star' },
-                { title: 'Duyệt HB Thử thách', url: 'HBTT.html', icon: 'fa-hand-holding-heart' },
-                { title: 'Duyệt HB Doanh nghiệp', url: 'HBDN.html', icon: 'fa-briefcase' }
-            ],
-            PDAOTAO: [
-                { title: 'QL Hồ sơ Sinh viên', url: 'QL_HSSV.html', icon: 'fa-id-card' },
-                { title: 'QL Điểm GPA', url: 'QL_GPA.html', icon: 'fa-file-excel' }
-            ],
-            KHOA: [
-                { title: 'QL Điểm Rèn Luyện', url: 'QL_DRL.html', icon: 'fa-running' },
-                { title: 'Tra cứu Lịch sử HB', url: 'QL_LSHB.html', icon: 'fa-search' }
-            ]
-        };
+        <form id="gpaForm">
+            <input type="hidden" id="maGPA">
 
-        function createSidebar(role, activePage) {
-            const container = document.getElementById('sidebar-container');
-            if (!container) return;
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="fw-bold"><span class="stt-label">2.</span>Mã sinh viên <span class="text-danger">*</span></label>
+                    <input type="text" id="maSV" class="form-control" required placeholder="VD: SV001">
+                </div>
 
-            const menuItems = MENUS[role] || [];
+                <div class="col-md-6">
+                    <label class="fw-bold"><span class="stt-label">3.</span>Học kỳ <span class="text-danger">*</span></label>
+                    <select id="maHK" class="form-select" required>
+                        <option value="">-- Chọn học kỳ --</option>
+                        <option value="HK1_2024">HK1 - 2024-2025</option>
+                        <option value="HK2_2024">HK2 - 2024-2025</option>
+                        <option value="HK1_2025">HK1 - 2025-2026</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="fw-bold"><span class="stt-label">4.</span>Điểm GPA <span class="text-danger">*</span></label>
+                    <input type="number" id="gpa" step="0.01" min="0" max="4" class="form-control" required placeholder="Thang 4.0">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="fw-bold"><span class="stt-label">5.</span>Xếp loại (Tự động)</label>
+                    <input type="text" id="xepLoaiPreview" class="form-control bg-light fw-bold text-primary" readonly>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="fw-bold"><span class="stt-label">6.</span>Ngày cập nhật</label>
+                    <input type="date" id="ngayCapNhat" class="form-control">
+                </div>
+            </div>
+
+            <div class="mt-4 text-end">
+                <button type="button" class="btn btn-secondary me-2" onclick="hideForm()">Hủy bỏ</button>
+                <button type="submit" class="btn btn-primary fw-bold px-4">
+                    <i class="fas fa-save me-1"></i>Lưu dữ liệu
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="text-primary m-0"><i class="fas fa-list me-2"></i>Danh sách Điểm GPA</h5>
+            <button class="btn btn-primary fw-bold" onclick="showAddForm()">
+                <i class="fas fa-plus me-1"></i>Thêm mới
+            </button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-primary">
+                    <tr>
+                        <th><span class="stt-label">1.</span>Mã GPA</th>
+                        <th><span class="stt-label">2.</span>Mã SV</th>
+                        <th><span class="stt-label">3.</span>Học kỳ</th>
+                        <th class="text-center"><span class="stt-label">4.</span>GPA</th>
+                        <th class="text-center"><span class="stt-label">5.</span>Xếp loại</th>
+                        <th><span class="stt-label">6.</span>Ngày CN</th>
+                        <th class="text-center">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="gpaTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // --- DỮ LIỆU MẪU (Khớp với Table GPA_SinhVien) ---
+    // Cấu trúc: { MaGPA, MaSV, MaHK, GPA, XepLoai, NgayCapNhat }
+    let gpaList = [
+        { maGPA: 'GPA001', maSV:'SV001', maHK:'HK2', gpa:3.75, xepLoai:'Xuất sắc', ngayCapNhat:'2025-05-15' },
+        { maGPA: 'GPA002', maSV:'SV002', maHK:'HK2', gpa:3.30, xepLoai:'Giỏi', ngayCapNhat:'2025-05-15' },
+        { maGPA: 'GPA003', maSV:'SV003', maHK:'HK2', gpa:2.80, xepLoai:'Khá', ngayCapNhat:'2025-05-15' },
+        { maGPA: 'GPA006', maSV:'SV006', maHK:'HK2', gpa:2.10, xepLoai:'Trung bình', ngayCapNhat:'2025-05-15' },
+        { maGPA: 'GPA012', maSV:'SV012', maHK:'HK2', gpa:1.50, xepLoai:'Yếu', ngayCapNhat:'2025-05-15' }
+    ];
+
+    let editingIndex = null;
+
+    // Logic tính xếp loại (Khớp với SQL/Quy chế)
+    function tinhXepLoai(gpa){
+        if(gpa >= 3.6) return 'Xuất sắc';
+        if(gpa >= 3.2) return 'Giỏi';
+        if(gpa >= 2.5) return 'Khá';
+        if(gpa >= 2.0) return 'Trung bình';
+        return 'Yếu';
+    }
+
+    // Class màu sắc
+    function getXepLoaiClass(txt) {
+        if(txt === 'Xuất sắc') return 'xuatSac';
+        if(txt === 'Giỏi') return 'gioi';
+        if(txt === 'Khá') return 'kha';
+        if(txt === 'Trung bình') return 'trungBinh';
+        return 'yeu';
+    }
+
+    function render(){
+        const tableBody = document.getElementById('gpaTable');
+        tableBody.innerHTML = '';
+        
+        gpaList.forEach((x, i) => {
+            const cssClass = getXepLoaiClass(x.xepLoai);
             
-            // Cấu hình riêng cho Phòng Đào Tạo
-            const brandTitle = 'P. ĐÀO TẠO';
-            const brandIcon = 'fa-graduation-cap';
-
-            let html = `
-                <nav class="sidebar">
-                    <div class="brand-logo">
-                        <i class="fas ${brandIcon} me-2"></i> ${brandTitle}
-                    </div>
-                    <div class="nav flex-column">
-            `;
-
-            menuItems.forEach(item => {
-                const isActive = activePage.includes(item.url) ? 'active' : '';
-                html += `
-                    <a href="${item.url}" class="nav-link ${isActive}">
-                        <i class="fas ${item.icon} me-2"></i> ${item.title}
-                    </a>
-                `;
-            });
-
-            html += `
-                    </div>
-                    <div class="mt-auto p-3 border-top border-secondary" style="position: absolute; bottom: 0; width: 100%;">
-                        <a href="../TrangChu/index.html" class="nav-link text-white">
-                            <i class="fas fa-sign-out-alt me-2"></i> Thoát
-                        </a>
-                    </div>
-                </nav>
-            `;
-            container.innerHTML = html;
-        }
-
-        // Gọi hàm tạo Sidebar cho vai trò PDAOTAO
-        createSidebar('PDAOTAO', 'QL_GPA.html');
-    </script>
-
-    <script>
-        const hocKyList = [
-            { maHK: "HK1", tenHK: "HK1 - Năm 2024-2025" },
-            { maHK: "HK2", tenHK: "HK2 - Năm 2024-2025" },
-            { maHK: "HK3", tenHK: "HK3 - Năm 2024-2025" },
-            { maHK: "HK1_2025", tenHK: "HK1 - Năm 2025-2026" },
-            { maHK: "HK2_2025", tenHK: "HK2 - Năm 2025-2026" }
-        ];
-
-        // Dữ liệu mẫu (Khởi tạo nếu LocalStorage trống)
-        let gpaList = JSON.parse(localStorage.getItem('gpaList')) || [
-            { maSV: "21110123", maHK: "HK1", gpa: 3.75, ngayCapNhat: "2024-01-15" },
-            { maSV: "21110456", maHK: "HK1", gpa: 3.30, ngayCapNhat: "2024-01-15" },
-            { maSV: "22110789", maHK: "HK2", gpa: 2.80, ngayCapNhat: "2024-06-20" },
-            { maSV: "22110111", maHK: "HK2", gpa: 2.10, ngayCapNhat: "2024-06-20" },
-            { maSV: "23110222", maHK: "HK3", gpa: 1.50, ngayCapNhat: "2024-08-30" }
-        ];
-
-        let editingIndex = null;
-
-        const tbody = document.querySelector('#gpaTable tbody');
-        const form = document.getElementById('gpaForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const updateBtn = document.getElementById('updateBtn');
-        const cancelBtn = document.getElementById('cancelBtn');
-
-        function loadHocKy() {
-            const select = document.getElementById('maHK');
-            select.innerHTML = '<option value="">Chọn Học Kỳ</option>';
-            hocKyList.forEach(hk => {
-                const opt = document.createElement('option');
-                opt.value = hk.maHK;
-                opt.textContent = hk.tenHK;
-                select.appendChild(opt);
-            });
-        }
-
-        function tinhXepLoai(gpa) {
-            gpa = parseFloat(gpa);
-            if (gpa >= 3.6) return { text: "Xuất sắc", class: "xuatSac" };
-            if (gpa >= 3.2) return { text: "Giỏi", class: "gioi" };
-            if (gpa >= 2.5) return { text: "Khá", class: "kha" };
-            if (gpa >= 2.0) return { text: "Trung bình", class: "trungBinh" };
-            return { text: "Yếu", class: "yeu" };
-        }
-
-        function renderTable() {
-            tbody.innerHTML = '';
-            gpaList.forEach((item, i) => {
-                const xl = tinhXepLoai(item.gpa);
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>${item.maSV}</strong></td>
-                    <td>${item.maHK}</td>
-                    <td><strong>${parseFloat(item.gpa).toFixed(2)}</strong></td>
-                    <td><span class="xepLoai ${xl.class}">${xl.text}</span></td>
-                    <td>${item.ngayCapNhat}</td>
-                    <td>
-                        <button class="btn-action btn-edit" onclick="editGPA(${i})"><i class="fas fa-edit"></i></button>
-                        <button class="btn-action btn-delete" onclick="deleteGPA(${i})"><i class="fas fa-trash"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function saveToStorage() {
-            localStorage.setItem('gpaList', JSON.stringify(gpaList));
-        }
-
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const data = {
-                maSV: document.getElementById('maSV').value.trim(),
-                maHK: document.getElementById('maHK').value,
-                gpa: parseFloat(document.getElementById('gpa').value).toFixed(2),
-                ngayCapNhat: document.getElementById('ngayCapNhat').value
-            };
-
-            if (editingIndex !== null) {
-                gpaList[editingIndex] = data;
-                editingIndex = null;
-                submitBtn.style.display = 'block';
-                updateBtn.style.display = 'none';
-                cancelBtn.style.display = 'none';
-                alert('✅ Cập nhật điểm GPA thành công!');
-            } else {
-                gpaList.push(data);
-                alert('✅ Thêm điểm GPA thành công!');
-            }
-
-            saveToStorage();
-            renderTable();
-            form.reset();
+            tableBody.innerHTML += `
+            <tr>
+                <td><small class="text-muted fw-bold">${x.maGPA}</small></td>
+                <td class="fw-bold text-primary">${x.maSV}</td>
+                <td>${x.maHK}</td>
+                <td class="text-center fw-bold">${x.gpa.toFixed(2)}</td>
+                <td class="text-center"><span class="xepLoai ${cssClass}">${x.xepLoai}</span></td>
+                <td>${x.ngayCapNhat}</td>
+                <td class="text-center">
+                    <button class="btn-action btn-edit btn-sm" onclick="edit(${i})"><i class="fas fa-edit"></i></button>
+                    <button class="btn-action btn-delete btn-sm" onclick="del(${i})"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>`;
         });
+    }
 
-        window.editGPA = function(i) {
-            const item = gpaList[i];
-            document.getElementById('maSV').value = item.maSV;
-            document.getElementById('maHK').value = item.maHK;
-            document.getElementById('gpa').value = item.gpa;
-            document.getElementById('ngayCapNhat').value = item.ngayCapNhat;
+    // --- CÁC HÀM XỬ LÝ FORM ---
 
-            editingIndex = i;
-            submitBtn.style.display = 'none';
-            updateBtn.style.display = 'block';
-            cancelBtn.style.display = 'block';
-            
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+    function showAddForm(){
+        document.getElementById('gpaForm').reset();
+        document.getElementById('maGPA').value = ''; // Reset ID
+        document.getElementById('xepLoaiPreview').value = '';
+        
+        document.getElementById('maSV').readOnly = false;
+        document.getElementById('maHK').disabled = false;
+        
+        editingIndex = null;
+        document.getElementById('formCard').style.display = 'block';
+        window.scrollTo({top:0, behavior:'smooth'});
+    }
+
+    function hideForm(){
+        document.getElementById('formCard').style.display = 'none';
+    }
+
+    function edit(i){
+        const x = gpaList[i];
+        
+        document.getElementById('maGPA').value = x.maGPA;
+        document.getElementById('maSV').value = x.maSV;
+        document.getElementById('maHK').value = x.maHK;
+        document.getElementById('gpa').value = x.gpa;
+        document.getElementById('ngayCapNhat').value = x.ngayCapNhat;
+        document.getElementById('xepLoaiPreview').value = x.xepLoai;
+        
+        document.getElementById('maSV').readOnly = true;
+        document.getElementById('maHK').disabled = true;
+        
+        editingIndex = i;
+        document.getElementById('formCard').style.display = 'block';
+        window.scrollTo({top:0, behavior:'smooth'});
+    }
+
+    function del(i){
+        if(confirm('Bạn có chắc muốn xóa điểm GPA này?')){
+            gpaList.splice(i, 1);
+            render();
+        }
+    }
+
+    // Tự động tính xếp loại
+    document.getElementById('gpa').oninput = function(){
+        let val = parseFloat(this.value);
+        if(val >= 0 && val <= 4.0){
+            document.getElementById('xepLoaiPreview').value = tinhXepLoai(val);
+        } else {
+            document.getElementById('xepLoaiPreview').value = '';
+        }
+    };
+
+    // Submit Form
+    document.getElementById('gpaForm').onsubmit = function(e){
+        e.preventDefault();
+        
+        let diemGPA = parseFloat(document.getElementById('gpa').value);
+        
+        const data = {
+            maGPA: document.getElementById('maGPA').value || ('GPA' + Date.now()), // Sinh ID giả lập
+            maSV: document.getElementById('maSV').value.trim().toUpperCase(),
+            maHK: document.getElementById('maHK').value,
+            gpa: diemGPA,
+            xepLoai: tinhXepLoai(diemGPA),
+            ngayCapNhat: document.getElementById('ngayCapNhat').value || new Date().toISOString().slice(0,10)
         };
-
-        cancelBtn.onclick = () => {
-            editingIndex = null;
-            form.reset();
-            submitBtn.style.display = 'block';
-            updateBtn.style.display = 'none';
-            cancelBtn.style.display = 'none';
-        };
-
-        window.deleteGPA = function(i) {
-            if (confirm('Xóa điểm GPA này?')) {
-                gpaList.splice(i, 1);
-                saveToStorage();
-                renderTable();
+        
+        if(editingIndex === null) {
+            // Check trùng (Giả lập)
+            let isExist = gpaList.some(item => item.maSV === data.maSV && item.maHK === data.maHK);
+            if(isExist) {
+                alert("Sinh viên này đã có điểm GPA trong kỳ này!");
+                return;
             }
-        };
+            gpaList.push(data);
+        } else {
+            gpaList[editingIndex] = data;
+        }
+        
+        hideForm();
+        render();
+        alert("Đã lưu thành công!");
+    };
 
-        loadHocKy();
-        renderTable();
-    </script>
+    render();
+</script>
+
 </body>
 </html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCTSV - Xử Lý Khiếu Nại</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- GIAO DIỆN PCTSV (GREEN THEME) --- */
+        body { background: linear-gradient(135deg, #134E5E 0%, #71B280 100%); font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
+        
+        .sidebar { min-height: 100vh; background: #1a3c34; color: white; width: 250px; position: fixed; top: 0; left: 0; z-index: 1000; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
+        .brand-logo { padding: 20px; font-size: 1.5rem; font-weight: bold; text-align: center; background: #14302a; border-bottom: 1px solid #2a5c52; }
+        .sidebar .nav-link { color: #a8d5cc; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { color: #fff; background: #2a5c52; border-left: 4px solid #71B280; }
+        
+        .main-wrapper { margin-left: 250px; padding: 30px; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; background: white; }
+        .admin-header { background: white; padding: 15px 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 30px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
+
+        /* Status Badges */
+        .status-wait { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        .status-done { background-color: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; }
+
+        /* STT Label */
+        .stt-label { color: #dc3545; font-weight: 900; margin-right: 5px; }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar-container"></div>
+
+    <div class="main-wrapper">
+        <header class="admin-header">
+            <h4 class="m-0 fw-bold text-secondary"><i class="fas fa-gavel me-2 text-success"></i>Xử Lý Khiếu Nại Sinh Viên</h4>
+            <div class="dropdown">
+                <a href="#" class="text-decoration-none text-dark fw-bold"><img src="https://via.placeholder.com/30" class="rounded-circle me-1"> Cán bộ CTSV</a>
+            </div>
+        </header>
+
+        <div class="card p-4">
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <label class="fw-bold"><span class="stt-label">1.</span>Lọc theo Học kỳ:</label>
+                    <select class="form-select" id="filterHK" onchange="renderTable()">
+                        <option value="">-- Tất cả --</option>
+                        <option value="HK2">HK2 (2024-2025)</option>
+                        <option value="HK1">HK1 (2024-2025)</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="fw-bold"><span class="stt-label">2.</span>Trạng thái:</label>
+                    <select class="form-select" id="filterStatus" onchange="renderTable()">
+                        <option value="">-- Tất cả --</option>
+                        <option value="Chờ xử lý">Chờ xử lý</option>
+                        <option value="Đã xử lý">Đã xử lý</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-success">
+                        <tr>
+                            <th><span class="stt-label">3.</span>Mã KN</th>
+                            <th><span class="stt-label">4.</span>Mã SV</th>
+                            <th><span class="stt-label">5.</span>Học kỳ</th>
+                            <th width="30%"><span class="stt-label">6.</span>Nội dung</th>
+                            <th><span class="stt-label">7.</span>Ngày gửi</th>
+                            <th class="text-center"><span class="stt-label">8.</span>Trạng thái</th>
+                            <th class="text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalXuLy" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title fw-bold"><i class="fas fa-reply-all me-2"></i>Phản Hồi Khiếu Nại</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 border-end">
+                            <h6 class="text-secondary fw-bold mb-3">Thông tin khiếu nại</h6>
+                            <p><strong>Mã SV:</strong> <span id="md_MaSV" class="text-primary"></span></p>
+                            <p><strong>Học kỳ:</strong> <span id="md_MaHK"></span></p>
+                            <p><strong>Ngày gửi:</strong> <span id="md_NgayGui"></span></p>
+                            <div class="p-3 bg-light rounded border">
+                                <small class="text-muted d-block mb-1">Nội dung sinh viên gửi:</small>
+                                <strong id="md_NoiDung" class="text-dark"></strong>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h6 class="text-secondary fw-bold mb-3">Kết quả xử lý</h6>
+                            <form id="frmXuLy">
+                                <input type="hidden" id="md_MaKN">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold"><span class="stt-label">9.</span>Nội dung phản hồi <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" id="res_NoiDungPH" rows="4" placeholder="Nhập nội dung trả lời sinh viên..." required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold"><span class="stt-label">10.</span>Kết quả <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="res_KetQua">
+                                        <option value="Chấp nhận">Chấp nhận (Cập nhật lại điểm)</option>
+                                        <option value="Từ chối">Từ chối (Giữ nguyên kết quả)</option>
+                                        <option value="Yêu cầu bổ sung">Yêu cầu bổ sung minh chứng</option>
+                                    </select>
+                                </div>
+                                <div class="text-end mt-4">
+                                    <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Đóng</button>
+                                    <button type="submit" class="btn btn-success fw-bold"><i class="fas fa-paper-plane me-2"></i>Gửi phản hồi</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // --- 1. SIDEBAR LOGIC ---
+        const MENUS = {
+            ADMIN: [],
+            PCTSV: [
+                { title: 'QL Doanh nghiệp', url: 'QLDN.html', icon: 'fa-building' },
+                { title: 'Duyệt Điểm HĐ', url: 'DuyetDHD.html', icon: 'fa-tasks' },
+                { title: 'Duyệt HB Khuyến khích', url: 'HBKK.html', icon: 'fa-star' },
+                { title: 'Duyệt HB Thử thách', url: 'HBTT.html', icon: 'fa-hand-holding-heart' },
+                { title: 'Duyệt HB Doanh nghiệp', url: 'HBDN.html', icon: 'fa-briefcase' },
+                { title: 'Xử lý Khiếu nại', url: 'XuLyKhieuNai.html', icon: 'fa-gavel' } // Active
+            ]
+        };
+
+        function createSidebar(role, activePage) {
+            const container = document.getElementById('sidebar-container');
+            if (!container) return;
+            const menuItems = MENUS[role] || [];
+            let html = `<nav class="sidebar"><div class="brand-logo"><i class="fas fa-university me-2"></i> P. CÔNG TÁC SV</div><div class="nav flex-column">`;
+            menuItems.forEach(item => {
+                const isActive = activePage.includes(item.url) ? 'active' : '';
+                html += `<a href="${item.url}" class="nav-link ${isActive}"><i class="fas ${item.icon} me-2"></i> ${item.title}</a>`;
+            });
+            html += `</div><div class="mt-auto p-3 border-top border-secondary position-absolute bottom-0 w-100"><a href="../TrangChu/index.html" class="nav-link text-white"><i class="fas fa-sign-out-alt me-2"></i> Thoát</a></div></nav>`;
+            container.innerHTML = html;
+        }
+        createSidebar('PCTSV', 'PCTSV_XuLyKhieuNai.html');
+
+        // --- 2. DỮ LIỆU MẪU (Mock từ db_KhieuNai của Sinh viên) ---
+        // Giả lập dữ liệu đã được gửi từ Sinh viên lên
+        const initData = [
+            { MaKN: 'KN001', MaSV: 'SV001', MaHK: 'HK1', NoiDung: 'Em thấy điểm rèn luyện HK1 bị thiếu mục Mùa hè xanh.', NgayGui: '2025-01-25', TrangThai: 'Chờ xử lý', PhanHoi: null },
+            { MaKN: 'KN002', MaSV: 'SV003', MaHK: 'HK2', NoiDung: 'Điểm GPA trên hệ thống (3.2) khác với bảng điểm (3.4).', NgayGui: '2025-05-20', TrangThai: 'Chờ xử lý', PhanHoi: null },
+            { MaKN: 'KN003', MaSV: 'SV005', MaHK: 'HK2', NoiDung: 'Em nộp minh chứng HB Thử thách nhưng bị báo lỗi.', NgayGui: '2025-05-22', TrangThai: 'Đã xử lý', PhanHoi: { NoiDungPH: 'Đã kiểm tra, em vui lòng nộp lại file PDF.', KetQua: 'Yêu cầu bổ sung' } }
+        ];
+
+        // Load dữ liệu
+        let dataList = JSON.parse(localStorage.getItem('db_KhieuNai'));
+        if (!dataList || dataList.length === 0) {
+            dataList = initData;
+            localStorage.setItem('db_KhieuNai', JSON.stringify(dataList));
+        }
+
+        // --- 3. RENDER TABLE ---
+        function renderTable() {
+            const hk = document.getElementById('filterHK').value;
+            const st = document.getElementById('filterStatus').value;
+            const tbody = document.getElementById('tblBody');
+            tbody.innerHTML = '';
+
+            // Filter
+            let filtered = dataList.filter(item => {
+                return (hk === '' || item.MaHK === hk) && (st === '' || item.TrangThai === st);
+            });
+
+            filtered.forEach(item => {
+                let badgeClass = item.TrangThai === 'Đã xử lý' ? 'status-done' : 'status-wait';
+                let btnHtml = item.TrangThai === 'Đã xử lý' 
+                    ? `<button class="btn btn-sm btn-outline-secondary" onclick="openModal('${item.MaKN}')"><i class="fas fa-eye"></i> Xem lại</button>`
+                    : `<button class="btn btn-sm btn-success" onclick="openModal('${item.MaKN}')"><i class="fas fa-edit"></i> Xử lý</button>`;
+
+                let row = `
+                    <tr>
+                        <td class="fw-bold">${item.MaKN}</td>
+                        <td class="text-primary fw-bold">${item.MaSV}</td>
+                        <td>${item.MaHK}</td>
+                        <td>${item.NoiDung}</td>
+                        <td>${item.NgayGui}</td>
+                        <td class="text-center"><span class="badge ${badgeClass} p-2 text-dark">${item.TrangThai}</span></td>
+                        <td class="text-center">${btnHtml}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // --- 4. XỬ LÝ MODAL ---
+        const modal = new bootstrap.Modal(document.getElementById('modalXuLy'));
+        
+        window.openModal = function(maKN) {
+            let item = dataList.find(x => x.MaKN === maKN);
+            
+            // Fill Info (Read-only)
+            document.getElementById('md_MaKN').value = item.MaKN;
+            document.getElementById('md_MaSV').innerText = item.MaSV;
+            document.getElementById('md_MaHK').innerText = item.MaHK;
+            document.getElementById('md_NgayGui').innerText = item.NgayGui;
+            document.getElementById('md_NoiDung').innerText = item.NoiDung;
+
+            // Fill Form (Nếu đã xử lý thì điền lại, nếu chưa thì trống)
+            if(item.PhanHoi) {
+                document.getElementById('res_NoiDungPH').value = item.PhanHoi.NoiDungPH;
+                document.getElementById('res_KetQua').value = item.PhanHoi.KetQua;
+            } else {
+                document.getElementById('res_NoiDungPH').value = '';
+                document.getElementById('res_KetQua').value = 'Chấp nhận';
+            }
+
+            modal.show();
+        }
+
+        // --- 5. SUBMIT PHẢN HỒI ---
+        document.getElementById('frmXuLy').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            let maKN = document.getElementById('md_MaKN').value;
+            let noiDungPH = document.getElementById('res_NoiDungPH').value;
+            let ketQua = document.getElementById('res_KetQua').value;
+
+            // Update Data
+            let index = dataList.findIndex(x => x.MaKN === maKN);
+            if(index !== -1) {
+                dataList[index].TrangThai = 'Đã xử lý';
+                dataList[index].PhanHoi = {
+                    MaPH: 'PH' + Date.now(), // Tự sinh
+                    NoiDungPH: noiDungPH,
+                    KetQua: ketQua,
+                    NgayPhanHoi: new Date().toISOString().slice(0,10)
+                };
+                
+                localStorage.setItem('db_KhieuNai', JSON.stringify(dataList));
+                alert("✅ Đã gửi phản hồi thành công!");
+                modal.hide();
+                renderTable();
+            }
+        });
+
+        renderTable();
+    </script>
+</body>
+</html>

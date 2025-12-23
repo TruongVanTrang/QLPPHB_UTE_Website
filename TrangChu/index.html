@@ -13,7 +13,7 @@
             --color-admin: #dc3545;
             --color-pdt: #0d6efd;
             --color-khoa: #0dcaf0;
-            --color-sv: #fd7e14; /* Màu cam cho Sinh viên */
+            --color-sv: #fd7e14;
             --color-ctsv: #198754;
             --bg-light: #f3f6f9;
         }
@@ -104,7 +104,7 @@
         .group-khoa:hover .icon-wrapper { background-color: var(--color-khoa); color: white; }
         .group-khoa::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--color-khoa); }
 
-        /* Sinh Vien (Orange) - NEW */
+        /* Sinh Vien (Orange) */
         .group-sv .icon-wrapper { background-color: rgba(253, 126, 20, 0.1); color: var(--color-sv); }
         .group-sv:hover .icon-wrapper { background-color: var(--color-sv); color: white; }
         .group-sv::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--color-sv); }
@@ -136,18 +136,6 @@
             font-weight: bold;
             color: white;
             margin-right: 10px;
-        }
-
-        /* --- Badge Ready --- */
-        .badge-ready {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            padding: 5px 10px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.7rem;
-            letter-spacing: 0.5px;
         }
 
         /* Search Box */
@@ -218,9 +206,9 @@
                     </a>
                 </div>
                 <div class="col-md-4 col-sm-6 function-item">
-                    <a href="../admin/namhoc.html" class="card-function group-admin">
+                    <a href="../admin/hocky.html" class="card-function group-admin">
                         <div class="icon-wrapper"><i class="fas fa-calendar-alt"></i></div>
-                        <div class="card-title">2. Thiết lập Năm học & Học kỳ</div>
+                        <div class="card-title">2. Thiết lập Học kỳ</div>
                         <div class="card-desc">Cấu hình thời gian, mở/đóng học kỳ và kích hoạt Trigger.</div>
                     </a>
                 </div>
@@ -351,6 +339,14 @@
                         <div class="card-desc">Xem xét CV ứng viên và phê duyệt theo tiêu chí DN.</div>
                     </a>
                 </div>
+                <div class="col-md-4 col-sm-6 function-item">
+                    <a href="../PCTSV/XuLyKhieuNai.html" class="card-function group-ctsv">
+                        <div class="icon-wrapper"><i class="fas fa-gavel"></i></div>
+                        <div class="card-title">16. Xử lý Khiếu nại</div>
+                        <div class="card-desc">Tiếp nhận, phản hồi và xử lý các yêu cầu khiếu nại từ sinh viên.</div>
+                    </a>
+                </div>
+                
             </div>
         </div>
 
@@ -367,7 +363,7 @@
     <script>
         // Script tìm kiếm nhanh chức năng
         function filterFunctions() {
-            var input, filter, cards, cardContainer, h5, title, i;
+            var input, filter, cards, title, i;
             input = document.getElementById("functionSearch");
             filter = input.value.toUpperCase();
             cards = document.getElementsByClassName("function-item");

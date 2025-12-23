@@ -1,438 +1,296 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Điểm Rèn Luyện - Khoa</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8">
+<title>Quản Lý Điểm Rèn Luyện - Khoa</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        /* --- 1. GIAO DIỆN CHUẨN KHOA (CYAN THEME) --- */
-        body { 
-            /* Tông xanh lơ sáng, năng động */
-            background: linear-gradient(135deg, #0dcaf0 0%, #0099cc 100%);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
-        }
-        
-        /* Sidebar Menu (Dark Cyan Theme) */
-        .sidebar {
-            min-height: 100vh;
-            background: #004d61; /* Xanh lơ đen */
-            color: white;
-            width: 250px;
-            position: fixed;
-            top: 0; left: 0;
-            z-index: 1000;
-            transition: all 0.3s;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-        }
-        
-        .brand-logo {
-            padding: 20px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-align: center;
-            background: #003a4d;
-            border-bottom: 1px solid #0dcaf0;
-        }
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-        .sidebar .nav-link {
-            color: #a8eeff;
-            padding: 15px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            text-decoration: none;
-            display: block;
-        }
-
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
-            color: #fff;
-            background: #007a99;
-            border-left: 4px solid #0dcaf0;
-        }
-
-        /* Vùng nội dung chính */
-        .main-wrapper {
-            margin-left: 250px;
-            padding: 30px;
-            transition: all 0.3s;
-        }
-
-        /* Header */
-        .admin-header {
-            background: white;
-            padding: 15px 25px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* --- 2. CSS CÁC THÀNH PHẦN CON --- */
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-
-        .card h2 {
-            color: #0099cc;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            border-bottom: 3px solid #0dcaf0;
-            padding-bottom: 10px;
-        }
-
-        /* Form */
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 15px;
-        }
-
-        .form-group { margin-bottom: 15px; }
-        .form-group label { font-weight: 600; margin-bottom: 8px; color: #004d61; }
-        .form-group .required { color: red; }
-        
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-        .form-group input:focus, .form-group select:focus {
-            outline: none; border-color: #0dcaf0;
-            box-shadow: 0 0 0 3px rgba(13, 202, 240, 0.2);
-        }
-
-        /* Buttons */
-        .button-group { display: flex; gap: 15px; margin-top: 20px; }
-        .btn-custom {
-            padding: 10px 25px; border: none; border-radius: 8px;
-            font-weight: bold; cursor: pointer; color: white;
-            flex: 1; transition: all 0.3s;
-        }
-        .btn-save { background: linear-gradient(135deg, #0dcaf0 0%, #0099cc 100%); color: white; }
-        .btn-save:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(13, 202, 240, 0.3); }
-        .btn-reset { background: #f8f9fa; color: #333; border: 1px solid #ddd; }
-        .btn-reset:hover { background: #e2e6ea; }
-        .btn-update { background: #198754; color: white; display: none; }
-        .btn-cancel { background: #dc3545; color: white; display: none; }
-
-        /* Table */
-        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .data-table th { 
-            background: #e0faff; 
-            font-weight: bold; 
-            color: #007a99; 
-            padding: 12px; text-align: left; 
-            border-bottom: 2px solid #0dcaf0; 
-        }
-        .data-table td { padding: 12px; border-bottom: 1px solid #e0e0e0; font-size: 0.95rem; }
-        .data-table tr:hover { background: #f0fdff; }
-
-        /* Actions & Badges */
-        .btn-action { padding: 5px 10px; font-size: 13px; border-radius: 5px; border: none; cursor: pointer; margin-right: 5px; color: white; transition: 0.2s; }
-        .btn-edit { background: #ffc107; color: #333; }
-        .btn-edit:hover { background: #e0a800; }
-        .btn-delete { background: #dc3545; }
-        .btn-delete:hover { background: #c82333; }
-
-        /* Xếp loại màu sắc */
-        .xepLoai { font-weight: bold; padding: 5px 10px; border-radius: 20px; font-size: 0.85rem; display: inline-block; }
-        .tot { color: #0f5132; background-color: #d1e7dd; } /* Xuất sắc/Tốt */
-        .kha { color: #664d03; background-color: #fff3cd; } /* Khá */
-        .trungbinh { color: #856404; background-color: #ffecb5; } /* TB */
-        .yeu { color: #842029; background-color: #f8d7da; } /* Yếu */
-    </style>
+<style>
+    /* --- GIAO DIỆN KHOA (CYAN/BLUE THEME) --- */
+    body {
+        background: linear-gradient(135deg, #0dcaf0, #0099cc);
+        font-family: 'Segoe UI', Tahoma;
+        min-height: 100vh;
+    }
+    .sidebar {
+        width: 250px; background: #004d61; color: white;
+        position: fixed; top: 0; left: 0; bottom: 0; z-index: 1000;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+    .sidebar .brand-logo { padding: 20px; background: #003a4d; text-align: center; font-weight: bold; font-size: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .sidebar a { color: #a8eeff; display: block; padding: 15px 20px; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .sidebar a:hover, .sidebar a.active { background: #007a99; color: white; border-left: 4px solid #0dcaf0; }
+    
+    .main-wrapper { margin-left: 250px; padding: 30px; }
+    .card { border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); padding: 25px; margin-bottom: 30px; background: white; border: none; }
+    
+    /* Table & Badge */
+    .xepLoai { font-weight: bold; padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; }
+    .tot { background: #d1e7dd; color: #0f5132; } /* Xuất sắc/Tốt/Giỏi */
+    .kha { background: #fff3cd; color: #664d03; }
+    .trungbinh { background: #ffecb5; color: #856404; }
+    .yeu { background: #f8d7da; color: #842029; }
+    
+    .btn-action { border: none; border-radius: 5px; padding: 5px 10px; color: white; transition: 0.2s; }
+    .btn-edit { background: #ffc107; color: black; }
+    .btn-delete { background: #dc3545; }
+    
+    /* STT Label Style */
+    .stt-label { color: #dc3545; font-weight: 900; margin-right: 5px; }
+</style>
 </head>
+
 <body>
 
-    <div id="sidebar-container"></div>
+<div class="sidebar">
+    <div class="brand-logo">
+        <i class="fas fa-chalkboard-teacher me-2"></i>GIÁO VỤ KHOA
+    </div>
+    <a href="#" class="active"><i class="fas fa-running me-2"></i>QL Điểm Rèn Luyện</a>
+    <a href="QL_LSHB.html"><i class="fas fa-search me-2"></i>Tra Cứu Lịch Sử HB</a>
+    <div style="position: absolute; bottom: 0; width: 100%; border-top: 1px solid rgba(255,255,255,0.1);">
+        <a href="../TrangChu/index.html"><i class="fas fa-sign-out-alt me-2"></i>Thoát</a>
+    </div>
+</div>
 
-    <div class="main-wrapper">
-        
-        <header class="admin-header">
-            <h4 class="m-0 fw-bold text-secondary">
-                <i class="fas fa-running me-2 text-info"></i>Quản Lý Điểm Rèn Luyện
-            </h4>
-            <div class="dropdown">
-                <a href="#" class="text-decoration-none text-dark dropdown-toggle" data-bs-toggle="dropdown">
-                    <img src="https://via.placeholder.com/30" class="rounded-circle me-1">
-                    <span>Xin chào, <b>Giáo vụ Khoa</b></span>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item text-danger" href="#">Đăng xuất</a></li>
-                </ul>
-            </div>
-        </header>
+<div class="main-wrapper">
 
-        <div class="card">
-            <h2>➕ Form Nhập/Cập Nhật Điểm Rèn Luyện</h2>
-            <form id="drlForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Mã SV <span class="required">*</span></label>
-                        <input type="text" id="maSV" required placeholder="Nhập mã sinh viên">
-                    </div>
-                    <div class="form-group">
-                        <label>Học Kỳ <span class="required">*</span></label>
-                        <select id="maHK" required>
-                            <option value="">Chọn Học Kỳ</option>
-                            <option value="HK1_2024">HK1 - Năm học 2024-2025</option>
-                            <option value="HK2_2024">HK2 - Năm học 2024-2025</option>
-                            <option value="HK3_2024">HK3 - Năm học 2024-2025</option>
-                            <option value="HK1_2025">HK1 - Năm học 2025-2026</option>
-                            <option value="HK2_2025">HK2 - Năm học 2025-2026</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Điểm Rèn Luyện <span class="required">*</span></label>
-                        <input type="number" id="diemRL" min="0" max="100" step="1" required placeholder="0 đến 100">
-                    </div>
-                    <div class="form-group">
-                        <label>Ngày Nhập <span class="required">*</span></label>
-                        <input type="date" id="ngayNhap" required>
-                    </div>
-                </div>
-                
-                <div class="button-group">
-                    <button type="submit" id="submitBtn" class="btn-custom btn-save"><i class="fas fa-plus me-2"></i>Thêm Điểm</button>
-                    <button type="button" id="updateBtn" class="btn-custom btn-update"><i class="fas fa-save me-2"></i>Cập Nhật</button>
-                    <button type="button" id="cancelBtn" class="btn-custom btn-cancel"><i class="fas fa-times me-2"></i>Hủy</button>
-                    <button type="reset" class="btn-custom btn-reset">Làm Mới</button>
-                </div>
-            </form>
-        </div>
-
-        <div class="card">
-            <h2>📋 Danh Sách Điểm Rèn Luyện</h2>
-            <div style="overflow-x: auto;">
-                <table class="data-table" id="drlTable">
-                    <thead>
-                        <tr>
-                            <th>Mã SV</th>
-                            <th>Học Kỳ</th>
-                            <th>Điểm RL</th>
-                            <th>Xếp Loại</th>
-                            <th>Ngày Nhập</th>
-                            <th>Hành Động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        </tbody>
-                </table>
-            </div>
+    <div class="card d-flex justify-content-between align-items-center flex-row py-3">
+        <h4 class="text-info m-0 fw-bold">
+            <i class="fas fa-running me-2"></i>Quản Lý Điểm Rèn Luyện
+        </h4>
+        <div class="d-flex align-items-center">
+            <img src="https://via.placeholder.com/35" class="rounded-circle me-2">
+            <b>Giáo vụ Khoa CNTT</b>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="card" id="formCard" style="display:none; border-top: 4px solid #0dcaf0;">
+        <h5 class="text-info mb-4 border-bottom pb-2">
+            <i class="fas fa-edit me-2"></i>Nhập / Cập nhật điểm rèn luyện
+        </h5>
 
-    <script>
-        const MENUS = {
-            ADMIN: [
-                { title: 'Tổng quan', url: 'Dashboard.html', icon: 'fa-tachometer-alt' },
-                { title: 'Người dùng', url: 'nguoidung.html', icon: 'fa-users-cog' },
-                { title: 'Năm học', url: 'namhoc.html', icon: 'fa-calendar-alt' },
-                { title: 'Học bổng', url: 'hocbong.html', icon: 'fa-hand-holding-usd' }
-            ],
-            PCTSV: [
-                { title: 'QL Doanh nghiệp', url: 'QLDN.html', icon: 'fa-building' },
-                { title: 'Phân bổ ngân sách', url: 'PBNS.html', icon: 'fa-chart-pie' },
-                { title: 'Duyệt Điểm HĐ', url: 'DuyetDHD.html', icon: 'fa-tasks' },
-                { title: 'Duyệt HB Khuyến khích', url: 'HBKK.html', icon: 'fa-star' },
-                { title: 'Duyệt HB Thử thách', url: 'HBTT.html', icon: 'fa-hand-holding-heart' },
-                { title: 'Duyệt HB Doanh nghiệp', url: 'HBDN.html', icon: 'fa-briefcase' }
-            ],
-            PDAOTAO: [
-                { title: 'QL Hồ sơ Sinh viên', url: 'QL_HSSV.html', icon: 'fa-id-card' },
-                { title: 'QL Điểm GPA', url: 'QL_GPA.html', icon: 'fa-file-excel' }
-            ],
-            KHOA: [
-                { title: 'QL Điểm Rèn Luyện', url: 'QL_DRL.html', icon: 'fa-running' },
-                { title: 'Tra cứu Lịch sử HB', url: 'QL_LSHB.html', icon: 'fa-search' }
-            ]
+        <form id="drlForm">
+            <input type="hidden" id="maDRL"> 
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold"><span class="stt-label">2.</span>Mã sinh viên <span class="text-danger">*</span></label>
+                    <input type="text" id="maSV" class="form-control" placeholder="VD: SV001" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold"><span class="stt-label">3.</span>Học kỳ <span class="text-danger">*</span></label>
+                    <select id="maHK" class="form-select" required>
+                        <option value="">-- Chọn học kỳ --</option>
+                        <option value="HK2">Học kỳ 2 (2024-2025)</option>
+                        <option value="HK1">Học kỳ 1 (2024-2025)</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-bold"><span class="stt-label">4.</span>Điểm rèn luyện <span class="text-danger">*</span></label>
+                    <input type="number" id="diemRL" class="form-control" min="0" max="100" required placeholder="0 - 100">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-bold"><span class="stt-label">5.</span>Xếp loại (Tự động)</label>
+                    <input type="text" id="xepLoaiPreview" class="form-control bg-light fw-bold text-primary" readonly>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-bold"><span class="stt-label">6.</span>Ngày nhập</label>
+                    <input type="date" id="ngayNhap" class="form-control">
+                </div>
+            </div>
+
+            <div class="mt-4 text-end">
+                <button type="button" class="btn btn-secondary me-2" onclick="hideForm()">Hủy bỏ</button>
+                <button type="submit" class="btn btn-info text-white fw-bold px-4">
+                    <i class="fas fa-save me-1"></i>Lưu dữ liệu
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="text-info m-0"><i class="fas fa-list me-2"></i>Danh sách Điểm Rèn Luyện</h5>
+            <button class="btn btn-info text-white fw-bold" onclick="showAddForm()">
+                <i class="fas fa-plus me-1"></i>Thêm mới
+            </button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-info">
+                    <tr>
+                        <th><span class="stt-label">1.</span>Mã ĐRL</th>
+                        <th><span class="stt-label">2.</span>Mã SV</th>
+                        <th><span class="stt-label">3.</span>Học kỳ</th>
+                        <th class="text-center"><span class="stt-label">4.</span>Điểm RL</th>
+                        <th class="text-center"><span class="stt-label">5.</span>Xếp loại</th>
+                        <th><span class="stt-label">6.</span>Ngày nhập</th>
+                        <th class="text-center">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="drlTable">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // --- DỮ LIỆU MẪU (Khớp với Table DiemRenLuyen trong SQL) ---
+    // Cấu trúc: { MaDRL, MaSV, MaHK, DiemRL, XepLoai, NgayNhap }
+    let drlList = [
+        { maDRL: 'DRL001', maSV:'SV001', maHK:'HK2', diemRL:85, xepLoai:'Giỏi', ngayNhap:'2025-05-10' },
+        { maDRL: 'DRL002', maSV:'SV002', maHK:'HK2', diemRL:90, xepLoai:'Xuất sắc', ngayNhap:'2025-05-10' },
+        { maDRL: 'DRL003', maSV:'SV003', maHK:'HK2', diemRL:75, xepLoai:'Khá', ngayNhap:'2025-05-10' },
+        { maDRL: 'DRL006', maSV:'SV006', maHK:'HK2', diemRL:70, xepLoai:'Khá', ngayNhap:'2025-05-10' },
+        { maDRL: 'DRL012', maSV:'SV012', maHK:'HK2', diemRL:60, xepLoai:'Trung bình', ngayNhap:'2025-05-10' }
+    ];
+
+    let editingIndex = null;
+
+    // Logic tính xếp loại (Giống Trigger SQL)
+    function tinhXepLoai(d) {
+        if (d >= 90) return 'Xuất sắc';
+        if (d >= 80) return 'Giỏi';
+        if (d >= 65) return 'Khá';
+        if (d >= 50) return 'Trung bình';
+        return 'Yếu';
+    }
+
+    // Logic Class màu sắc
+    function getXepLoaiClass(txt) {
+        if (txt === 'Xuất sắc' || txt === 'Giỏi') return 'tot';
+        if (txt === 'Khá') return 'kha';
+        if (txt === 'Trung bình') return 'trungbinh';
+        return 'yeu';
+    }
+
+    function render() {
+        const tableBody = document.getElementById('drlTable');
+        tableBody.innerHTML = '';
+        
+        drlList.forEach((x, i) => {
+            const cssClass = getXepLoaiClass(x.xepLoai);
+            
+            tableBody.innerHTML += `
+            <tr>
+                <td><small class="text-muted fw-bold">${x.maDRL}</small></td>
+                <td class="fw-bold text-primary">${x.maSV}</td>
+                <td>${x.maHK}</td>
+                <td class="text-center fw-bold">${x.diemRL}</td>
+                <td class="text-center"><span class="xepLoai ${cssClass}">${x.xepLoai}</span></td>
+                <td>${x.ngayNhap}</td>
+                <td class="text-center">
+                    <button class="btn-action btn-edit btn-sm" onclick="edit(${i})"><i class="fas fa-edit"></i></button>
+                    <button class="btn-action btn-delete btn-sm" onclick="del(${i})"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>`;
+        });
+    }
+
+    // --- CÁC HÀM XỬ LÝ FORM ---
+
+    function showAddForm() {
+        document.getElementById('drlForm').reset();
+        document.getElementById('maDRL').value = ''; // Reset ID
+        document.getElementById('xepLoaiPreview').value = '';
+        
+        // Mở khóa nhập liệu
+        document.getElementById('maSV').readOnly = false;
+        document.getElementById('maHK').disabled = false;
+        
+        editingIndex = null;
+        document.getElementById('formCard').style.display = 'block';
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    function hideForm() {
+        document.getElementById('formCard').style.display = 'none';
+    }
+
+    function edit(i) {
+        const x = drlList[i];
+        
+        // Fill dữ liệu vào form
+        document.getElementById('maDRL').value = x.maDRL;
+        document.getElementById('maSV').value = x.maSV;
+        document.getElementById('maHK').value = x.maHK;
+        document.getElementById('diemRL').value = x.diemRL;
+        document.getElementById('ngayNhap').value = x.ngayNhap;
+        document.getElementById('xepLoaiPreview').value = x.xepLoai;
+
+        // Khóa khóa chính
+        document.getElementById('maSV').readOnly = true;
+        document.getElementById('maHK').disabled = true;
+
+        editingIndex = i;
+        document.getElementById('formCard').style.display = 'block';
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    function del(i) {
+        if(confirm('Bạn có chắc muốn xóa điểm rèn luyện này?')) {
+            drlList.splice(i, 1);
+            render();
+        }
+    }
+
+    // Tự động tính xếp loại khi nhập điểm
+    document.getElementById('diemRL').oninput = function() {
+        let val = parseFloat(this.value);
+        if(val >= 0 && val <= 100) {
+            document.getElementById('xepLoaiPreview').value = tinhXepLoai(val);
+        } else {
+            document.getElementById('xepLoaiPreview').value = '';
+        }
+    };
+
+    // Xử lý Submit Form
+    document.getElementById('drlForm').onsubmit = function(e) {
+        e.preventDefault();
+        
+        // Lấy dữ liệu từ form
+        let diem = parseFloat(document.getElementById('diemRL').value);
+        
+        const data = {
+            maDRL: document.getElementById('maDRL').value || ('DRL' + Date.now()), // Sinh ID giả lập nếu mới
+            maSV: document.getElementById('maSV').value.trim().toUpperCase(),
+            maHK: document.getElementById('maHK').value,
+            diemRL: diem,
+            xepLoai: tinhXepLoai(diem), // Tính toán luôn để lưu vào Object
+            ngayNhap: document.getElementById('ngayNhap').value || new Date().toISOString().slice(0,10)
         };
 
-        function createSidebar(role, activePage) {
-            const container = document.getElementById('sidebar-container');
-            if (!container) return;
-
-            const menuItems = MENUS[role] || [];
-            
-            // Cấu hình riêng cho KHOA
-            const brandTitle = 'GIÁO VỤ KHOA';
-            const brandIcon = 'fa-chalkboard-teacher';
-
-            let html = `
-                <nav class="sidebar">
-                    <div class="brand-logo">
-                        <i class="fas ${brandIcon} me-2"></i> ${brandTitle}
-                    </div>
-                    <div class="nav flex-column">
-            `;
-
-            menuItems.forEach(item => {
-                const isActive = activePage.includes(item.url) ? 'active' : '';
-                html += `
-                    <a href="${item.url}" class="nav-link ${isActive}">
-                        <i class="fas ${item.icon} me-2"></i> ${item.title}
-                    </a>
-                `;
-            });
-
-            html += `
-                    </div>
-                    <div class="mt-auto p-3 border-top border-secondary" style="position: absolute; bottom: 0; width: 100%;">
-                        <a href="../TrangChu/index.html" class="nav-link text-white">
-                            <i class="fas fa-sign-out-alt me-2"></i> Thoát
-                        </a>
-                    </div>
-                </nav>
-            `;
-            container.innerHTML = html;
-        }
-
-        // Gọi hàm tạo Sidebar cho vai trò KHOA
-        createSidebar('KHOA', 'QL_DRL.html');
-    </script>
-
-    <script>
-        // Dữ liệu mẫu (Khởi tạo nếu LocalStorage trống)
-        let drlList = JSON.parse(localStorage.getItem('diemRenLuyen')) || [
-            { maSV: '21110123', maHK: 'HK1_2024', diemRL: 95, ngayNhap: '2024-01-20' },
-            { maSV: '21110456', maHK: 'HK1_2024', diemRL: 82, ngayNhap: '2024-01-22' },
-            { maSV: '22110789', maHK: 'HK2_2024', diemRL: 70, ngayNhap: '2024-06-15' },
-            { maSV: '22110111', maHK: 'HK2_2024', diemRL: 60, ngayNhap: '2024-06-18' },
-            { maSV: '23110222', maHK: 'HK1_2024', diemRL: 45, ngayNhap: '2024-01-25' }
-        ];
-
-        let editingIndex = null;
-
-        const tbody = document.querySelector('#drlTable tbody');
-        const form = document.getElementById('drlForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const updateBtn = document.getElementById('updateBtn');
-        const cancelBtn = document.getElementById('cancelBtn');
-
-        function xepLoaiRL(diem) {
-            diem = parseInt(diem);
-            if (diem >= 90) return { text: "Xuất sắc", class: "tot" };
-            if (diem >= 80) return { text: "Tốt", class: "tot" };
-            if (diem >= 65) return { text: "Khá", class: "kha" };
-            if (diem >= 50) return { text: "Trung bình", class: "trungbinh" };
-            return { text: "Yếu", class: "yeu" };
-        }
-
-        function renderTable() {
-            tbody.innerHTML = '';
-            drlList.forEach((item, i) => {
-                const xl = xepLoaiRL(item.diemRL);
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>${item.maSV}</strong></td>
-                    <td>${item.maHK.replace('_', ' ')}</td>
-                    <td class="fw-bold">${item.diemRL}</td>
-                    <td><span class="xepLoai ${xl.class}">${xl.text}</span></td>
-                    <td>${item.ngayNhap}</td>
-                    <td>
-                        <button class="btn-action btn-edit" onclick="editDRL(${i})"><i class="fas fa-edit"></i></button>
-                        <button class="btn-action btn-delete" onclick="deleteDRL(${i})"><i class="fas fa-trash"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function saveToStorage() {
-            localStorage.setItem('diemRenLuyen', JSON.stringify(drlList));
-        }
-
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const diem = document.getElementById('diemRL').value;
-            if (diem < 0 || diem > 100) {
-                alert('Điểm rèn luyện phải từ 0 đến 100!');
+        if (editingIndex === null) {
+            // Check trùng (Giả lập Constraint PK)
+            let isExist = drlList.some(item => item.maSV === data.maSV && item.maHK === data.maHK);
+            if(isExist) {
+                alert("Sinh viên này đã có điểm trong học kỳ này rồi!");
                 return;
             }
+            drlList.push(data);
+        } else {
+            drlList[editingIndex] = data;
+        }
 
-            const data = {
-                maSV: document.getElementById('maSV').value.trim().toUpperCase(),
-                maHK: document.getElementById('maHK').value,
-                diemRL: diem,
-                ngayNhap: document.getElementById('ngayNhap').value
-            };
+        hideForm();
+        render();
+        alert("Đã lưu thành công!");
+    };
 
-            if (editingIndex !== null) {
-                drlList[editingIndex] = data;
-                editingIndex = null;
-                submitBtn.style.display = 'block';
-                updateBtn.style.display = 'none';
-                cancelBtn.style.display = 'none';
-                alert('✅ Cập nhật điểm rèn luyện thành công!');
-            } else {
-                // Kiểm tra trùng (MaSV + HocKy)
-                const exists = drlList.some(item => item.maSV === data.maSV && item.maHK === data.maHK);
-                if (exists) {
-                    if (!confirm('Điểm rèn luyện của sinh viên này trong học kỳ này đã tồn tại. Bạn có muốn ghi đè?')) {
-                        return;
-                    }
-                    const index = drlList.findIndex(item => item.maSV === data.maSV && item.maHK === data.maHK);
-                    drlList[index] = data;
-                } else {
-                    drlList.push(data);
-                }
-                alert('✅ Thêm điểm rèn luyện thành công!');
-            }
+    // Chạy lần đầu
+    render();
+</script>
 
-            saveToStorage();
-            renderTable();
-            form.reset();
-        });
-
-        window.editDRL = function(i) {
-            const item = drlList[i];
-            document.getElementById('maSV').value = item.maSV;
-            document.getElementById('maHK').value = item.maHK;
-            document.getElementById('diemRL').value = item.diemRL;
-            document.getElementById('ngayNhap').value = item.ngayNhap;
-
-            editingIndex = i;
-            submitBtn.style.display = 'none';
-            updateBtn.style.display = 'block';
-            cancelBtn.style.display = 'block';
-            
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-
-        cancelBtn.onclick = () => {
-            editingIndex = null;
-            form.reset();
-            submitBtn.style.display = 'block';
-            updateBtn.style.display = 'none';
-            cancelBtn.style.display = 'none';
-        };
-
-        window.deleteDRL = function(i) {
-            if (confirm('Xóa điểm rèn luyện của sinh viên này trong học kỳ này?')) {
-                drlList.splice(i, 1);
-                saveToStorage();
-                renderTable();
-            }
-        };
-
-        renderTable();
-    </script>
 </body>
 </html>
