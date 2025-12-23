@@ -1,500 +1,241 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Hồ Sơ Sinh Viên - PDT</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quản Lý Hồ Sơ Sinh Viên - PDT</title>
 
-    <style>
-        /* --- 1. GIAO DIỆN CHUẨN PHÒNG ĐÀO TẠO (BLUE THEME) --- */
-        body { 
-            background: linear-gradient(135deg, #0d6efd 0%, #0043a8 100%);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
-        }
-        
-        /* Sidebar Menu */
-        .sidebar {
-            min-height: 100vh;
-            background: #002a5c;
-            color: white;
-            width: 250px;
-            position: fixed;
-            top: 0; left: 0;
-            z-index: 1000;
-            transition: all 0.3s;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-        }
-        
-        .brand-logo {
-            padding: 20px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-align: center;
-            background: #001f45;
-            border-bottom: 1px solid #0d6efd;
-        }
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        .sidebar .nav-link {
-            color: #a8cfff;
-            padding: 15px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            text-decoration: none;
-            display: block;
-        }
-
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
-            color: #fff;
-            background: #0043a8;
-            border-left: 4px solid #0d6efd;
-        }
-
-        /* Main Content */
-        .main-wrapper {
-            margin-left: 250px;
-            padding: 30px;
-            transition: all 0.3s;
-        }
-
-        /* Header */
-        .admin-header {
-            background: white;
-            padding: 15px 25px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* --- 2. CSS CÁC THÀNH PHẦN CON --- */
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-
-        .card h2 {
-            color: #0d6efd;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            border-bottom: 3px solid #0d6efd;
-            padding-bottom: 10px;
-        }
-
-        /* Form Styles */
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 15px;
-        }
-
-        .form-group { margin-bottom: 15px; }
-        .form-group label { font-weight: 600; margin-bottom: 8px; color: #002a5c; }
-        .form-group .required { color: red; }
-        
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-        .form-group input:focus, .form-group select:focus {
-            outline: none; border-color: #0d6efd;
-            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.2);
-        }
-
-        .gender-group { display: flex; gap: 20px; align-items: center; padding-top: 5px; }
-        .gender-group label { font-weight: normal; display: flex; align-items: center; gap: 5px; cursor: pointer; }
-
-        /* Buttons */
-        .button-group { display: flex; gap: 15px; margin-top: 20px; }
-        .btn-custom {
-            padding: 10px 25px; border: none; border-radius: 8px;
-            font-weight: bold; cursor: pointer; color: white;
-            flex: 1; transition: all 0.3s;
-        }
-        .btn-save { background: linear-gradient(135deg, #0d6efd 0%, #0043a8 100%); }
-        .btn-save:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3); }
-        .btn-reset { background: #f8f9fa; color: #333; border: 1px solid #ddd; }
-        .btn-reset:hover { background: #e2e6ea; }
-        .btn-update { background: #198754; color: white; display: none; }
-        .btn-cancel { background: #dc3545; color: white; display: none; }
-
-        /* Table */
-        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .data-table th { 
-            background: #f0f7ff; 
-            font-weight: bold; 
-            color: #0043a8; 
-            padding: 12px; text-align: left; 
-            border-bottom: 2px solid #0d6efd; 
-        }
-        .data-table td { padding: 12px; border-bottom: 1px solid #e0e0e0; font-size: 0.95rem; }
-        .data-table tr:hover { background: #f8fbff; }
-
-        .btn-action { padding: 5px 10px; font-size: 13px; border-radius: 5px; border: none; cursor: pointer; margin-right: 5px; color: white; transition: 0.2s; }
-        .btn-edit { background: #ffc107; color: #333; }
-        .btn-edit:hover { background: #e0a800; }
-        .btn-delete { background: #dc3545; }
-        .btn-delete:hover { background: #c82333; }
-    </style>
+<style>
+body{
+    background:linear-gradient(135deg,#0d6efd,#0043a8);
+    font-family:'Segoe UI',Tahoma;
+}
+.sidebar{
+    width:250px;position:fixed;top:0;left:0;bottom:0;
+    background:#002a5c;color:white;
+}
+.brand-logo{
+    padding:20px;font-size:1.4rem;font-weight:bold;
+    text-align:center;background:#001f45;
+}
+.nav-link{color:#a8cfff;padding:15px 20px;display:block;text-decoration:none}
+.nav-link.active,.nav-link:hover{background:#0043a8;color:#fff}
+.main-wrapper{margin-left:250px;padding:30px}
+.card{
+    background:white;border-radius:15px;padding:30px;
+    box-shadow:0 5px 20px rgba(0,0,0,.1);margin-bottom:30px;
+}
+.data-table th{background:#f0f7ff;color:#0043a8}
+.btn-action{border:none;padding:5px 10px;border-radius:5px;color:white}
+.btn-edit{background:#ffc107;color:black}
+.btn-delete{background:#dc3545}
+</style>
 </head>
+
 <body>
 
-    <div id="sidebar-container"></div>
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <div class="brand-logo">
+        <i class="fas fa-graduation-cap me-2"></i>P. ĐÀO TẠO
+    </div>
+    <a class="nav-link active" href="#"><i class="fas fa-id-card me-2"></i>QL Hồ sơ SV</a>
+    <a class="nav-link" href="QL_GPA.html"><i class="fas fa-file-excel me-2"></i>QL GPA</a>
+</div>
 
-    <div class="main-wrapper">
-        
-        <header class="admin-header">
-            <h4 class="m-0 fw-bold text-secondary">
-                <i class="fas fa-id-card me-2 text-primary"></i>Quản Lý Hồ Sơ Sinh Viên
-            </h4>
-            <div class="dropdown">
-                <a href="#" class="text-decoration-none text-dark dropdown-toggle" data-bs-toggle="dropdown">
-                    <img src="https://via.placeholder.com/30" class="rounded-circle me-1">
-                    <span>Xin chào, <b>Cán bộ Đào Tạo</b></span>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item text-danger" href="#">Đăng xuất</a></li>
-                </ul>
-            </div>
-        </header>
+<div class="main-wrapper">
 
-        <div class="card">
-            <h2>➕ Form Thêm/Cập Nhật Sinh Viên</h2>
-            <form id="studentForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Mã SV <span class="required">*</span></label>
-                        <input type="text" id="maSV" placeholder="VD: 20110123" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Họ Tên <span class="required">*</span></label>
-                        <input type="text" id="hoTen" placeholder="VD: Nguyễn Văn An" required>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Ngày Sinh <span class="required">*</span></label>
-                        <input type="date" id="ngaySinh" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Giới Tính <span class="required">*</span></label>
-                        <div class="gender-group">
-                            <label><input type="radio" name="gioiTinh" value="Nam" checked> Nam</label>
-                            <label><input type="radio" name="gioiTinh" value="Nữ"> Nữ</label>
-                        </div>
-                    </div>
-                </div>
+<!-- HEADER -->
+<div class="card d-flex justify-content-between align-items-center flex-row">
+    <h4 class="text-primary m-0">
+        <i class="fas fa-id-card me-2"></i>Quản Lý Hồ Sơ Sinh Viên
+    </h4>
+    <b>Cán bộ Phòng Đào Tạo</b>
+</div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Email <span class="required">*</span></label>
-                        <input type="email" id="email" placeholder="email@student.hcmute.edu.vn" required>
-                    </div>
-                    <div class="form-group">
-                        <label>SĐT <span class="required">*</span></label>
-                        <input type="tel" id="sdt" placeholder="09xxxxxxxxx" required>
-                    </div>
-                </div>
+<!-- FORM (ẨN BAN ĐẦU) -->
+<div class="card" id="formCard" style="display:none">
+<h5 class="text-primary mb-3"><i class="fas fa-edit me-2"></i>Thêm / Cập Nhật Sinh Viên</h5>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Khoa <span class="required">*</span></label>
-                        <select id="khoa" required onchange="updateLop()">
-                            <option value="">-- Chọn Khoa --</option>
-                            <option value="CNTT">Công Nghệ Thông Tin</option>
-                            <option value="KinhTe">Kinh Tế</option>
-                            <option value="NgoaiNgu">Ngoại Ngữ</option>
-                            <option value="CoKhi">Cơ Khí</option>
-                            <option value="DienTu">Điện - Điện Tử</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Mã Lớp <span class="required">*</span></label>
-                        <select id="maLop" required>
-                            <option value="">-- Chọn Lớp --</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="button-group">
-                    <button type="submit" id="submitBtn" class="btn-custom btn-save"><i class="fas fa-plus me-2"></i>Thêm Mới</button>
-                    <button type="button" id="updateBtn" class="btn-custom btn-update"><i class="fas fa-save me-2"></i>Cập Nhật</button>
-                    <button type="button" id="cancelBtn" class="btn-custom btn-cancel"><i class="fas fa-times me-2"></i>Hủy</button>
-                    <button type="reset" class="btn-custom btn-reset">Làm Mới</button>
-                </div>
-            </form>
-        </div>
-
-        <div class="card">
-            <h2>📋 Danh Sách Sinh Viên</h2>
-            <div style="overflow-x: auto;">
-                <table class="data-table" id="studentTable">
-                    <thead>
-                        <tr>
-                            <th>Mã SV</th>
-                            <th>Họ Tên</th>
-                            <th>Ngày Sinh</th>
-                            <th>Giới Tính</th>
-                            <th>Email</th>
-                            <th>SĐT</th>
-                            <th>Khoa</th>
-                            <th>Lớp</th>
-                            <th>Hành Động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        </tbody>
-                </table>
-            </div>
-        </div>
+<form id="studentForm">
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label>Mã SV</label>
+        <input type="text" id="maSV" class="form-control" required>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label>Họ Tên</label>
+        <input type="text" id="hoTen" class="form-control" required>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="col-md-6 mb-3">
+        <label>Ngày Sinh</label>
+        <input type="date" id="ngaySinh" class="form-control" required>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label>Giới Tính</label>
+        <select id="gioiTinh" class="form-select">
+            <option>Nam</option>
+            <option>Nữ</option>
+        </select>
+    </div>
 
-    <script>
-        const MENUS = {
-            // Dành cho thư mục admin/
-            ADMIN: [
-                { title: 'Tổng quan', url: 'Dashboard.html', icon: 'fa-tachometer-alt' },
-                { title: 'Người dùng', url: 'nguoidung.html', icon: 'fa-users-cog' },
-                { title: 'Năm học', url: 'namhoc.html', icon: 'fa-calendar-alt' },
-                { title: 'Học bổng', url: 'hocbong.html', icon: 'fa-hand-holding-usd' }
-            ],
-            // Dành cho thư mục PCTSV/
-            PCTSV: [
-                { title: 'QL Doanh nghiệp', url: 'QLDN.html', icon: 'fa-building' },
-                { title: 'Phân bổ ngân sách', url: 'PBNS.html', icon: 'fa-chart-pie' },
-                { title: 'Duyệt Điểm HĐ', url: 'DuyetDHD.html', icon: 'fa-tasks' },
-                { title: 'Duyệt HB Khuyến khích', url: 'HBKK.html', icon: 'fa-star' },
-                { title: 'Duyệt HB Thử thách', url: 'HBTT.html', icon: 'fa-hand-holding-heart' },
-                { title: 'Duyệt HB Doanh nghiệp', url: 'HBDN.html', icon: 'fa-briefcase' }
-            ],
-            // Dành cho thư mục PDAOTAO/
-            PDAOTAO: [
-                { title: 'QL Hồ sơ Sinh viên', url: 'QL_HSSV.html', icon: 'fa-id-card' },
-                { title: 'QL Điểm GPA', url: 'QL_GPA.html', icon: 'fa-file-excel' }
-            ],
-            // Dành cho thư mục KHOA/
-            KHOA: [
-                { title: 'QL Điểm Rèn Luyện', url: 'QL_DRL.html', icon: 'fa-running' },
-                { title: 'Tra cứu Lịch sử HB', url: 'QL_LSHB.html', icon: 'fa-search' }
-            ]
-        };
+    <div class="col-md-6 mb-3">
+        <label>Email</label>
+        <input type="email" id="email" class="form-control">
+    </div>
+    <div class="col-md-6 mb-3">
+        <label>SĐT</label>
+        <input type="text" id="sdt" class="form-control">
+    </div>
 
-        function createSidebar(role, activePage) {
-            const container = document.getElementById('sidebar-container');
-            if (!container) return;
+    <div class="col-md-6 mb-3">
+        <label>Khoa</label>
+        <select id="maKhoa" class="form-select" onchange="loadLop()"></select>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label>Lớp</label>
+        <select id="maLop" class="form-select"></select>
+    </div>
+</div>
 
-            const menuItems = MENUS[role] || [];
-            
-            // Cấu hình riêng cho Phòng Đào Tạo
-            const brandTitle = 'P. ĐÀO TẠO';
-            const brandIcon = 'fa-graduation-cap';
+<button class="btn btn-primary" type="submit">Lưu</button>
+<button class="btn btn-secondary" type="button" onclick="hideForm()">Hủy</button>
+</form>
+</div>
 
-            let html = `
-                <nav class="sidebar">
-                    <div class="brand-logo">
-                        <i class="fas ${brandIcon} me-2"></i> ${brandTitle}
-                    </div>
-                    <div class="nav flex-column">
-            `;
+<!-- TABLE -->
+<div class="card">
+<div class="d-flex justify-content-between mb-3">
+    <h5 class="text-primary"><i class="fas fa-list me-2"></i>Danh sách sinh viên</h5>
+    <button class="btn btn-primary" onclick="showForm()">
+        <i class="fas fa-plus me-1"></i>Thêm mới
+    </button>
+</div>
 
-            menuItems.forEach(item => {
-                const isActive = activePage.includes(item.url) ? 'active' : '';
-                html += `
-                    <a href="${item.url}" class="nav-link ${isActive}">
-                        <i class="fas ${item.icon} me-2"></i> ${item.title}
-                    </a>
-                `;
-            });
+<table class="table table-hover data-table">
+<thead>
+<tr>
+<th>Mã SV</th><th>Họ Tên</th><th>Ngày Sinh</th>
+<th>Giới Tính</th><th>Email</th><th>SĐT</th>
+<th>Khoa</th><th>Lớp</th><th>Hành động</th>
+</tr>
+</thead>
+<tbody id="svTable"></tbody>
+</table>
+</div>
 
-            html += `
-                    </div>
-                    <div class="mt-auto p-3 border-top border-secondary" style="position: absolute; bottom: 0; width: 100%;">
-                        <a href="../TrangChu/index.html" class="nav-link text-white">
-                            <i class="fas fa-sign-out-alt me-2"></i> Thoát
-                        </a>
-                    </div>
-                </nav>
-            `;
-            container.innerHTML = html;
-        }
+</div>
 
-        // Gọi hàm tạo Sidebar cho vai trò PDAOTAO
-        createSidebar('PDAOTAO', 'QL_HSSV.html');
-    </script>
+<script>
+/* ====== DATA MẪU CHUẨN DB ====== */
+const khoas = [
+ {MaKhoa:'CNTT',TenKhoa:'Công nghệ thông tin'},
+ {MaKhoa:'CK',TenKhoa:'Cơ khí'},
+ {MaKhoa:'DT',TenKhoa:'Điện - Điện tử'},
+{MaKhoa:'SPKT',TenKhoa:'Sư phạm kỹ thuật'}
+];
 
-    <script>
-        // Dữ liệu lớp theo khoa
-        const lopData = {
-            CNTT: ['21110CNT', '21110CLC', '22110CNT', '22110CLC'],
-            KinhTe: ['21110KT', '22110KT', '23110KT'],
-            NgoaiNgu: ['21110NN', '22110NN'],
-            CoKhi: ['21110CK', '22110CK', '23110CK'],
-            DienTu: ['21110DT', '22110DT']
-        };
+const lops = [
+ {MaLop:'21110CNT',TenLop:'CNTT 2021',MaKhoa:'CNTT'},
+ {MaLop:'22110CNT',TenLop:'CNTT 2022',MaKhoa:'CNTT'},
+ {MaLop:'22110CK',TenLop:'Cơ khí 2022',MaKhoa:'CK'},
+ {MaLop:'22110DT',TenLop:'Điện tử 2022',MaKhoa:'DT'},
+    {MaLop:'23SK01',TenLop:'SPKT 2023',MaKhoa:'SPKT'}
+];
 
-        // Dữ liệu mẫu (Khởi tạo nếu LocalStorage trống)
-        let students = JSON.parse(localStorage.getItem('students')) || [
-            { maSV: '21110123', hoTen: 'Nguyễn Văn An', ngaySinh: '2003-01-15', gioiTinh: 'Nam', email: 'an.nv@hcmute.edu.vn', sdt: '0901234567', khoa: 'CNTT', maLop: '21110CNT' },
-            { maSV: '21110456', hoTen: 'Trần Thị Bích', ngaySinh: '2003-05-20', gioiTinh: 'Nữ', email: 'bich.tt@hcmute.edu.vn', sdt: '0902345678', khoa: 'KinhTe', maLop: '21110KT' },
-            { maSV: '22110789', hoTen: 'Lê Văn Cường', ngaySinh: '2004-09-10', gioiTinh: 'Nam', email: 'cuong.lv@hcmute.edu.vn', sdt: '0903456789', khoa: 'CoKhi', maLop: '22110CK' },
-            { maSV: '22110111', hoTen: 'Phạm Minh Duy', ngaySinh: '2004-12-05', gioiTinh: 'Nam', email: 'duy.pm@hcmute.edu.vn', sdt: '0904567890', khoa: 'DienTu', maLop: '22110DT' },
-            { maSV: '23110222', hoTen: 'Hoàng Thị Hoa', ngaySinh: '2005-03-08', gioiTinh: 'Nữ', email: 'hoa.ht@hcmute.edu.vn', sdt: '0905678901', khoa: 'NgoaiNgu', maLop: '23110NN' }
-        ];
+let students = JSON.parse(localStorage.getItem('SV')) || [
+ {MaSV:'21110123',HoTen:'Nguyễn Văn An',NgaySinh:'2003-01-15',GioiTinh:'Nam',Email:'an@ute.edu.vn',SDT:'0901112222',MaLop:'21110CNT'},
+ {MaSV:'22110456',HoTen:'Trần Thị Bích',NgaySinh:'2004-06-20',GioiTinh:'Nữ',Email:'bich@ute.edu.vn',SDT:'0903334444',MaLop:'22110CK'}
+];
 
-        let editingIndex = null;
+let editIndex=null;
 
-        const tbody = document.querySelector('#studentTable tbody');
-        const form = document.getElementById('studentForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const updateBtn = document.getElementById('updateBtn');
-        const cancelBtn = document.getElementById('cancelBtn');
+/* ====== FORM ====== */
+function showForm(){
+ document.getElementById('studentForm').reset();
+ document.getElementById('maSV').disabled=false;
+ editIndex=null;
+ document.getElementById('formCard').style.display='block';
+}
+function hideForm(){
+ document.getElementById('formCard').style.display='none';
+}
 
-        // Cập nhật dropdown lớp
-        function updateLop() {
-            const khoa = document.getElementById('khoa').value;
-            const lopSelect = document.getElementById('maLop');
-            lopSelect.innerHTML = '<option value="">-- Chọn Lớp --</option>';
-            if (khoa && lopData[khoa]) {
-                lopData[khoa].forEach(lop => {
-                    const opt = document.createElement('option');
-                    opt.value = lop;
-                    opt.textContent = lop;
-                    lopSelect.appendChild(opt);
-                });
-            }
-        }
+/* ====== LOAD SELECT ====== */
+function loadKhoa(){
+ const s=document.getElementById('maKhoa');
+ s.innerHTML='';
+ khoas.forEach(k=>s.innerHTML+=`<option value="${k.MaKhoa}">${k.TenKhoa}</option>`);
+ loadLop();
+}
+function loadLop(){
+ const maKhoa=document.getElementById('maKhoa').value;
+ const s=document.getElementById('maLop');
+ s.innerHTML='';
+ lops.filter(l=>l.MaKhoa===maKhoa)
+     .forEach(l=>s.innerHTML+=`<option value="${l.MaLop}">${l.MaLop}</option>`);
+}
 
-        // Render bảng
-        function renderTable() {
-            tbody.innerHTML = '';
-            students.forEach((sv, i) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>${sv.maSV}</strong></td>
-                    <td>${sv.hoTen}</td>
-                    <td>${sv.ngaySinh}</td>
-                    <td>${sv.gioiTinh}</td>
-                    <td>${sv.email}</td>
-                    <td>${sv.sdt}</td>
-                    <td>${sv.khoa}</td>
-                    <td><span class="badge bg-primary">${sv.maLop}</span></td>
-                    <td>
-                        <button class="btn-action btn-edit" onclick="editStudent(${i})"><i class="fas fa-edit"></i></button>
-                        <button class="btn-action btn-delete" onclick="deleteStudent(${i})"><i class="fas fa-trash"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
+/* ====== TABLE ====== */
+function render(){
+ const tb=document.getElementById('svTable');
+ tb.innerHTML='';
+ students.forEach((s,i)=>{
+  const lop=lops.find(l=>l.MaLop===s.MaLop);
+  const khoa=khoas.find(k=>k.MaKhoa===lop.MaKhoa);
+  tb.innerHTML+=`
+  <tr>
+   <td>${s.MaSV}</td>
+   <td>${s.HoTen}</td>
+   <td>${s.NgaySinh}</td>
+   <td>${s.GioiTinh}</td>
+   <td>${s.Email}</td>
+   <td>${s.SDT}</td>
+   <td>${khoa.TenKhoa}</td>
+   <td>${s.MaLop}</td>
+   <td>
+    <button class="btn-action btn-edit" onclick="edit(${i})"><i class="fas fa-edit"></i></button>
+    <button class="btn-action btn-delete" onclick="del(${i})"><i class="fas fa-trash"></i></button>
+   </td>
+  </tr>`;
+ });
+ localStorage.setItem('SV',JSON.stringify(students));
+}
 
-        // Lưu vào LocalStorage
-        function saveToStorage() {
-            localStorage.setItem('students', JSON.stringify(students));
-        }
+function edit(i){
+ const s=students[i];
+ maSV.value=s.MaSV;maSV.disabled=true;
+ hoTen.value=s.HoTen;ngaySinh.value=s.NgaySinh;
+ gioiTinh.value=s.GioiTinh;
+ email.value=s.Email;sdt.value=s.SDT;
+ const lop=lops.find(l=>l.MaLop===s.MaLop);
+ maKhoa.value=lop.MaKhoa;
+ loadLop();maLop.value=s.MaLop;
+ editIndex=i;
+ showForm();
+}
 
-        // Xử lý Submit Form
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
+function del(i){
+ if(confirm('Xóa sinh viên?')){students.splice(i,1);render();}
+}
 
-            const data = {
-                maSV: document.getElementById('maSV').value.trim().toUpperCase(),
-                hoTen: document.getElementById('hoTen').value.trim(),
-                ngaySinh: document.getElementById('ngaySinh').value,
-                gioiTinh: document.querySelector('input[name="gioiTinh"]:checked')?.value || '',
-                email: document.getElementById('email').value.trim(),
-                sdt: document.getElementById('sdt').value.trim(),
-                khoa: document.getElementById('khoa').value,
-                maLop: document.getElementById('maLop').value
-            };
+studentForm.onsubmit=e=>{
+ e.preventDefault();
+ const sv={
+  MaSV:maSV.value,HoTen:hoTen.value,NgaySinh:ngaySinh.value,
+  GioiTinh:gioiTinh.value,Email:email.value,SDT:sdt.value,
+  MaLop:maLop.value
+ };
+ if(editIndex===null) students.push(sv);
+ else students[editIndex]=sv;
+ hideForm();render();
+};
 
-            // Thêm mới
-            if (editingIndex === null) {
-                if (students.some(s => s.maSV === data.maSV)) {
-                    alert('Mã sinh viên đã tồn tại!');
-                    return;
-                }
-                students.push(data);
-                alert('✅ Thêm sinh viên thành công!');
-            } 
-            // Cập nhật
-            else {
-                students[editingIndex] = data;
-                editingIndex = null;
-                resetFormState();
-                alert('✅ Cập nhật thành công!');
-            }
-
-            saveToStorage();
-            renderTable();
-            form.reset();
-            updateLop();
-        });
-
-        // Chế độ sửa
-        window.editStudent = function(i) {
-            const sv = students[i];
-            document.getElementById('maSV').value = sv.maSV;
-            document.getElementById('maSV').disabled = true; // Không cho sửa mã SV
-            document.getElementById('hoTen').value = sv.hoTen;
-            document.getElementById('ngaySinh').value = sv.ngaySinh;
-            document.querySelector(`input[name="gioiTinh"][value="${sv.gioiTinh}"]`).checked = true;
-            document.getElementById('email').value = sv.email;
-            document.getElementById('sdt').value = sv.sdt;
-            document.getElementById('khoa').value = sv.khoa;
-            
-            updateLop(); // Load lại lớp của khoa đó
-            document.getElementById('maLop').value = sv.maLop;
-
-            editingIndex = i;
-            
-            // Đổi nút
-            submitBtn.style.display = 'none';
-            updateBtn.style.display = 'block';
-            cancelBtn.style.display = 'block';
-            
-            // Scroll lên form
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-
-        // Hủy sửa
-        cancelBtn.onclick = () => {
-            editingIndex = null;
-            form.reset();
-            updateLop();
-            resetFormState();
-        };
-
-        function resetFormState() {
-            document.getElementById('maSV').disabled = false;
-            submitBtn.style.display = 'block';
-            updateBtn.style.display = 'none';
-            cancelBtn.style.display = 'none';
-        }
-
-        // Xóa
-        window.deleteStudent = function(i) {
-            if (confirm('Bạn có chắc muốn xóa sinh viên này?')) {
-                students.splice(i, 1);
-                saveToStorage();
-                renderTable();
-            }
-        };
-
-        // Khởi chạy
-        renderTable();
-    </script>
+loadKhoa();render();
+</script>
 </body>
 </html>
